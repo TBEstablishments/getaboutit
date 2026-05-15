@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#0a0a1e" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>GETABOUTIT</title>
-<meta name="description" content="how high can you go · a one-tap stacking game" />
+<meta name="description" content="A one-tap stacking game. How high can you go." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/" />
 
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/" />
 <meta property="og:title" content="GETABOUTIT" />
-<meta property="og:description" content="how high can you go · a one-tap stacking game" />
+<meta property="og:description" content="A one-tap stacking game. How high can you go." />
 <meta property="og:image" content="https://getaboutit.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="GETABOUTIT" />
-<meta name="twitter:description" content="how high can you go · a one-tap stacking game" />
+<meta name="twitter:description" content="A one-tap stacking game. How high can you go." />
 <meta name="twitter:image" content="https://getaboutit.com/og.png" />
 
-<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='10' width='18' height='14' fill='%2300f5ff'/><rect x='10' y='4' width='18' height='14' fill='%23ff006e'/></svg>" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,29 +34,26 @@
 <body>
 
 <div id="stage">
-  <canvas id="game"></canvas>
+  <canvas id="game" aria-label="GETABOUTIT stacking game" role="img"></canvas>
   <div id="scanlines" aria-hidden="true"></div>
 
-  <!-- HUD: in-game -->
-  <div id="hud" class="hidden">
-    <div id="hud-floor"><span class="chrom" data-text="1"><span>1</span></span></div>
+  <div id="hud" class="hidden" aria-hidden="true">
+    <div id="hud-floor"><span class="chrom"><span>1</span></span></div>
     <div id="hud-perfect" class="hidden"><span id="perfect-count">×2</span> PERFECT</div>
     <div id="hud-today">TODAY 0</div>
     <button id="mute" type="button" aria-label="Toggle sound">🔊</button>
   </div>
 
-  <!-- Splash -->
-  <div id="splash" class="screen">
-    <h1 class="wordmark chrom" data-text="GETABOUTIT"><span>GETABOUTIT</span></h1>
+  <div id="splash" class="screen" role="dialog" aria-label="Start screen">
+    <h1 class="wordmark chrom"><span>GETABOUTIT</span></h1>
     <p class="subtitle">how high can you go</p>
     <p class="tap-prompt">▶ TAP TO PLAY</p>
     <p class="daily-tag"><span id="daily-date">DAILY</span></p>
   </div>
 
-  <!-- Game Over -->
-  <div id="gameover" class="screen hidden">
-    <h2 class="collapse glitch" data-text="TOWER COLLAPSE">TOWER COLLAPSE</h2>
-    <div class="final-floor chrom" data-text="0"><span id="final-floor">0</span></div>
+  <div id="gameover" class="screen hidden" role="dialog" aria-label="Game over">
+    <h2 class="collapse glitch">TOWER COLLAPSE</h2>
+    <div class="final-floor chrom"><span id="final-floor">0</span></div>
     <div class="stats">
       <span>BEST <b id="stat-best">0</b></span>
       <span class="sep">·</span>
@@ -59,10 +61,10 @@
       <span class="sep">·</span>
       <span>ALLTIME <b id="stat-alltime">0</b></span>
     </div>
-    <pre id="scorecard" class="scorecard"></pre>
+    <pre id="scorecard" class="scorecard" aria-label="Shareable score card"></pre>
     <div class="buttons">
-      <button id="btn-copy" class="arcade" type="button">COPY</button>
-      <button id="btn-share" class="arcade" type="button">SHARE</button>
+      <button id="btn-copy" class="arcade" type="button" aria-label="Copy score to clipboard">COPY</button>
+      <button id="btn-share" class="arcade" type="button" aria-label="Share score">SHARE</button>
     </div>
     <p class="tap-prompt retry">▶ TAP TO RETRY</p>
   </div>

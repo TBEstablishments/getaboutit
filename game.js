@@ -73,9 +73,16 @@ function resize() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.imageSmoothingEnabled = false;
 }
-window.addEventListener('resize', resize);
-window.addEventListener('orientationchange', resize);
+let resizeTimer = null;
+function scheduleResize() {
+  if (resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { resizeTimer = null; resize(); }, 150);
+}
+window.addEventListener('resize', scheduleResize);
+window.addEventListener('orientationchange', scheduleResize);
 resize();
+
+const reducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 // ============================================================
 // DAILY SEED
@@ -161,6 +168,7 @@ function tone(freq, dur, type = 'sine', gain = 0.18, attack = 0.005, release = 0
   g.gain.exponentialRampToValueAtTime(gain, t + attack);
   g.gain.exponentialRampToValueAtTime(0.0001, t + attack + dur + release);
   o.connect(g).connect(masterGain);
+  o.onended = () => { try { o.disconnect(); g.disconnect(); } catch (_) {} };
   o.start(t);
   o.stop(t + attack + dur + release + 0.02);
 }
@@ -197,6 +205,7 @@ function boostTone() {
   g.gain.exponentialRampToValueAtTime(0.18, t + 0.05);
   g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
   o.connect(f).connect(g).connect(masterGain);
+  o.onended = () => { try { o.disconnect(); f.disconnect(); g.disconnect(); } catch (_) {} };
   o.start(t);
   o.stop(t + 0.75);
 }
@@ -464,9 +473,7 @@ function bumpHUD() {
 }
 
 function updateHUD() {
-  const span = hudFloor.querySelector('.chrom');
-  span.setAttribute('data-text', String(floorNum));
-  span.querySelector('span').textContent = String(floorNum);
+  hudFloor.querySelector('.chrom > span').textContent = String(floorNum);
   hudToday.textContent = 'TODAY ' + getToday();
   if (streak >= 2) {
     hudPerfect.classList.remove('hidden');
@@ -489,7 +496,6 @@ function gameOver() {
   if (cur > tBest) setTodayLS(cur);
 
   finalFloor.textContent = String(cur);
-  finalFloor.parentElement.setAttribute('data-text', String(cur));
   statBest.textContent = cur;
   statToday.textContent = Math.max(tBest, cur);
   statAlltime.textContent = Math.max(aTime, cur);
@@ -616,8 +622,6 @@ function update(dt) {
   if (state === 'playing' && moving) topFloor = moving.floor;
   const topWorldY = (topFloor + 1) * BLOCK_H;
   cameraTarget = topWorldY - 380;
-  const camLerp = Math.min(0.10 * k, 1);
-  cameraY += (cameraTarget - cameraY) * camLerp;
 
   if (state === 'playing' && stack.length > 1) {
     const t = stack[stack.length - 1];
@@ -625,7 +629,14 @@ function update(dt) {
   } else {
     cameraXOffTarget = 0;
   }
-  cameraXOff += (cameraXOffTarget - cameraXOff) * Math.min(0.06 * k, 1);
+
+  if (reducedMotion) {
+    cameraY = cameraTarget;
+    cameraXOff = cameraXOffTarget;
+  } else {
+    cameraY += (cameraTarget - cameraY) * Math.min(0.10 * k, 1);
+    cameraXOff += (cameraXOffTarget - cameraXOff) * Math.min(0.06 * k, 1);
+  }
 
   // Splash demo
   if (state === 'splash') splashPhase += dt * 0.0024;
@@ -963,14 +974,35 @@ showSplash();
 // ============================================================
 // MAIN LOOP
 // ============================================================
+let rafId = null;
 function loop(now) {
   const dt = Math.min(now - lastTime, 50);
   lastTime = now;
   update(dt);
   render();
-  requestAnimationFrame(loop);
+  rafId = requestAnimationFrame(loop);
 }
-requestAnimationFrame((t) => { lastTime = t; loop(t); });
+function startLoop() {
+  if (rafId !== null) return;
+  lastTime = performance.now();
+  rafId = requestAnimationFrame(loop);
+}
+function stopLoop() {
+  if (rafId !== null) cancelAnimationFrame(rafId);
+  rafId = null;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopLoop();
+    if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {});
+  } else {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+    startLoop();
+  }
+});
+
+startLoop();
 
 // Today's best on splash
 hudToday.textContent = 'TODAY ' + getToday();

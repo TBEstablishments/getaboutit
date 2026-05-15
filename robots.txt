@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://getaboutit.com/sitemap.xml
