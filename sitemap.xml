@@ -18,4 +18,17 @@
   <url><loc>https://getaboutit.com/slide</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://getaboutit.com/reaction</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://getaboutit.com/words</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/blackjack</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/poker</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/solitaire</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/hearts</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/chess</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/checkers</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/sudoku</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/connect4</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/battleship</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/runner</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/bubbles</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/dots</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://getaboutit.com/settings</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>

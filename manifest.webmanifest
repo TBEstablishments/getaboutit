@@ -1,7 +1,7 @@
 {
   "name": "GETABOUTIT Arcade",
   "short_name": "GETABOUTIT",
-  "description": "A free retro arcade. 17 classic games. No signup. Just play.",
+  "description": "A free retro arcade. 29 classic games. No signup. Just play.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a1e",
