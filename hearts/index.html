@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>HEARTS · GETABOUTIT</title>
+<meta name="description" content="Hearts — avoid the hearts and the queen of spades, or shoot the moon." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/hearts" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'hearts';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="scoreboard" class="scoreboard">
+    <span>YOU <b id="s0">0</b></span>
+    <span>LEFT <b id="s1">0</b></span>
+    <span>TOP <b id="s2">0</b></span>
+    <span>RIGHT <b id="s3">0</b></span>
+  </div>
+  <canvas id="game" aria-label="Hearts table"></canvas>
+  <div id="status" class="status">PASS 3 CARDS</div>
+  <div id="passBtn" class="arcade green hidden" role="button" tabindex="0">PASS LEFT →</div>
+  <div id="newBtn" class="arcade cyan hidden" role="button" tabindex="0">NEXT HAND</div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

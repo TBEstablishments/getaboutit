@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>SUDOKU · GETABOUTIT</title>
+<meta name="description" content="Sudoku — daily puzzle, three difficulties, pencil marks." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/sudoku" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'sudoku';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span id="diffTag">DAILY · MEDIUM</span>
+    <span><b id="time">0:00</b></span>
+  </div>
+  <canvas id="board" aria-label="Sudoku board"></canvas>
+  <div class="keypad" id="keypad">
+    <button class="num" data-n="1">1</button><button class="num" data-n="2">2</button><button class="num" data-n="3">3</button>
+    <button class="num" data-n="4">4</button><button class="num" data-n="5">5</button><button class="num" data-n="6">6</button>
+    <button class="num" data-n="7">7</button><button class="num" data-n="8">8</button><button class="num" data-n="9">9</button>
+    <button class="op" id="pencilBtn">✎</button>
+    <button class="op" id="eraseBtn">⌫</button>
+    <button class="op" id="hintBtn">💡 <span id="hints">3</span></button>
+  </div>
+  <div class="ctrls">
+    <button class="arcade" id="diffBtn" type="button">DIFFICULTY</button>
+    <button class="arcade cyan" id="checkBtn" type="button">CHECK <span id="checks">3</span></button>
+    <button class="arcade green hidden" id="winBtn" type="button">✦ SOLVED — NEW PUZZLE</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
