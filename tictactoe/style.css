@@ -1,0 +1,38 @@
+.stage {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 18px;
+  padding:
+    calc(60px + env(safe-area-inset-top))
+    20px
+    calc(60px + env(safe-area-inset-bottom));
+  background: radial-gradient(ellipse at center, #1a0635 0%, #0a0a1e 70%);
+}
+.head { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.title { font-size: clamp(20px, 5vw, 32px); letter-spacing: 0.05em; }
+.controls { display: flex; gap: 10px; }
+.controls .arcade { padding: 10px 16px; font-size: 10px; }
+.series {
+  font-size: clamp(9px, 1.4vw, 11px);
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.75);
+}
+.series b { color: var(--c-yellow); font-weight: normal; }
+#board {
+  width: min(85vw, 380px);
+  height: min(85vw, 380px);
+  max-height: 50vh;
+  image-rendering: pixelated;
+  touch-action: manipulation;
+}
+.status {
+  font-size: clamp(10px, 2vw, 13px);
+  letter-spacing: 0.15em;
+  color: var(--c-cyan);
+  min-height: 20px;
+  text-align: center;
+}
+.status.win { color: var(--c-teal); }
+.status.lose { color: var(--c-red); }
+.status.draw { color: var(--c-yellow); }

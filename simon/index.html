@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>SIMON · GETABOUTIT</title>
+<meta name="description" content="Remember the sequence." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/simon" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <h1 class="title chrom"><span>SIMON</span></h1>
+  <div class="board" id="board" role="group" aria-label="Simon board">
+    <button class="pad p0" data-i="0" type="button" aria-label="Pink pad"></button>
+    <button class="pad p1" data-i="1" type="button" aria-label="Cyan pad"></button>
+    <button class="pad p2" data-i="2" type="button" aria-label="Teal pad"></button>
+    <button class="pad p3" data-i="3" type="button" aria-label="Yellow pad"></button>
+    <div class="center"><span class="chrom"><span id="round">0</span></span></div>
+  </div>
+  <div class="info">
+    <span id="status">TAP TO START</span>
+    <span class="sep">·</span>
+    <span>BEST <b id="best">0</b></span>
+  </div>
+</main>
+<script>window.GAME_KEY = 'simon';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

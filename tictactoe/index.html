@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>TIC TAC TOE · GETABOUTIT</title>
+<meta name="description" content="X vs O. Best of five. Hard is unbeatable." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/tictactoe" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <header class="head">
+    <h1 class="title chrom"><span>TIC TAC TOE</span></h1>
+    <div class="controls">
+      <button id="diff" class="arcade cyan" type="button" aria-label="Toggle difficulty">HARD</button>
+      <button id="reset" class="arcade" type="button" aria-label="New series">NEW</button>
+    </div>
+    <div class="series">
+      W <b id="w">0</b> · L <b id="l">0</b> · D <b id="d">0</b>
+    </div>
+  </header>
+  <canvas id="board" aria-label="Tic Tac Toe board"></canvas>
+  <div class="status" id="status">YOUR MOVE</div>
+</main>
+<script>window.GAME_KEY = 'tictactoe';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

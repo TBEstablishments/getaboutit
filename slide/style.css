@@ -1,0 +1,47 @@
+.stage {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px;
+  padding:
+    calc(60px + env(safe-area-inset-top))
+    20px
+    calc(60px + env(safe-area-inset-bottom));
+  background: radial-gradient(ellipse at center, #150525 0%, #0a0a1e 70%);
+}
+.head { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.title { font-size: clamp(20px, 5vw, 32px); letter-spacing: 0.05em; }
+.sub { font-size: 9px; color: var(--c-cyan); letter-spacing: 0.18em; }
+#board {
+  width: min(82vw, 340px);
+  aspect-ratio: 1;
+  height: auto;
+  image-rendering: pixelated;
+  background: #050510;
+  border: 1px solid rgba(255,255,255,0.1);
+  touch-action: manipulation;
+}
+.info {
+  font-size: clamp(9px, 1.6vw, 11px);
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.8);
+}
+.info b { color: var(--c-yellow); font-weight: normal; }
+.info .sep { margin: 0 8px; color: rgba(255,255,255,0.3); }
+.win-overlay {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  pointer-events: none; z-index: 50;
+}
+.win-overlay .ripple {
+  position: absolute;
+  border: 2px solid var(--c-teal);
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  opacity: 1;
+  animation: ripple 1.4s ease-out forwards;
+}
+@keyframes ripple {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(40); opacity: 0; }
+}

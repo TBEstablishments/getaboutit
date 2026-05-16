@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>LIGHTS OUT · GETABOUTIT</title>
+<meta name="description" content="Turn off every light. Daily seeded puzzle." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/lightsout" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <header class="head">
+    <h1 class="title chrom"><span>LIGHTS OUT</span></h1>
+    <p class="sub" id="daily">DAILY ·</p>
+  </header>
+  <div id="grid" class="grid-5" role="grid" aria-label="5 by 5 lights grid"></div>
+  <div class="info">
+    <span>MOVES <b id="moves">0</b></span>
+    <span class="sep">·</span>
+    <span>BEST <b id="best">—</b></span>
+  </div>
+  <button id="reset" class="arcade" type="button">RESET</button>
+  <div id="banner" class="banner hidden">✦ DAILY CLEARED ✦</div>
+</main>
+<script>window.GAME_KEY = 'lightsout';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
