@@ -2,8 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/2048", "destination": "/p2048/index.html" },
-    { "source": "/2048/(.*)", "destination": "/p2048/$1" }
+    { "source": "/2048", "destination": "/p2048" },
+    { "source": "/2048/:path*", "destination": "/p2048/:path*" }
   ],
   "headers": [
     {
