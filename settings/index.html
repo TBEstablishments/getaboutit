@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>SETTINGS · GETABOUTIT</title>
+<meta name="description" content="Settings — export your scores, manage themes, view achievements." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/settings" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = '';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<main class="page">
+  <h1 class="wordmark chrom"><span>SETTINGS</span></h1>
+
+  <section class="card">
+    <h2>THEME</h2>
+    <p class="hint">CYCLE THROUGH VISUAL MODES</p>
+    <div class="theme-row" id="themeRow">
+      <button class="theme-btn" data-theme="default">DEFAULT</button>
+      <button class="theme-btn" data-theme="deepnight">DEEP NIGHT</button>
+      <button class="theme-btn" data-theme="highcontrast">HIGH CONTRAST</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ACHIEVEMENTS <span class="counter" id="achCounter">0/9</span></h2>
+    <p class="hint">UNLOCK BY PLAYING — NO ACCOUNT REQUIRED</p>
+    <div class="ach-list" id="achList"></div>
+  </section>
+
+  <section class="card">
+    <h2>STATS</h2>
+    <div class="stats-grid" id="statsGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>EXPORT / IMPORT</h2>
+    <p class="hint">DOWNLOAD ALL YOUR PROGRESS AS JSON — IMPORT TO ANOTHER DEVICE</p>
+    <div class="btn-row">
+      <button class="arcade cyan" id="exportBtn">EXPORT</button>
+      <label class="arcade" for="importFile">IMPORT</label>
+      <input type="file" id="importFile" accept="application/json" style="display:none" />
+      <button class="arcade red" id="resetBtn">RESET ALL</button>
+    </div>
+    <pre id="exportOut" class="export-out hidden"></pre>
+  </section>
+
+  <section class="card">
+    <h2>ABOUT</h2>
+    <p class="about-line">29 free retro arcade games at <span class="chrom"><span>GETABOUTIT.COM</span></span></p>
+    <p class="about-line">vanilla js · canvas 2d · web audio · localstorage · no tracking</p>
+    <p class="about-line"><a href="/" class="back-link">← BACK TO ARCADE</a></p>
+  </section>
+</main>
+<script src="settings.js"></script>
+</body>
+</html>
