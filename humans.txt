@@ -1,0 +1,11 @@
+/* TEAM */
+GETABOUTIT — a free retro-vaporwave arcade.
+37 classic games. No tracking. No accounts. No build step.
+
+/* TECH */
+Vanilla ES6+. Canvas 2D. Web Audio API (procedural — no asset files).
+LocalStorage for scores. One font: Press Start 2P from Google Fonts.
+Ten-color palette. Static deploy via Vercel.
+
+/* THANKS */
+To everyone who plays a game on a flight, a queue, or a Tuesday afternoon.

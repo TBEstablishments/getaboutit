@@ -1,10 +1,10 @@
 # getaboutit
 
-A free retro-vaporwave arcade at getaboutit.com — **29 classic games**, no signup, no tracking, no build step.
+A free retro-vaporwave arcade at getaboutit.com — **37 classic games**, no signup, no tracking, no build step.
 
 ## What this is
 
-GETABOUTIT is the entire identity — domain, arcade name, brand. The home page is the lobby. Each game lives at its own clean URL (`/snake`, `/chess`, `/blackjack`, …) and is fully self-contained.
+GETABOUTIT is the entire identity — domain, arcade name, brand. The home page is the lobby. Each game lives at its own clean URL (`/snake`, `/chess`, `/go`, `/backgammon`, …) and is fully self-contained.
 
 ## Hard constraints
 
@@ -20,6 +20,8 @@ These are non-negotiable for this project:
 - **One font** — Press Start 2P; system monospace as pre-load fallback
 - **No analytics, no trackers, no telemetry, no ads, no signup, no accounts**
 - **Card games render procedurally** — no image assets, no emoji-substitute cards
+- **No service workers** (yet)
+- **AI engines stay client-side and original** — no Stockfish, no external engines
 
 If a request would break these, push back and propose an alternative.
 
@@ -36,58 +38,62 @@ If a request would break these, push back and propose an alternative.
 /
 ├── index.html / arcade.css / arcade.js     home page (the lobby)
 ├── shared/
-│   ├── core.css                            palette vars, scanlines, .chrom, .arcade, .hud, .shake, toast, tab
-│   ├── core.js                             window.GAI namespace
+│   ├── core.css                            palette vars, scanlines, .chrom, .arcade, .hud, .shake, toast, tab, play-next, pause, etc
+│   ├── core.js                             window.GAI namespace (all subsystems)
 │   └── shell.js                            auto-mounts back+mute on every game page
-├── settings/                               export/import, theme, achievements
+├── stats/                                  /stats dashboard (canvas charts)
+├── settings/                               /settings — export/import, theme, achievements
 ├── stack/ snake/ blocks/ p2048/ breakout/ pong/ memory/ minesweeper/
 │   flap/ invaders/ asteroids/ simon/ tictactoe/ lightsout/ slide/
 │   reaction/ words/ blackjack/ poker/ solitaire/ hearts/ chess/
 │   checkers/ sudoku/ connect4/ battleship/ runner/ bubbles/ dots/
+│   craps/ type/ pixel/ spider/ cribbage/ slither/ backgammon/ go/
 │       ├── index.html                      sets window.GAME_KEY, loads core + game
 │       ├── style.css                       game-specific layout
 │       └── game.js                         self-contained game
-├── favicon.svg / manifest.webmanifest / robots.txt / sitemap.xml
+├── favicon.svg / manifest.webmanifest / robots.txt / sitemap.xml / humans.txt
 ├── vercel.json                             cleanUrls + /2048 rewrite + headers
-├── og-generator.html / og.png              social share image
-└── README.md / CLAUDE.md / plan.md
+├── og-generator.html                       procedural 37-variant OG image generator
+└── README.md / CLAUDE.md / plan*.md / audit*.md
 ```
 
 `/2048` is rewritten to `/p2048/` because numeric-leading paths can break some tooling — folder is `p2048/` internally.
 
 ## shared/core.js — the GAI namespace
 
-Every game uses `window.GAI`. Highlights:
+Every game uses `window.GAI`. Subsystems:
 
-- `GAI.PALETTE` — array of 10 hex strings
-- `GAI.GAME_KEYS / GAME_PATHS / GAME_NAMES / GAME_CATEGORIES` — registry of all 29 games
+- `GAI.PALETTE` / `GAME_KEYS` / `GAME_PATHS` / `GAME_NAMES` / `GAME_CATEGORIES` — registry of all 37 games
 - `GAI.storage.{get,set,del,getJSON,setJSON}` — try/catch wrapped localStorage
-- `GAI.bestScore(key, current)` — read/write best score per game
-- `GAI.recordPlay(key)` — increment per-game and total play counts, update streak, push to recently-played
-- `GAI.recordWin(key)` — increment win counter, fires achievements
-- `GAI.streak.get()` — global play streak object
-- `GAI.totalPlays()` / `GAI.gamePlays(key)`
-- `GAI.rng(seed)` — mulberry32
-- `GAI.todayUTC()` — `YYYYMMDD`
-- `GAI.dailySeed(salt)` — stable seed for daily challenges
+- `GAI.bestScore(key, current)` / `GAI.recordPlay(key)` / `GAI.recordWin(key)`
+- `GAI.streak.get()` / `GAI.totalPlays()` / `GAI.gamePlays(key)`
+- `GAI.rng(seed)` / `GAI.todayUTC()` / `GAI.dailySeed(salt)`
 - `GAI.audio.{ensure,tone,arpeggio,noiseBurst,startPad,stopPad,setMuted,isMuted}`
-- `GAI.canvas.fit(canvas, opts)` — DPR-aware fit
-- `GAI.input.{tap,swipe,keys}` — input helpers
-- `GAI.transition.glitchTo(url)` — 200ms glitch overlay + navigate
-- `GAI.shell.init()` — mounts back button + mute button + scanlines + vignette + records play
+- `GAI.canvas.fit(canvas, opts)`
+- `GAI.input.{tap,swipe,keys,drag}` — drag is unified mouse+touch
+- `GAI.haptic(pattern)` / `GAI.haptics = { TAP, DOUBLE, HEAVY, BOOST, ERROR }`
+- `GAI.transition.glitchTo(url)`
+- `GAI.shell.init()`
 - `GAI.util.{clamp,lerp,lerpColor,shade,smoothstep}`
-- `GAI.fx.{screenShake, particleBurst, chromaticFlash, confetti, outrunBg, roundRect}` — shared visual effects
-- `GAI.ui.{splash, gameOver, toast, countdown}` — shared screen builders
-- `GAI.cards.{SUITS,RANKS,newDeck,shuffle,handValue,evalPoker,draw,cardBack}` — shared card system
-- `GAI.ai.minimax(state, depth, alpha, beta, isMax, opts)` — generic minimax with alpha-beta
-- `GAI.achievements.{list,has,unlock,unlocked,check,total}` — achievement system
-- `GAI.theme.{get,set,cycle,list}` — default/deepnight/highcontrast
-- `GAI.exportData.{dump,load}` — JSON backup/restore of all gai_* keys
-- `GAI.cleanup.{on,raf,dispose}` — auto-cleanup helpers (auto-fires on pagehide)
+- `GAI.fx.{screenShake, particleBurst, chromaticFlash, confetti, outrunBg, roundRect, fireworks, scanlineSweep, ripple}`
+- `GAI.ui.{splash, gameOver, toast, countdown, pause, shareCard, playNext}`
+- `GAI.cards.{SUITS, RANKS, newDeck, shuffle, handValue, evalPoker, draw, cardBack}`
+- `GAI.dice.{roll, drawDie, rollWithAnim}`
+- `GAI.text.{measure, wrap, drawChromatic}`
+- `GAI.path.{bezier, ease, lerp, distance}`
+- `GAI.ai.{minimax, mcts}`
+- `GAI.achievements.{list, has, unlock, unlocked, check, total}`
+- `GAI.theme.{get, set, cycle, list}`
+- `GAI.exportData.{dump, load}`
+- `GAI.cleanup.{on, raf, dispose}` — auto-fires on pagehide
+- `GAI.pins.{get, toggle, has, max}` — pinned games (max 5)
+- `GAI.blitz.{isOn, set}` — per-game blitz mode toggle
+- `GAI.stats.{sessionStart, sessionEnd, timeFor, dailyCounts}` — session time tracking
+- `GAI.welcomeBack()` — toast on return after 24h+
 
 ## shared/shell.js
 
-Runs on every game page. Reads `window.GAME_KEY` (set in HTML before `<script>` tags), calls `GAI.shell.init()` which mounts:
+Runs on every game page. Reads `window.GAME_KEY`, calls `GAI.shell.init()`, which mounts:
 - floating ← ARCADE button (top-left)
 - floating 🔊/🔇 mute button (top-right)
 - `#scanlines` and `#vignette` overlays
@@ -95,7 +101,7 @@ Runs on every game page. Reads `window.GAME_KEY` (set in HTML before `<script>` 
 
 ## Game contract
 
-Every game folder follows this template:
+Every game folder:
 
 ```html
 <!-- index.html -->
@@ -109,18 +115,26 @@ Every game folder follows this template:
 
 In `game.js`, never instantiate `AudioContext` at module load — use `GAI.audio.ensure()` on first user gesture.
 
-## Categories
+Opt-in patterns (recommended in new games):
+- Call `GAI.stats.sessionStart(key)` at boot and `GAI.stats.sessionEnd(key)` on `pagehide`
+- Append `GAI.ui.shareCard({title, score, best, color, key, label})` buttons + `GAI.ui.playNext(key, container)` to the game-over screen
+- Use `GAI.input.drag` for drag-based input (solitaire, backgammon, battleship-placement)
+- Use `GAI.ai.minimax` or `GAI.ai.mcts` for AI opponents
+- Use `GAI.dice.drawDie` / `GAI.dice.rollWithAnim` for any dice rendering
 
-The home page filters by:
-- **ARCADE** — Stack, Snake, Blocks, 2048, Breakout, Pong, Flap, Invaders, Asteroids, Bubbles, Runner
-- **PUZZLE** — Memory, Minesweeper, Slide, Lights Out, Words, Sudoku, Dots & Boxes
-- **BOARD** — Tic Tac Toe, Chess, Checkers, Connect 4, Battleship
-- **CARDS** — Blackjack, Poker, Solitaire, Hearts
-- **MIND** — Simon, Reaction
+## Categories (7)
+
+- **ARCADE** (12) — Stack, Snake, Blocks, 2048, Breakout, Pong, Flap, Invaders, Asteroids, Bubbles, Runner, Slither
+- **PUZZLE** (8) — Memory, Minesweeper, Slide, Lights Out, Words, Sudoku, Dots, Pixel
+- **BOARD** (7) — Tic Tac Toe, Chess, Checkers, Connect 4, Battleship, Go, Backgammon
+- **CARDS** (6) — Blackjack, Poker, Solitaire, Hearts, Cribbage, Spider
+- **CASINO** (1) — Craps
+- **MIND** (2) — Simon, Reaction
+- **SKILL** (1) — Type Race
 
 ## Workflow
 
-- **Commits**: conventional — `feat:`, `fix:`, `chore:`, `style:`, `refactor:`, `docs:`. Present tense, lowercase.
+- **Commits**: conventional — `feat:`, `fix:`, `chore:`, `style:`, `refactor:`, `polish:`, `docs:`, `perf:`, `a11y:`, `mobile:`. Present tense, lowercase.
 - **Branch**: work on `main`. Small static site, no PR ceremony needed.
 - **Do not push** unless asked — only the human pushes. Stage and commit locally.
 - **One commit per logical change.**
@@ -129,30 +143,44 @@ The home page filters by:
 
 - Local dev: `python3 -m http.server 8000` from the repo root.
 - Visit `http://localhost:8000/` for the lobby, then `http://localhost:8000/stack/` etc.
-  (Locally you need the trailing slash; Vercel's cleanUrls handles bare paths in prod.)
 - Test on actual mobile via Vercel preview URL.
 
 ## Common pitfalls
 
 - **AudioContext autoplay**: never instantiate before first gesture; `GAI.audio.ensure()` handles this.
-- **Touch + click double-fire**: debounce input ~100ms.
+- **Touch + click double-fire**: debounce input ~100ms (or use `GAI.input.tap` which already debounces).
 - **Mobile pull-to-refresh**: `overscroll-behavior: contain` on body (already in core).
 - **Canvas blur on high-DPR**: use `GAI.canvas.fit()` or scale ctx by DPR yourself.
 - **localStorage in private mode**: `GAI.storage.*` already try/catch wrapped.
 - **iOS Safari audio**: AudioContext suspends on backgrounding — shell wires `visibilitychange` to resume.
+- **AI search blocking UI**: wrap top-level minimax/mcts in `setTimeout(0)` so the "AI THINKING…" status paints first.
 
 ## Cross-game features
 
-- **Daily challenges** — three rotating picks per day (one arcade, one puzzle/board, one card/mind); displayed in `#dailyTrio` + tiles get 🌟
-- **Global streak** — `gai_streak_global` (current/max/lastPlayDate)
-- **Recently played** — `gai_recent` (5 most recent { key, ts })
-- **Surprise me** — picks random game excluding most-recently-played; long-press to cycle category mode
-- **Achievements** — 9 unlock IDs in `gai_achievements`; toast on unlock; full list at /settings
-- **Themes** — `gai_theme` cycles default/deepnight/highcontrast; trigger by typing "mood" on home or via /settings
-- **Konami code** (↑↑↓↓←→←→BA) — toggles `gai_rainbow_unlocked` rainbow mode site-wide
-- **`gai` typed on home page** — CRT-collapse effect
+- **Daily challenges** — 3-game rotation per day, one per major category
+- **Pinned games** — long-press / right-click any tile (max 5; persisted in `gai_pinned`)
+- **Search** — `/` to focus search input on home; filters by name/tag/key
+- **Sort-by-plays** — ALL tab orders tiles by play count
+- **Streak** — `gai_streak_global` (current/max/lastPlayDate)
+- **Recently played** — `gai_recent` (5 most recent)
+- **Surprise me** — random; long-press cycles category mode
+- **Achievements** — 9 unlock IDs in `gai_achievements`; toast on unlock; full list at `/settings` and `/stats`
+- **Stats** — `/stats` page: per-game best, time played, daily plays chart, most played chart, achievement grid
+- **Themes** — `gai_theme` (default | deepnight | highcontrast); type "mood" or use `/settings`
+- **Export / import scores** — JSON backup at `/settings`
+- **Share cards** — `GAI.ui.shareCard` generates 1080×1920 PNG; opt-in per game in game-over
+- **Play next** — `GAI.ui.playNext` appends 3 same-category tiles to game-over
+- **Blitz mode** — `GAI.blitz.set(key, on)`; some games (snake) expose a splash toggle
+- **Welcome back** — fires on home after 24h+ absence
+- **Konami code** (↑↑↓↓←→←→BA) — toggles `gai_rainbow_unlocked`
+- **`gai` typed on home** — CRT-collapse effect
 - **100+ lifetime plays** — adds ⚡ VETERAN ⚡ tag below the wordmark
 - **Royal flush** — adds sticky 👑 to the poker tile after first royal
+- **Perfect 29** — adds sticky 29 badge to the cribbage tile after first perfect hand
+
+## Per-game OG images
+
+`og-generator.html` renders one 1200×630 OG per game procedurally. Open it in a browser, click SAVE ALL, drop the 37 PNGs into `/og/`, then update each game's index.html OG meta to reference `https://getaboutit.com/og/<key>.png`. (Not done yet for individual game pages — they currently share the home `og.png`.)
 
 ## Deploy
 

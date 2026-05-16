@@ -2,7 +2,7 @@
 
 > free arcade · no signup · just play
 
-A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No ads. Just a tab full of bright tiny games.
+A retro-vaporwave arcade with **37 classic games**. No accounts. No tracking. No ads. Just a tab full of bright tiny games.
 
 **Play:** [getaboutit.com](https://getaboutit.com)
 
@@ -12,7 +12,7 @@ A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No
 | URL | Game | About |
 | --- | --- | --- |
 | [/stack](https://getaboutit.com/stack) | STACK | one-tap tower |
-| [/snake](https://getaboutit.com/snake) | SNAKE | eat the dots |
+| [/snake](https://getaboutit.com/snake) | SNAKE | eat the dots · BLITZ mode |
 | [/blocks](https://getaboutit.com/blocks) | BLOCKS | falling tetrominoes |
 | [/2048](https://getaboutit.com/2048) | 2048 | merge to win |
 | [/breakout](https://getaboutit.com/breakout) | BREAKOUT | smash the bricks |
@@ -22,6 +22,7 @@ A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No
 | [/asteroids](https://getaboutit.com/asteroids) | ASTEROIDS | rotate, thrust, shoot |
 | [/bubbles](https://getaboutit.com/bubbles) | BUBBLES | pop chain combos |
 | [/runner](https://getaboutit.com/runner) | RUNNER | one tap to jump |
+| [/slither](https://getaboutit.com/slither) | SLITHER | grow, dodge, dominate |
 
 ### Puzzle
 | URL | Game | About |
@@ -33,6 +34,7 @@ A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No
 | [/words](https://getaboutit.com/words) | WORDS | guess in six |
 | [/sudoku](https://getaboutit.com/sudoku) | SUDOKU | fill the grid |
 | [/dots](https://getaboutit.com/dots) | DOTS & BOXES | claim the squares |
+| [/pixel](https://getaboutit.com/pixel) | PIXEL | paint by numbers |
 
 ### Board
 | URL | Game | About |
@@ -42,6 +44,8 @@ A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No
 | [/checkers](https://getaboutit.com/checkers) | CHECKERS | king me |
 | [/connect4](https://getaboutit.com/connect4) | CONNECT 4 | four in a row |
 | [/battleship](https://getaboutit.com/battleship) | BATTLESHIP | fire when ready |
+| [/go](https://getaboutit.com/go) | GO 9×9 | ancient strategy |
+| [/backgammon](https://getaboutit.com/backgammon) | BACKGAMMON | race for home |
 
 ### Cards
 | URL | Game | About |
@@ -50,12 +54,24 @@ A retro-vaporwave arcade with **29 classic games**. No accounts. No tracking. No
 | [/poker](https://getaboutit.com/poker) | POKER | jacks or better |
 | [/solitaire](https://getaboutit.com/solitaire) | SOLITAIRE | classic time killer |
 | [/hearts](https://getaboutit.com/hearts) | HEARTS | shoot the moon |
+| [/cribbage](https://getaboutit.com/cribbage) | CRIBBAGE | fifteen-two, fifteen-four |
+| [/spider](https://getaboutit.com/spider) | SPIDER | harder solitaire |
+
+### Casino
+| URL | Game | About |
+| --- | --- | --- |
+| [/craps](https://getaboutit.com/craps) | CRAPS | roll the bones |
 
 ### Mind
 | URL | Game | About |
 | --- | --- | --- |
 | [/simon](https://getaboutit.com/simon) | SIMON | remember the sequence |
 | [/reaction](https://getaboutit.com/reaction) | REACTION | how fast can you tap |
+
+### Skill
+| URL | Game | About |
+| --- | --- | --- |
+| [/type](https://getaboutit.com/type) | TYPE RACE | fast fingers vs 3 AI typists |
 
 ## Stack
 
@@ -81,16 +97,25 @@ There's no build step. Just plain files served as-is.
 
 ## Cross-game features
 
-- **Daily challenges** — three rotating picks per day (one arcade, one puzzle/board, one card/mind)
-- **Daily puzzles** — Words, Lights Out, Slide, and Sudoku use a daily seed so today's puzzle matches across visitors
+- **Daily challenges** — three rotating picks per day (one arcade, one puzzle/board, one card/casino/mind/skill)
+- **Daily puzzles** — Words, Lights Out, Slide, Sudoku, Pixel use a daily seed so today's puzzle matches across visitors
 - **Streak counter** — keeps track of consecutive days you played anything
 - **Recently played** — quick re-entry from the lobby
-- **Surprise me** — picks a random game (never the one you just played); long-press to scope by category
+- **Pinned games** — long-press / right-click any tile to pin (max 5); pinned strip appears above the grid
+- **Search** — type `/` to focus, search any game by name or tag
+- **Sort-by-plays** — default ALL view orders by your play count, daily-drivers float to the top
+- **Surprise me** — picks a random game (never the one you just played); long-press cycles category mode
 - **Achievements** — 9 milestones to unlock; view at /settings
+- **Stats** — overview tiles + 30-day daily-plays chart + most-played + best scores + time per game + achievements
 - **Themes** — default, deep night, high contrast; cycle by typing "mood" on home or via /settings
 - **Export / import scores** — JSON backup at /settings, no account needed
+- **Share cards** — game-over screen on supported games generates a 1080×1920 share PNG
+- **Play next** — game-over screen suggests 3 same-category games to keep you in the loop
+- **Welcome back** — returning after 24h+ shows a toast counting how many days
 - **Konami code** — ↑↑↓↓←→←→BA unlocks rainbow mode site-wide
-- **MOOD** — typed anywhere on home cycles themes
+- **MOOD typed** — cycles themes
+- **GAI typed** — CRT-collapse effect
+- **🔥 HOT streak** — 7+ days lights the streak emoji on fire
 
 ## Layout
 
@@ -98,10 +123,11 @@ There's no build step. Just plain files served as-is.
 .
 ├── index.html / arcade.css / arcade.js    home page (the lobby)
 ├── shared/core.css / core.js / shell.js   GAI namespace + shared styles
-├── stack/ snake/ … dots/                  one folder per game (29 total)
+├── stack/ snake/ … go/                    one folder per game (37 total)
+├── stats/                                 stats dashboard
 ├── settings/                              progress backup, themes, achievements
 ├── favicon.svg / manifest.webmanifest
-├── og-generator.html / og.png
-├── robots.txt / sitemap.xml
-├── vercel.json / CLAUDE.md / README.md
+├── og-generator.html                      37-variant procedural OG image generator
+├── robots.txt / sitemap.xml / humans.txt
+├── vercel.json / CLAUDE.md / README.md / plan*.md
 ```
