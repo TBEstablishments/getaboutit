@@ -4,47 +4,105 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>STACK · GETABOUTIT</title>
-<meta name="description" content="A one-tap stacking game. How high can you go." />
+<meta name="description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="canonical" href="https://getaboutit.com/stack" />
 
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/stack" />
 <meta property="og:title" content="STACK · GETABOUTIT" />
-<meta property="og:description" content="A one-tap stacking game." />
+<meta property="og:description" content="A one-tap stacking game. Climb from ground to deep space." />
 <meta property="og:image" content="https://getaboutit.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="STACK · GETABOUTIT" />
+<meta name="twitter:description" content="A one-tap stacking game. Climb from ground to deep space." />
+<meta name="twitter:image" content="https://getaboutit.com/og.png" />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/manifest.webmanifest" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
-<link rel="stylesheet" href="/shared/core.css" />
 <link rel="stylesheet" href="style.css" />
+<style>
+  /* Floating arcade-home back button (stack uses self-contained style.css, no shared/core.css) */
+  .stack-back {
+    position: fixed;
+    top: calc(12px + env(safe-area-inset-top));
+    left: calc(12px + env(safe-area-inset-left));
+    z-index: 95;
+    background: rgba(10,10,30,0.7);
+    border: 2px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    backdrop-filter: blur(6px);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .stack-back:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
+  @media (prefers-reduced-transparency: reduce) { .stack-back { backdrop-filter: none; background: rgba(10,10,30,0.95); } }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "GETABOUTIT — STACK",
+  "url": "https://getaboutit.com/stack",
+  "description": "A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score.",
+  "genre": ["Arcade", "Casual"],
+  "playMode": "SinglePlayer",
+  "gamePlatform": ["Web Browser", "Mobile Web"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 </head>
 <body>
+
+<a class="stack-back" href="/" aria-label="Back to arcade">← ARCADE</a>
+
 <div id="stage">
-  <canvas id="game" aria-label="STACK — tap to drop blocks" role="img"></canvas>
+  <canvas id="game" aria-label="GETABOUTIT stacking game, tap to drop a block" role="img" tabindex="0"></canvas>
+  <div id="scanlines" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+
+  <div id="zone-banner" class="hidden" aria-hidden="true"><span class="chrom"><span></span></span></div>
 
   <div id="hud" class="hidden" aria-hidden="true">
     <div id="hud-floor"><span class="chrom"><span>1</span></span></div>
     <div id="hud-perfect" class="hidden"><span id="perfect-count">×2</span> PERFECT</div>
     <div id="hud-today">TODAY 0</div>
+    <button id="mute" type="button" aria-label="Toggle sound">🔊</button>
+    <div id="audio-hint" class="hidden">tap 🔊 for sound</div>
   </div>
 
   <div id="splash" class="screen" role="dialog" aria-label="Start screen">
-    <h1 class="wordmark chrom"><span>STACK</span></h1>
+    <h1 class="wordmark chrom"><span>GETABOUTIT</span></h1>
     <p class="subtitle">how high can you go</p>
-    <p class="tap-prompt pulse">▶ TAP TO PLAY</p>
-    <p class="daily-tag"><span id="daily-date">DAILY</span></p>
+    <p id="veteran-tag" class="veteran-tag hidden">— veteran —</p>
+    <p class="tap-prompt">▶ TAP TO PLAY</p>
+    <p id="streak-broken" class="streak-broken hidden"></p>
+    <div class="meta-row">
+      <span id="streak-tag" class="streak-tag hidden"><span class="flame">🔥</span> <span id="streak-count">0</span></span>
+      <span id="daily-tag" class="daily-tag"><span id="daily-date">DAILY</span></span>
+      <span id="lifetime-tag" class="lifetime-tag hidden">lifetime: <b id="lifetime-count">0</b></span>
+    </div>
   </div>
 
   <div id="gameover" class="screen hidden" role="dialog" aria-label="Game over">
     <h2 class="collapse glitch">TOWER COLLAPSE</h2>
     <div class="final-floor chrom"><span id="final-floor">0</span></div>
+    <p id="zone-reached" class="zone-reached"></p>
     <div class="stats">
       <span>BEST <b id="stat-best">0</b></span>
       <span class="sep">·</span>
@@ -54,16 +112,33 @@
     </div>
     <pre id="scorecard" class="scorecard" aria-label="Shareable score card"></pre>
     <div class="buttons">
-      <button id="btn-copy" class="arcade" type="button" aria-label="Copy score">COPY</button>
-      <button id="btn-share" class="arcade cyan" type="button" aria-label="Share score">SHARE</button>
+      <button id="btn-copy" class="arcade" type="button" aria-label="Copy score to clipboard">COPY</button>
+      <button id="btn-share" class="arcade" type="button" aria-label="Share score">SHARE</button>
+      <button id="btn-image" class="arcade green" type="button" aria-label="Save shareable image">📸 SAVE IMAGE</button>
     </div>
-    <p class="tap-prompt retry pulse">▶ TAP TO RETRY</p>
+    <p class="tap-prompt retry">▶ TAP TO RETRY</p>
   </div>
 </div>
 
 <script>window.GAME_KEY = 'stack';</script>
 <script src="/shared/core.js"></script>
-<script src="/shared/shell.js"></script>
 <script src="game.js"></script>
+<script>
+  // arcade integration: record play, mirror Stack best score to GAI
+  if (window.GAI) {
+    window.GAI.recordPlay('stack');
+    const sync = () => {
+      try {
+        const all = +(localStorage.getItem('gai_alltime_best') || 0);
+        if (all) window.GAI.bestScore('stack', all);
+      } catch {}
+    };
+    sync();
+    window.addEventListener('beforeunload', sync);
+    document.addEventListener('visibilitychange', sync);
+    // also mirror after game over events: poll lightly
+    setInterval(sync, 5000);
+  }
+</script>
 </body>
 </html>

@@ -111,64 +111,80 @@ function shade(hex, m) {
 }
 
 function drawBackground(ctx, W, H) {
-  // Vertical gradient sky
+  // Deep space gradient
   const sky = ctx.createLinearGradient(0, 0, 0, H);
-  sky.addColorStop(0, '#1a0535');
-  sky.addColorStop(0.55, '#3a0ca3');
-  sky.addColorStop(1, '#6a1b9a');
+  sky.addColorStop(0, '#01000c');
+  sky.addColorStop(0.6, '#0a0220');
+  sky.addColorStop(1, '#1a0635');
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, W, H);
 
-  const horY = H * 0.62;
-  const sunR = Math.min(W, H) * 0.32;
-  const sunY = horY - H * 0.02;
+  // Starfield
+  const rand = mulberry32(202405);
+  for (let i = 0; i < Math.round(W * H / 2400); i++) {
+    const x = rand() * W;
+    const y = rand() * H * 0.95;
+    const sz = rand() * 2 + 0.6;
+    ctx.fillStyle = `rgba(255,255,255,${(0.4 + rand() * 0.6).toFixed(3)})`;
+    ctx.fillRect(x, y, sz, sz);
+  }
 
-  // Sun radial
-  const sunG = ctx.createRadialGradient(W/2, sunY, sunR*0.05, W/2, sunY, sunR);
-  sunG.addColorStop(0, '#ffd60a');
-  sunG.addColorStop(0.3, '#ff9500');
-  sunG.addColorStop(0.7, '#ff006e');
-  sunG.addColorStop(1, 'rgba(255,0,110,0)');
-  ctx.fillStyle = sunG;
+  // Nebula glow (magenta-cyan)
+  const nebG1 = ctx.createRadialGradient(W * 0.25, H * 0.55, 20, W * 0.25, H * 0.55, W * 0.45);
+  nebG1.addColorStop(0, 'rgba(255, 0, 200, 0.45)');
+  nebG1.addColorStop(0.5, 'rgba(131, 56, 236, 0.20)');
+  nebG1.addColorStop(1, 'rgba(80, 30, 140, 0)');
+  ctx.fillStyle = nebG1;
+  ctx.fillRect(0, 0, W, H);
+
+  const nebG2 = ctx.createRadialGradient(W * 0.78, H * 0.28, 10, W * 0.78, H * 0.28, W * 0.4);
+  nebG2.addColorStop(0, 'rgba(0, 245, 255, 0.40)');
+  nebG2.addColorStop(0.6, 'rgba(0, 100, 200, 0.10)');
+  nebG2.addColorStop(1, 'rgba(0, 60, 120, 0)');
+  ctx.fillStyle = nebG2;
+  ctx.fillRect(0, 0, W, H);
+
+  // Galaxy spiral, top-right
+  ctx.save();
+  ctx.translate(W * 0.82, H * 0.20);
+  ctx.rotate(0.4);
+  const galG = ctx.createRadialGradient(0, 0, 6, 0, 0, Math.min(W, H) * 0.25);
+  galG.addColorStop(0, 'rgba(255,210,255,0.9)');
+  galG.addColorStop(0.35, 'rgba(180,120,220,0.45)');
+  galG.addColorStop(1, 'rgba(80,40,140,0)');
+  ctx.fillStyle = galG;
   ctx.beginPath();
-  ctx.arc(W/2, sunY, sunR, 0, Math.PI*2);
+  ctx.ellipse(0, 0, Math.min(W, H) * 0.22, Math.min(W, H) * 0.06, 0, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 
-  // Sun stripes
-  ctx.fillStyle = '#0a0a1e';
-  for (let i = 0; i < 5; i++) {
-    const sy = sunY + sunR * (0.28 + i * 0.10);
-    const sh = Math.max(1, Math.round(sunR * (0.04 - i * 0.005)));
-    ctx.fillRect(W/2 - sunR, sy, sunR*2, sh);
-  }
+  // Earth's curved horizon at very bottom
+  const earthY = H * 1.15;
+  const earthR = W * 0.95;
+  const eg = ctx.createRadialGradient(W/2, earthY, earthR * 0.7, W/2, earthY, earthR * 1.05);
+  eg.addColorStop(0, '#1a4d8c');
+  eg.addColorStop(0.6, '#0a2540');
+  eg.addColorStop(1, '#020010');
+  ctx.fillStyle = eg;
+  ctx.beginPath();
+  ctx.arc(W/2, earthY, earthR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0, 245, 255, 0.5)';
+  ctx.lineWidth = Math.max(2, W/450);
+  ctx.beginPath();
+  ctx.arc(W/2, earthY, earthR + 2, Math.PI + 0.25, 2 * Math.PI - 0.25);
+  ctx.stroke();
+}
 
-  // Horizon line
-  const lineG = ctx.createLinearGradient(0, horY-2, 0, horY+2);
-  lineG.addColorStop(0, '#ffd60a');
-  lineG.addColorStop(1, '#ff006e');
-  ctx.fillStyle = lineG;
-  ctx.fillRect(0, horY-1, W, 2);
-
-  // Receding grid
-  ctx.strokeStyle = '#ff006e';
-  ctx.lineWidth = Math.max(1, W/900);
-  for (let i = 1; i <= 14; i++) {
-    const t = i / 14;
-    const yLine = horY + Math.pow(t, 1.9) * (H - horY) * 1.1;
-    ctx.globalAlpha = 1 - t * 0.5;
-    ctx.beginPath();
-    ctx.moveTo(0, yLine);
-    ctx.lineTo(W, yLine);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-  for (let i = -11; i <= 11; i++) {
-    const xBot = W/2 + i * (W / 9);
-    ctx.beginPath();
-    ctx.moveTo(xBot, H);
-    ctx.lineTo(W/2, horY);
-    ctx.stroke();
-  }
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
 function drawIsoBlock(ctx, cx, cy, w, d, h, color) {
@@ -250,24 +266,38 @@ function renderOG() {
   ctx.clearRect(0, 0, W, H);
   drawBackground(ctx, W, H);
 
-  // Iso tower illustration on the right side
-  const baseX = W * 0.78;
-  const baseY = H * 0.78;
-  const bw = 130, bd = 130, bh = 28;
-  for (let i = 0; i < 6; i++) {
-    drawIsoBlock(ctx, baseX, baseY - i * bh, bw, bd, bh, PAL[i]);
+  // Tall iso tower illustration on the right — reaches the void
+  const baseX = W * 0.82;
+  const baseY = H * 0.92;
+  const bw = 96, bd = 96, bh = 22;
+  const tallStack = 14;
+  for (let i = 0; i < tallStack; i++) {
+    const shrink = 1 - i * 0.018;
+    drawIsoBlock(ctx, baseX, baseY - i * bh, bw * shrink, bd * shrink, bh, PAL[i % PAL.length]);
   }
+  // Glow under the top of the tower
+  const tipY = baseY - tallStack * bh;
+  const tipG = ctx.createRadialGradient(baseX, tipY, 5, baseX, tipY, 180);
+  tipG.addColorStop(0, 'rgba(255, 0, 110, 0.55)');
+  tipG.addColorStop(1, 'rgba(255, 0, 110, 0)');
+  ctx.fillStyle = tipG;
+  ctx.fillRect(0, 0, W, H);
 
-  // Wordmark — left aligned big
-  chromText(ctx, 'GETABOUTIT', W * 0.42, H * 0.42, 92);
+  // Wordmark — left side big
+  chromText(ctx, 'GETABOUTIT', W * 0.38, H * 0.34, 84);
 
+  // Tagline + zone teaser
   ctx.font = "20px 'Press Start 2P', monospace";
   ctx.textAlign = 'center';
   ctx.fillStyle = '#06ffa5';
-  ctx.fillText('how high can you go', W * 0.42, H * 0.56);
+  ctx.fillText('one-tap stacker · daily seed', W * 0.38, H * 0.50);
+
+  ctx.font = "16px 'Press Start 2P', monospace";
+  ctx.fillStyle = '#00f5ff';
+  ctx.fillText('✦ GROUND · NEON CITY · CLOUDS · ORBIT · NEBULA · THE VOID ✦', W * 0.38, H * 0.62);
 
   ctx.font = "14px 'Press Start 2P', monospace";
-  ctx.fillStyle = 'rgba(0,245,255,0.8)';
+  ctx.fillStyle = 'rgba(0,245,255,0.85)';
   ctx.textAlign = 'right';
   ctx.fillText('getaboutit.com', W - 28, H - 24);
 
