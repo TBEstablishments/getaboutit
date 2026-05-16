@@ -1,0 +1,86 @@
+html, body { overflow-y: auto; height: auto; min-height: 100dvh; }
+body { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding:
+    calc(80px + env(safe-area-inset-top))
+    calc(20px + env(safe-area-inset-right))
+    20px
+    calc(20px + env(safe-area-inset-left));
+}
+.page h1 {
+  font-size: clamp(24px, 7vw, 56px);
+  text-align: center;
+  margin-bottom: 28px;
+}
+.card {
+  background: rgba(10,10,30,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.card h2 {
+  font-size: clamp(11px, 2vw, 14px);
+  letter-spacing: 0.18em;
+  color: var(--c-cyan);
+  margin-bottom: 14px;
+}
+canvas#dailyChart, canvas#mostChart {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  background: rgba(5,5,15,0.6);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+.stat-cell {
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(10,10,30,0.5);
+}
+.stat-cell .label { color: rgba(255,255,255,0.6); display: block; margin-bottom: 6px; }
+.stat-cell b { color: var(--c-yellow); font-weight: normal; font-size: 14px; }
+.best-grid, .time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 6px;
+}
+.best-row, .time-row {
+  display: flex; justify-content: space-between;
+  padding: 6px 10px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,30,0.4);
+}
+.best-row .name, .time-row .name { color: rgba(255,255,255,0.75); }
+.best-row b, .time-row b { color: var(--c-teal); font-weight: normal; }
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+}
+.ach-cell {
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10,10,30,0.5);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+.ach-cell.locked { opacity: 0.4; }
+.ach-cell .icon { color: var(--c-yellow); margin-right: 6px; }
+.back-link-wrap { text-align: center; margin-top: 18px; }
+.back-link {
+  color: var(--c-cyan);
+  border-bottom: 1px dashed var(--c-cyan);
+  padding-bottom: 2px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}

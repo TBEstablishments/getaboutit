@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>STATS · GETABOUTIT</title>
+<meta name="description" content="Your arcade stats — best scores, daily play history, time per game." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/stats" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = '';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<main class="page">
+  <h1 class="wordmark chrom"><span>STATS</span></h1>
+
+  <section class="card">
+    <h2>OVERVIEW</h2>
+    <div class="stats-grid" id="overview"></div>
+  </section>
+
+  <section class="card">
+    <h2>DAILY PLAYS — LAST 30 DAYS</h2>
+    <canvas id="dailyChart" aria-label="Daily plays chart"></canvas>
+  </section>
+
+  <section class="card">
+    <h2>MOST PLAYED</h2>
+    <canvas id="mostChart" aria-label="Most played games chart"></canvas>
+  </section>
+
+  <section class="card">
+    <h2>BEST SCORES</h2>
+    <div class="best-grid" id="bestGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>TIME PER GAME</h2>
+    <div class="time-grid" id="timeGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>ACHIEVEMENTS</h2>
+    <div class="ach-grid" id="achGrid"></div>
+  </section>
+
+  <p class="back-link-wrap"><a href="/" class="back-link">← BACK TO ARCADE</a></p>
+</main>
+<script src="stats.js" defer></script>
+</body>
+</html>
