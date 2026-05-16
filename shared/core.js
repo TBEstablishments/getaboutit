@@ -821,7 +821,7 @@ function cardsEvalPoker(hand) {
   const u = [...new Set(ranks)].sort((a,b) => a - b);
   if (u.length === 5 && u[4] - u[0] === 4) straight = true;
   if (u.length === 5 && u[0] === 1 && u[1] === 10 && u[2] === 11 && u[3] === 12 && u[4] === 13) straight = true;
-  if (straight && flush && u[0] === 10 && u[4] === 13) return { rank: 9, name: 'ROYAL FLUSH' };
+  if (straight && flush && u[0] === 1 && u[1] === 10) return { rank: 9, name: 'ROYAL FLUSH' };
   if (straight && flush) return { rank: 8, name: 'STRAIGHT FLUSH' };
   if (cVals[0] === 4) return { rank: 7, name: 'FOUR OF A KIND' };
   if (cVals[0] === 3 && cVals[1] === 2) return { rank: 6, name: 'FULL HOUSE' };
