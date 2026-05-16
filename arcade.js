@@ -402,14 +402,25 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// IntersectionObserver for previews
+// Stamp every tile with one frame so the bottom rows aren't empty
+// boxes before the user scrolls them into view.
+for (const t of tiles) {
+  try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, 0, performance.now()); } catch {}
+}
+
+// IntersectionObserver for previews. Pin the first 9 tiles to always
+// tick (they're above-the-fold on every viewport) — observer governs
+// the rest.
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
     const tile = tiles.find(t => t.el === e.target);
     if (tile) tile.visible = e.isIntersecting;
   }
 }, { rootMargin: '50px' });
-for (const t of tiles) io.observe(t.el);
+for (let i = 0; i < tiles.length; i++) {
+  if (i < 9) { tiles[i].visible = true; continue; }
+  io.observe(tiles[i].el);
+}
 
 // hover blip
 let lastBlip = 0;
