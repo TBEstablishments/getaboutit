@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>SPIDER · GETABOUTIT</title>
+<meta name="description" content="Spider Solitaire — descending sequences, complete suits, win the spider." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/spider" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'spider';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>MOVES <b id="moves">0</b></span>
+    <span>COMPLETED <b id="comp">0</b>/8</span>
+    <span>DIFFICULTY <b id="diff">1 SUIT</b></span>
+  </div>
+  <canvas id="game" aria-label="Spider solitaire"></canvas>
+  <div class="ctrls">
+    <button class="arcade cyan" id="undoBtn">UNDO</button>
+    <button class="arcade" id="diffBtn">SUITS</button>
+    <button class="arcade green" id="dealBtn">DEAL</button>
+    <button class="arcade" id="newBtn">NEW</button>
+  </div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>

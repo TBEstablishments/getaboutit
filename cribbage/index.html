@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>CRIBBAGE · GETABOUTIT</title>
+<meta name="description" content="Cribbage — fifteen-two, fifteen-four. Peg to 121." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/cribbage" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'cribbage';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>YOU <b id="ps">0</b></span>
+    <span>AI <b id="as">0</b></span>
+    <span id="dealerTag">YOU DEAL</span>
+    <span id="perfectTag" class="hidden">29</span>
+  </div>
+  <canvas id="peg" aria-label="Peg board"></canvas>
+  <canvas id="game" aria-label="Cards"></canvas>
+  <div id="status" class="status">DISCARD 2 TO CRIB</div>
+  <div id="ctrls" class="ctrls"></div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>
