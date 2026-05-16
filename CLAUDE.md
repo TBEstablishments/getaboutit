@@ -1,71 +1,133 @@
 # getaboutit
 
-One-tap stacking game at getaboutit.com. Retro vaporwave aesthetic, single-file architecture, deployed via Vercel.
+A free retro-vaporwave arcade at getaboutit.com — 17 classic games, no signup, no tracking, no build step.
 
 ## What this is
 
-GETABOUTIT is the entire identity — domain, game name, brand. Players tap to drop blocks onto a growing tower. The world progresses from neon outrun horizon → sky → space as the tower climbs.
+GETABOUTIT is the entire identity — domain, arcade name, brand. The home page is the lobby. Each game lives at its own clean URL (`/snake`, `/blocks`, `/2048`, …) and is fully self-contained.
 
 ## Hard constraints
 
 These are non-negotiable for this project:
 
-- **Static site only** — three files: `index.html`, `style.css`, `game.js`
-- **No build step, no bundlers, no transpilation** — runs as-is in any modern browser
-- **No npm dependencies, no frameworks** — vanilla ES6+ JavaScript
+- **Static site only** — no build, no bundlers, no transpilation
+- **Multi-page architecture** — one folder per game; no SPA router
+- **No npm dependencies, no frameworks** — vanilla ES6+, Canvas 2D, Web Audio API, localStorage
 - **No backend** — all state in localStorage
-- **External resources OK from CDNs only** — Google Fonts for the pixel font is fine, anything else needs a strong reason
-- **Pure Web APIs** — Canvas 2D for game rendering, Web Audio API for sound (procedural, no asset files), `navigator.share` + clipboard for share card
+- **External resources from CDNs only** — Google Fonts for Press Start 2P; anything else needs a strong reason
+- **Procedural audio only** — no asset files; tones built from oscillators
+- **10-color palette is sacred** — see `--c-*` CSS variables in `shared/core.css`. Only other colors allowed: `#0a0a1e` (bg), `#ffffff` (rare accent), pure black for void.
+- **One font** — Press Start 2P; system monospace as pre-load fallback
+- **No analytics, no trackers, no telemetry, no ads, no signup, no accounts**
 
 If a request would break these, push back and propose an alternative.
 
 ## Brand system
 
-- **Wordmark**: "GETABOUTIT" — always uppercase, always with chromatic aberration (white main + #ff006e shifted +2px right + #00f5ff shifted -2px left)
-- **Font**: Press Start 2P (Google Fonts) for all in-game text
-- **Palette** (cycling rainbow for block colors):
-  - `#ff006e` hot pink
-  - `#d100d1` magenta
-  - `#8338ec` purple
-  - `#3a0ca3` deep purple
-  - `#4361ee` blue
-  - `#00f5ff` cyan
-  - `#06ffa5` teal
-  - `#ffd60a` yellow
-  - `#ff9500` orange
-  - `#ef233c` red
-- **Background**: `#0a0a1e` base, vaporwave outrun horizon at ground level
-- **Atmosphere**: CRT scanline overlay at ~0.04 opacity
+- **Wordmark**: "GETABOUTIT" — always uppercase, always chromatic aberration (white + `#ff006e` shifted right + `#00f5ff` shifted left)
+- **Font**: Press Start 2P (Google Fonts)
+- **Palette** (cycle for block colors): `#ff006e #d100d1 #8338ec #3a0ca3 #4361ee #00f5ff #06ffa5 #ffd60a #ff9500 #ef233c`
+- **Background**: `#0a0a1e` base; vaporwave outrun horizon on home page
 
-## Files
+## Architecture
 
-- `index.html` — meta, OG tags, favicon, fonts, canvas + overlay containers
-- `style.css` — overlays, splash, game-over screen, retro buttons, scanlines
-- `game.js` — game loop, rendering, input, audio, storage, share card
+```
+/
+├── index.html / arcade.css / arcade.js     home page (the lobby)
+├── shared/
+│   ├── core.css                            palette vars, scanlines, .chrom, .arcade, shell styles
+│   ├── core.js                             window.GAI namespace
+│   └── shell.js                            auto-mounts back+mute on every game page
+├── stack/ snake/ blocks/ p2048/ breakout/ pong/ memory/ minesweeper/
+│   flap/ invaders/ asteroids/ simon/ tictactoe/ lightsout/ slide/
+│   reaction/ words/
+│       ├── index.html                      sets window.GAME_KEY, loads core + game
+│       ├── style.css                       game-specific layout
+│       └── game.js                         self-contained game
+├── favicon.svg / manifest.webmanifest / robots.txt / sitemap.xml
+├── vercel.json                             cleanUrls + /2048 rewrite + headers
+├── og-generator.html / og.png              social share image (Stack OG used for all)
+└── README.md / CLAUDE.md
+```
 
-Anything else (vercel.json, README.md, .gitignore, CLAUDE.md) is project meta and lives at the repo root.
+`/2048` is rewritten to `/p2048/` because numeric-leading paths can break some tooling — folder is `p2048/` internally.
+
+## shared/core.js — the GAI namespace
+
+Every game uses `window.GAI`. Highlights:
+
+- `GAI.PALETTE` — array of 10 hex strings
+- `GAI.storage.{get,set,del,getJSON,setJSON}` — try/catch wrapped localStorage
+- `GAI.bestScore(key, current)` — read/write best score per game
+- `GAI.recordPlay(key)` — increment per-game and total play counts, update streak, push to recently-played
+- `GAI.streak.get()` — global play streak object
+- `GAI.totalPlays()` / `GAI.gamePlays(key)`
+- `GAI.rng(seed)` — mulberry32
+- `GAI.todayUTC()` — `YYYYMMDD`
+- `GAI.dailySeed(salt)` — stable seed for daily challenges
+- `GAI.audio.{ensure,tone,arpeggio,noiseBurst,startPad,stopPad,setMuted,isMuted}`
+- `GAI.canvas.fit(canvas, opts)` — DPR-aware fit
+- `GAI.input.{tap,swipe,keys}` — input helpers
+- `GAI.transition.glitchTo(url)` — 200ms glitch overlay + navigate
+- `GAI.shell.init()` — mounts back button + mute button + scanlines + vignette + records play
+- `GAI.util.{clamp,lerp,lerpColor,shade,smoothstep}`
+
+## shared/shell.js
+
+Runs on every game page. Reads `window.GAME_KEY` (set in HTML before `<script>` tags), calls `GAI.shell.init()` which mounts:
+- floating ← ARCADE button (top-left)
+- floating 🔊/🔇 mute button (top-right)
+- `#scanlines` and `#vignette` overlays
+- records the play via `GAI.recordPlay(key)`
+
+## Game contract
+
+Every game folder follows this template:
+
+```html
+<!-- index.html -->
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'snake';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+```
+
+In `game.js`, never instantiate `AudioContext` at module load — use `GAI.audio.ensure()` on first user gesture.
 
 ## Workflow
 
 - **Commits**: conventional — `feat:`, `fix:`, `chore:`, `style:`, `refactor:`, `docs:`. Present tense, lowercase.
-- **Branch**: work directly on `main`. This is a tiny static site.
-- **Do not push** — only the human pushes. Stage and commit locally, leave the push to them.
-- **One commit per logical change** — don't pile up sprawling commits.
+- **Branch**: work on `main`. Small static site, no PR ceremony needed.
+- **Do not push** unless asked — only the human pushes. Stage and commit locally.
+- **One commit per logical change.**
 
 ## Testing
 
 - Local dev: `python3 -m http.server 8000` from the repo root.
-- Play to floor 30+ to verify speed scaling, perfect detection, and altitude transitions.
-- Test on actual mobile (Vercel preview URL on phone), not just dev tools.
+- Visit `http://localhost:8000/` for the lobby, then `http://localhost:8000/stack/` etc.
+  (Locally you need the trailing slash; Vercel's cleanUrls handles bare paths in prod.)
+- Test on actual mobile via Vercel preview URL.
 
-## Common pitfalls to avoid
+## Common pitfalls
 
-- **AudioContext autoplay** — never instantiate before first user gesture.
-- **Touch + click double-fire** — debounce input by ~100ms.
-- **Floating-point drift in alignment** — snap to exact center on perfect drops.
-- **localStorage in private mode** — wrap reads/writes in try/catch.
-- **Mobile pull-to-refresh** — `overscroll-behavior: contain` on body.
-- **Canvas blur on high-DPR** — scale context by `devicePixelRatio`.
+- **AudioContext autoplay**: never instantiate before first gesture; `GAI.audio.ensure()` handles this.
+- **Touch + click double-fire**: debounce input ~100ms.
+- **Mobile pull-to-refresh**: `overscroll-behavior: contain` on body (already in core).
+- **Canvas blur on high-DPR**: use `GAI.canvas.fit()` or scale ctx by DPR yourself.
+- **localStorage in private mode**: `GAI.storage.*` already try/catch wrapped.
+- **iOS Safari audio**: AudioContext suspends on backgrounding — shell wires `visibilitychange` to resume.
+
+## Cross-game features
+
+- **Global streak** — `gai_streak_global` (current/max/lastPlayDate)
+- **Recently played** — `gai_recent` (5 most recent { key, ts })
+- **Daily featured game** — rotates by UTC date hash; displayed in ribbon + tile gets 🌟
+- **Surprise me** — picks random game excluding most-recently-played
+- **Konami code** (↑↑↓↓←→←→BA) — toggles `gai_rainbow_unlocked` rainbow mode site-wide
+- **`gai` typed on home page** — CRT-collapse effect
+- **100+ lifetime plays** — adds ⚡ VETERAN ⚡ tag below the wordmark
 
 ## Deploy
 

@@ -315,13 +315,26 @@ document.addEventListener('touchstart', onFirstGesture, { passive: true });
 // ============== shared rAF loop ==============
 let lastT = 0;
 const reduced = GAI.reducedMotion;
+let bgDrawn = false;
+let staticDrawn = false;
 function frame(now) {
   const dt = Math.min(now - lastT, 50); lastT = now;
   if (!document.hidden) {
-    drawBg(now);
-    for (const t of tiles) {
-      if (!t.visible) continue;
-      try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, dt / 1000, now); } catch {}
+    if (reduced) {
+      // Draw bg once, previews once, then idle
+      if (!bgDrawn) { drawBg(now); bgDrawn = true; }
+      if (!staticDrawn) {
+        for (const t of tiles) {
+          try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, 0, now); } catch {}
+        }
+        staticDrawn = true;
+      }
+    } else {
+      drawBg(now);
+      for (const t of tiles) {
+        if (!t.visible) continue;
+        try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, dt / 1000, now); } catch {}
+      }
     }
   }
   requestAnimationFrame(frame);

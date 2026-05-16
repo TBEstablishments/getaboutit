@@ -1,12 +1,12 @@
 {
-  "name": "GETABOUTIT",
+  "name": "GETABOUTIT Arcade",
   "short_name": "GETABOUTIT",
-  "description": "A one-tap stacking game.",
+  "description": "A free retro arcade. 17 classic games. No signup. Just play.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a1e",
   "theme_color": "#0a0a1e",
-  "orientation": "portrait",
+  "orientation": "any",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
