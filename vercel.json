@@ -5,6 +5,9 @@
     { "source": "/2048", "destination": "/p2048" },
     { "source": "/2048/:path*", "destination": "/p2048/:path*" }
   ],
+  "redirects": [
+    { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
