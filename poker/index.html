@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>POKER · GETABOUTIT</title>
+<meta name="description" content="Video Poker — Jacks or Better, draw five, chase the royal." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/poker" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'poker';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>CREDITS <b id="credits">1000</b></span>
+    <span>BEST <b id="best">1000</b></span>
+    <span id="royalTag" class="hidden">👑</span>
+  </div>
+  <div id="paytable" class="paytable"></div>
+  <canvas id="game" aria-label="Video poker"></canvas>
+  <div id="status" class="status">PRESS DEAL</div>
+  <div class="ctrls">
+    <button class="arcade cyan" id="betBtn" type="button">BET <span id="bet">1</span></button>
+    <button class="arcade green" id="dealBtn" type="button">DEAL</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

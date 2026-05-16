@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>BLACKJACK · GETABOUTIT</title>
+<meta name="description" content="Blackjack — hit, stand, double, split. Beat the dealer." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/blackjack" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'blackjack';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>CHIPS <b id="chips">1000</b></span>
+    <span>BET <b id="bet">50</b></span>
+    <span>BEST <b id="best">1000</b></span>
+  </div>
+  <canvas id="game" aria-label="Blackjack table"></canvas>
+  <div id="status" class="status">PLACE YOUR BET</div>
+  <div class="ctrls bet-ctrls" id="betCtrls">
+    <button class="arcade cyan" id="betDown">−25</button>
+    <button class="arcade green" id="dealBtn">DEAL</button>
+    <button class="arcade cyan" id="betUp">+25</button>
+  </div>
+  <div class="ctrls play-ctrls hidden" id="playCtrls">
+    <button class="arcade" id="hitBtn">HIT</button>
+    <button class="arcade green" id="standBtn">STAND</button>
+    <button class="arcade cyan" id="doubleBtn">DOUBLE</button>
+    <button class="arcade yellow hidden" id="splitBtn">SPLIT</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

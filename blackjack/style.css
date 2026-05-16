@@ -1,0 +1,26 @@
+canvas#game {
+  display: block;
+  border: 2px solid var(--c-teal);
+  box-shadow: 0 0 0 4px var(--c-bg), 0 0 24px rgba(6,255,165,0.30);
+  background:
+    repeating-linear-gradient(0deg, rgba(6,255,165,0.04), rgba(6,255,165,0.04) 1px, transparent 1px, transparent 3px),
+    radial-gradient(ellipse at center, #052a1a 0%, #051a14 70%, #03100b 100%);
+  touch-action: manipulation;
+}
+.status {
+  font-size: clamp(10px, 2vw, 13px);
+  letter-spacing: 0.16em;
+  color: var(--c-cyan);
+  margin: 12px 0;
+  text-align: center;
+  min-height: 18px;
+}
+.status.win { color: var(--c-teal); }
+.status.lose { color: var(--c-red); }
+.status.push { color: rgba(255,255,255,0.7); }
+.ctrls {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+.ctrls .arcade { padding: 12px 16px; font-size: 11px; }
+.ctrls.hidden { display: none !important; }
