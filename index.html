@@ -4,21 +4,21 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>GETABOUTIT</title>
-<meta name="description" content="A one-tap stacking game. How high can you go." />
+<meta name="description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="canonical" href="https://getaboutit.com/" />
 
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/" />
 <meta property="og:title" content="GETABOUTIT" />
-<meta property="og:description" content="A one-tap stacking game. How high can you go." />
+<meta property="og:description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
 <meta property="og:image" content="https://getaboutit.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="GETABOUTIT" />
-<meta name="twitter:description" content="A one-tap stacking game. How high can you go." />
+<meta name="twitter:description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
 <meta name="twitter:image" content="https://getaboutit.com/og.png" />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -30,30 +30,57 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
 <link rel="stylesheet" href="style.css" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "GETABOUTIT",
+  "url": "https://getaboutit.com/",
+  "description": "A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score.",
+  "genre": ["Arcade", "Casual"],
+  "playMode": "SinglePlayer",
+  "gamePlatform": ["Web Browser", "Mobile Web"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 </head>
 <body>
 
 <div id="stage">
-  <canvas id="game" aria-label="GETABOUTIT stacking game" role="img"></canvas>
+  <canvas id="game" aria-label="GETABOUTIT stacking game, tap to drop a block" role="img" tabindex="0"></canvas>
   <div id="scanlines" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+
+  <div id="zone-banner" class="hidden" aria-hidden="true"><span class="chrom"><span></span></span></div>
 
   <div id="hud" class="hidden" aria-hidden="true">
     <div id="hud-floor"><span class="chrom"><span>1</span></span></div>
     <div id="hud-perfect" class="hidden"><span id="perfect-count">×2</span> PERFECT</div>
     <div id="hud-today">TODAY 0</div>
     <button id="mute" type="button" aria-label="Toggle sound">🔊</button>
+    <div id="audio-hint" class="hidden">tap 🔊 for sound</div>
   </div>
 
   <div id="splash" class="screen" role="dialog" aria-label="Start screen">
     <h1 class="wordmark chrom"><span>GETABOUTIT</span></h1>
     <p class="subtitle">how high can you go</p>
+    <p id="veteran-tag" class="veteran-tag hidden">— veteran —</p>
     <p class="tap-prompt">▶ TAP TO PLAY</p>
-    <p class="daily-tag"><span id="daily-date">DAILY</span></p>
+    <p id="streak-broken" class="streak-broken hidden"></p>
+    <div class="meta-row">
+      <span id="streak-tag" class="streak-tag hidden"><span class="flame">🔥</span> <span id="streak-count">0</span></span>
+      <span id="daily-tag" class="daily-tag"><span id="daily-date">DAILY</span></span>
+      <span id="lifetime-tag" class="lifetime-tag hidden">lifetime: <b id="lifetime-count">0</b></span>
+    </div>
   </div>
 
   <div id="gameover" class="screen hidden" role="dialog" aria-label="Game over">
     <h2 class="collapse glitch">TOWER COLLAPSE</h2>
     <div class="final-floor chrom"><span id="final-floor">0</span></div>
+    <p id="zone-reached" class="zone-reached"></p>
     <div class="stats">
       <span>BEST <b id="stat-best">0</b></span>
       <span class="sep">·</span>
@@ -65,6 +92,7 @@
     <div class="buttons">
       <button id="btn-copy" class="arcade" type="button" aria-label="Copy score to clipboard">COPY</button>
       <button id="btn-share" class="arcade" type="button" aria-label="Share score">SHARE</button>
+      <button id="btn-image" class="arcade green" type="button" aria-label="Save shareable image">📸 SAVE IMAGE</button>
     </div>
     <p class="tap-prompt retry">▶ TAP TO RETRY</p>
   </div>
