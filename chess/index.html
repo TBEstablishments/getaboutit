@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>CHESS · GETABOUTIT</title>
+<meta name="description" content="Chess — full rules, beat the AI, easy or hard." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/chess" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'chess';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>W <b id="wWins">0</b></span>
+    <span>L <b id="losses">0</b></span>
+    <span>D <b id="draws">0</b></span>
+    <span id="diffTag">HARD</span>
+  </div>
+  <canvas id="board" aria-label="Chess board"></canvas>
+  <div id="status" class="status">YOUR MOVE</div>
+  <div class="ctrls">
+    <button class="arcade cyan" id="undoBtn">UNDO</button>
+    <button class="arcade" id="diffBtn">DIFFICULTY</button>
+    <button class="arcade red" id="resignBtn">RESIGN</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
