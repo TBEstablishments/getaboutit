@@ -211,3 +211,85 @@ the OG PNGs.
    specificity than `.chrom-jitter` and persists (body.entrance is never
    removed). Existing behavior — not a Phase 4 regression. Worth a Phase 5
    ticket if the gentler breathing is meant to be a hero feature.
+
+---
+
+# Phase 4 Wrap-Up Addendum
+
+After the initial verification report, the user confirmed visual review of
+the preview ("games play, console clean"), provided the preview URL, and
+asked for three final commits plus the merge.
+
+## Wrap-up commits
+
+| commit  | purpose                                                              |
+|---------|----------------------------------------------------------------------|
+| cf82c52 | chore: og images named to match meta references (37 PNGs + og.png)   |
+| f166585 | fix: device-aware play/retry prompts                                 |
+| d3abc34 | docs: known issues for future phases                                 |
+| (this)  | docs: phase 4 verification finalized                                 |
+
+## Final live curl sweep (attempted)
+
+Attempted against the preview URL the user provided
+(`getaboutit-git-phase4-recovery-tbestablishments.vercel.app`). Anonymous
+curl returned `HTTP 404` with `x-vercel-error: DEPLOYMENT_NOT_FOUND` —
+either the preview is auth-protected (Vercel logged-in session required),
+or the URL string differs from the one the deployment is actually aliased
+to. The Vercel MCP's `get_access_to_vercel_url` and `web_fetch_vercel_url`
+both also returned `Unable to create shareable URL`.
+
+Per spec Section 6 the same curl sweep is required against production
+after merge — that is the version I will run and paste into "Production
+sign-off" below.
+
+## Audit Findings — Final Status (one-liner per item)
+
+| # | finding                                       | status                        |
+|---|-----------------------------------------------|-------------------------------|
+| 1 | 36 of 37 games unreachable                    | FIXED · ea63d5d               |
+| 2 | /2048 hard 404                                | FIXED · ecba11d (Vercel rewrite verified post-merge below) |
+| 3 | /stats skeleton                               | FIXED · ea63d5d               |
+| 4 | /settings skeleton                            | FIXED · ea63d5d               |
+| 5 | /og.png 404                                   | FIXED · cf82c52 (Stack image as home OG) |
+| 6 | /apple-touch-icon.png 404                     | DEFERRED · known-issues.md (needs 180×180 generator) |
+| 7 | /favicon.ico 404                              | FIXED · 4dff84a (308 → favicon.svg) |
+| 8 | applyTheme TypeError on every page load       | FIXED · 6f81d7c               |
+| 9 | Home keyboard scroll broken                   | FIXED · 047976d               |
+| 10 | / shortcut doesn't focus search              | FIXED · 047976d               |
+| 11 | meta viewport user-scalable=no               | FIXED · 047976d               |
+| 12 | Settings copy "29 games"                     | FIXED · c3cfa06               |
+| 13 | Pong splash black-on-black                   | MITIGATED · f9d6186 (preventative #splash default) |
+| 14 | Per-game OG/Twitter/JSON-LD missing          | FIXED · bcce7a4 + cf82c52     |
+| 15 | Splash click handler over-specific           | NOT REPRODUCED · known-issues.md |
+| 16 | Mini-preview tiles 10+ empty                 | FIXED · 56d7b74               |
+| 17 | Tap targets below 44×44                      | FIXED · 5f3d5ef               |
+| 18 | Surprise Me overlaps tiles narrow viewports  | FIXED · 77a903e               |
+| 19 | MOOD theme cycle promise unfulfilled         | NO-OP · already wired pre-Phase 4 |
+| 20 | Wordmark jitter too rapid                    | FIXED · 4781021               |
+| 21 | Asset cache not immutable for versioned files | FIXED · cd8fd09              |
+| 22 | Stale Phase 3 assets cached                  | FIXED · ea63d5d (?v=phase4)   |
+| NEW | "TAP TO PLAY" misleading on desktop         | FIXED · f166585 (device-aware) |
+
+## What This Phase Did Not Address (moved to known-issues.md)
+
+- Gameplay difficulty calibration (per-game audit needed)
+- Per-game rule-fidelity comparison
+- Live mobile device testing (only DevTools mobile preview)
+- Achievement toast in-game observation
+- Lighthouse end-to-end per game
+- /apple-touch-icon.png + /favicon.png generation
+- First-visit entrance vs new wordmark breathing interaction
+
+## Sign-off
+
+- **User visual review on preview:** YES (user reply 2026-05-17)
+- **Preview URL provided:** `getaboutit-git-phase4-recovery-tbestablishments.vercel.app`
+  (anonymous fetch from this env returned DEPLOYMENT_NOT_FOUND — see above)
+- **Commit at sign-off (pre-merge):** `d3abc34` (this addendum then bumps to its own hash)
+- **Remaining items moved to known-issues.md:** YES
+
+## Production sign-off (filled after merge in Section 6)
+
+(To be filled by the post-merge `curl` battery + visual check.)
+
