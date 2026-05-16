@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>STACK · GETABOUTIT</title>
 <meta name="description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
@@ -29,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css?v=phase3.1" />
 <style>
   /* Floating arcade-home back button (stack uses self-contained style.css, no shared/core.css) */
   .stack-back {
@@ -67,7 +68,7 @@
 }
 </script>
 </head>
-<body>
+<body class="game">
 
 <a class="stack-back" href="/" aria-label="Back to arcade">← ARCADE</a>
 
@@ -121,8 +122,8 @@
 </div>
 
 <script>window.GAME_KEY = 'stack';</script>
-<script src="/shared/core.js"></script>
-<script src="game.js"></script>
+<script src="/shared/core.js?v=phase3.1"></script>
+<script src="game.js?v=phase3.1"></script>
 <script>
   // arcade integration: record play, mirror Stack best score to GAI
   if (window.GAI) {

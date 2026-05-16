@@ -16,18 +16,26 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-  height: 100%;
-  height: 100dvh;
   background: var(--c-bg);
   color: #fff;
   font-family: 'Press Start 2P', 'Courier New', monospace;
-  overflow: hidden;
-  overscroll-behavior: contain;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   user-select: none;
+}
+/* Game-page lockdown: fixed viewport, no scroll, contained overscroll.
+   Pages without body.game (home, /stats, /settings) scroll normally. */
+html:has(body.game), body.game {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: contain;
   touch-action: manipulation;
 }
+/* Fallback for browsers without :has() — game pages opt-in via body class */
+body.game { overflow: hidden; overscroll-behavior: contain; touch-action: manipulation; }
+/* Allow text selection where it matters (search input, type race input) */
+input, textarea { -webkit-user-select: text; user-select: text; touch-action: auto; }
 button, input, textarea { font-family: inherit; }
 button { cursor: pointer; background: none; border: none; color: inherit; }
 a { color: inherit; text-decoration: none; }

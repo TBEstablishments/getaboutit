@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>MEMORY · GETABOUTIT</title>
 <meta name="description" content="Match every pair from memory." />
@@ -11,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-<link rel="stylesheet" href="/shared/core.css" />
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="/shared/core.css?v=phase3.1" />
+<link rel="stylesheet" href="style.css?v=phase3.1" />
 </head>
-<body>
+<body class="game">
 <main id="stage" class="stage">
   <h1 class="title chrom"><span>MEMORY</span></h1>
   <div class="controls">
@@ -31,8 +32,8 @@
   <canvas id="board" aria-label="Memory grid"></canvas>
 </main>
 <script>window.GAME_KEY = 'memory';</script>
-<script src="/shared/core.js"></script>
-<script src="/shared/shell.js"></script>
-<script src="game.js"></script>
+<script src="/shared/core.js?v=phase3.1"></script>
+<script src="/shared/shell.js?v=phase3.1"></script>
+<script src="game.js?v=phase3.1"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <title>SPIDER · GETABOUTIT</title>
 <meta name="description" content="Spider Solitaire — descending sequences, complete suits, win the spider." />
@@ -11,13 +12,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-<link rel="stylesheet" href="/shared/core.css" />
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="/shared/core.css?v=phase3.1" />
+<link rel="stylesheet" href="style.css?v=phase3.1" />
 <script>window.GAME_KEY = 'spider';</script>
-<script src="/shared/core.js" defer></script>
-<script src="/shared/shell.js" defer></script>
+<script src="/shared/core.js?v=phase3.1" defer></script>
+<script src="/shared/shell.js?v=phase3.1" defer></script>
 </head>
-<body>
+<body class="game">
 <div class="stage">
   <div id="hud" class="hud">
     <span>MOVES <b id="moves">0</b></span>
@@ -32,6 +33,6 @@
     <button class="arcade" id="newBtn">NEW</button>
   </div>
 </div>
-<script src="game.js" defer></script>
+<script src="game.js?v=phase3.1" defer></script>
 </body>
 </html>

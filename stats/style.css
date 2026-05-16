@@ -1,4 +1,11 @@
-html, body { overflow-y: auto; height: auto; min-height: 100dvh; }
+html, body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100dvh;
+  overscroll-behavior-y: auto !important;
+  touch-action: pan-y !important;
+}
 body { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 .page {
   max-width: 920px;

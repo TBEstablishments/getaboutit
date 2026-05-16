@@ -2,6 +2,23 @@
 (() => {
 'use strict';
 
+// ============== VERSION ==============
+// Bump on every release that changes asset structure. Used to detect
+// stale-cache scenarios and to gate future migrations. User data
+// (scores, streak, achievements, pinned, etc.) is NEVER wiped here —
+// the version key is informational only.
+const SITE_VERSION = 'phase3.1';
+try {
+  const stored = localStorage.getItem('gai_site_version');
+  if (stored && stored !== SITE_VERSION) {
+    // Future-phase migrations would run here. For now: just record the
+    // transition so we can detect "user came from an older version".
+    // No-op migration — explicitly do NOT touch gai_best_*, gai_streak_*,
+    // gai_achievements, gai_recent, gai_pinned, gai_wins, gai_time_*, etc.
+  }
+  localStorage.setItem('gai_site_version', SITE_VERSION);
+} catch {}
+
 const PALETTE = [
   '#ff006e', '#d100d1', '#8338ec', '#3a0ca3', '#4361ee',
   '#00f5ff', '#06ffa5', '#ffd60a', '#ff9500', '#ef233c'
