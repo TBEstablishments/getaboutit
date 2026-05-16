@@ -8,11 +8,15 @@ A one-tap stacking game. Retro vaporwave, infinite tower, daily seed, shareable 
 
 ## How to play
 
-Tap, click, or press any key to drop the moving block. Land it flush for a **perfect** — chain three perfects and your block grows back. Chain five and unlock a rainbow boost.
+Tap, click, or press any key to drop the moving block. Land it flush for a **perfect** — chain three perfects and your block grows back. Chain five and unlock a rainbow boost. Land dead-center (within 2px) for a **perfect+** golden bell.
 
 Miss entirely and the tower collapses. How high you climb is your score.
 
-Each day's run uses the same random seed for everyone, so today's score is directly comparable to anyone else playing today.
+The climb passes through eight zones — GROUND, NEON CITY, CLOUDS, STRATOSPHERE, ORBIT, DEEP SPACE, NEBULA, THE VOID — each with its own palette, ambient pad, and entry sting. Specific floors trigger one-shot atmospheric events (shooting stars, comets, confetti at 100, and more).
+
+Each day's run uses the same random seed for everyone, so today's score is directly comparable to anyone else playing today. Atmospheric events are seeded too — every player sees the same wow moments at the same floors today.
+
+After a run you can copy the text card, share it via the system share sheet, or **📸 SAVE IMAGE** to grab a 1080×1920 portrait screenshot for stories. Daily streaks (🔥) and a lifetime floor count track on the splash.
 
 ## Stack
 
@@ -37,9 +41,10 @@ Or just open `index.html` directly. There's no build step.
 
 ## Layout
 
-    ├── index.html      markup, meta, font loading
-    ├── style.css       overlays + retro UI
-    ├── game.js         game loop, rendering, audio, storage
-    ├── vercel.json     static hosting config
-    ├── CLAUDE.md       guidance for Claude Code
-    └── README.md       you are here
+    ├── index.html          markup, meta, JSON-LD, font loading
+    ├── style.css           overlays + retro UI, vignette, scanlines, a11y rules
+    ├── game.js             game loop, rendering, audio, storage, share card
+    ├── og-generator.html   regenerates og.png / apple-touch-icon / favicon
+    ├── vercel.json         static hosting config
+    ├── CLAUDE.md           guidance for Claude Code
+    └── README.md           you are here

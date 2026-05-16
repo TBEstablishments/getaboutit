@@ -4,7 +4,7 @@ One-tap stacking game at getaboutit.com. Retro vaporwave aesthetic, single-file 
 
 ## What this is
 
-GETABOUTIT is the entire identity — domain, game name, brand. Players tap to drop blocks onto a growing tower. The world progresses from neon outrun horizon → sky → space as the tower climbs.
+GETABOUTIT is the entire identity — domain, game name, brand. Players tap to drop blocks onto a growing tower. The world progresses through eight named zones — GROUND, NEON CITY, CLOUDS, STRATOSPHERE, ORBIT, DEEP SPACE, NEBULA, THE VOID — as the tower climbs.
 
 ## Hard constraints
 
@@ -55,7 +55,7 @@ Anything else (vercel.json, README.md, .gitignore, CLAUDE.md) is project meta an
 ## Testing
 
 - Local dev: `python3 -m http.server 8000` from the repo root.
-- Play to floor 30+ to verify speed scaling, perfect detection, and altitude transitions.
+- Play to floor 100+ to verify speed scaling, perfect detection, zone transitions (banner + sting + pad swap), and at least the floor 13/27/33/42/100 events.
 - Test on actual mobile (Vercel preview URL on phone), not just dev tools.
 
 ## Common pitfalls to avoid
