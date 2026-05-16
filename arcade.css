@@ -47,27 +47,53 @@ body { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   opacity: 0.75;
 }
 
-/* ===== daily ribbon ===== */
-.daily-ribbon {
+/* ===== today's challenges ===== */
+.daily-trio { margin-top: 22px; }
+.daily-strip {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin: 22px auto 0;
-  padding: 12px 16px;
-  max-width: 700px;
-  background: rgba(10,10,30,0.6);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.daily-strip::-webkit-scrollbar { height: 4px; }
+.daily-strip::-webkit-scrollbar-thumb { background: var(--c-cyan); }
+.daily-tile {
+  flex: 1 1 200px;
+  min-width: 160px;
+  padding: 14px 16px;
+  background: rgba(10,10,30,0.7);
   border: 1px solid var(--c-cyan);
-  box-shadow: 0 0 0 2px rgba(0,245,255,0.15), 0 0 18px rgba(0,245,255,0.25);
-  font-size: clamp(9px, 1.8vw, 12px);
-  letter-spacing: 0.14em;
+  box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 0 16px rgba(0,245,255,0.18);
+  display: flex; flex-direction: column; gap: 4px;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.daily-ribbon:hover { transform: translateY(-1px); box-shadow: 0 0 0 2px rgba(0,245,255,0.3), 0 0 26px rgba(0,245,255,0.4); }
-.daily-ribbon:focus-visible { outline: 2px dashed #fff; outline-offset: 4px; }
-.daily-ribbon .d-mark { color: var(--c-cyan); }
-.daily-ribbon .d-name { letter-spacing: 0.04em; }
-.daily-ribbon .d-arrow { color: var(--c-pink); }
+.daily-tile:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(0,245,255,0.4), 0 0 26px rgba(0,245,255,0.35); }
+.daily-tile .d-mark { font-size: 8px; letter-spacing: 0.2em; color: var(--c-cyan); }
+.daily-tile .d-name { font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.06em; }
+.daily-tile .d-tag { font-size: 8px; letter-spacing: 0.18em; color: rgba(255,255,255,0.6); }
+
+/* ===== achievements badge in header ===== */
+.ach-badge {
+  position: absolute;
+  top: calc(36px + env(safe-area-inset-top));
+  right: calc(20px + env(safe-area-inset-right));
+  z-index: 6;
+  display: inline-block;
+}
+.ach-badge .chip {
+  background: rgba(10,10,30,0.7);
+  border: 1px solid var(--c-yellow);
+  color: var(--c-yellow);
+  padding: 6px 10px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+.ach-badge:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
+
+.foot-link { color: var(--c-cyan); border-bottom: 1px dashed var(--c-cyan); padding-bottom: 1px; }
+.foot-link:hover { color: var(--c-pink); }
+#themeIndicator { color: rgba(255,255,255,0.5); }
 
 /* ===== recently played ===== */
 .recent { margin-top: 26px; }
