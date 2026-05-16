@@ -1054,9 +1054,17 @@ function themeCycle() {
   return next;
 }
 function applyTheme(t) {
-  document.body.classList.remove('theme-deepnight', 'theme-highcontrast');
-  if (t === 'deepnight') document.body.classList.add('theme-deepnight');
-  if (t === 'highcontrast') document.body.classList.add('theme-highcontrast');
+  // body may not be parsed yet if core.js loads in <head> without defer.
+  // Self-defer until DOMContentLoaded — applyTheme runs at module load AND
+  // again whenever themeSet() is called from user-triggered code.
+  const body = document.body;
+  if (!body || !body.classList) {
+    document.addEventListener('DOMContentLoaded', () => applyTheme(t), { once: true });
+    return;
+  }
+  body.classList.remove('theme-deepnight', 'theme-highcontrast');
+  if (t === 'deepnight') body.classList.add('theme-deepnight');
+  if (t === 'highcontrast') body.classList.add('theme-highcontrast');
 }
 applyTheme(themeGet());
 
