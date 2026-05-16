@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>GO · GETABOUTIT</title>
+<meta name="description" content="Go 9×9 — ancient strategy. Captures, territory, ko." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/go" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'go';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>BLACK ●<b id="pCap">0</b></span>
+    <span>WHITE ○<b id="aCap">0</b></span>
+    <span id="diffTag">HARD</span>
+  </div>
+  <canvas id="board" aria-label="Go board"></canvas>
+  <div id="status" class="status">YOUR MOVE — BLACK</div>
+  <div class="ctrls">
+    <button class="arcade cyan" id="passBtn">PASS</button>
+    <button class="arcade" id="diffBtn">DIFFICULTY</button>
+    <button class="arcade green" id="newBtn">NEW</button>
+  </div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>

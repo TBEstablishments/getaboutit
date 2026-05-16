@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>SLITHER · GETABOUTIT</title>
+<meta name="description" content="Slither — grow, dodge, dominate the arena." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/slither" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'slither';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<canvas id="game" aria-label="Slither arena"></canvas>
+<canvas id="mini" aria-label="Minimap"></canvas>
+<div id="hud" class="hud">
+  <span>LENGTH <b id="len">12</b></span>
+  <span>BEST <b id="best">12</b></span>
+</div>
+<div id="splash" class="screen" role="dialog">
+  <h1 class="wordmark chrom"><span>SLITHER</span></h1>
+  <p class="sub">drag to steer · tap to boost</p>
+  <p class="tap pulse">▶ TAP TO PLAY</p>
+</div>
+<div id="over" class="screen hidden" role="dialog">
+  <h2 class="big chrom"><span>WIPED OUT</span></h2>
+  <div class="score"><b id="final">0</b></div>
+  <p class="stats">BEST <b id="best2">0</b></p>
+  <p class="tap pulse">▶ TAP TO RETRY</p>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>

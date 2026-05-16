@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>BACKGAMMON · GETABOUTIT</title>
+<meta name="description" content="Backgammon — race for home. Bear off the last checker." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/backgammon" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'backgammon';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>YOU <b id="pw">0</b></span>
+    <span>AI <b id="aw">0</b></span>
+    <span>BEST <b id="best">0</b></span>
+  </div>
+  <canvas id="board" aria-label="Backgammon board"></canvas>
+  <div id="status" class="status">TAP ROLL</div>
+  <div class="ctrls">
+    <button class="arcade green" id="rollBtn">ROLL</button>
+    <button class="arcade cyan" id="undoBtn">UNDO</button>
+    <button class="arcade" id="newBtn">NEW</button>
+  </div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+canvas#game {
+  position: fixed; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  touch-action: none;
+  background: #03030a;
+}
+canvas#mini {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  right: calc(20px + env(safe-area-inset-right));
+  width: 110px; height: 110px;
+  border: 1px solid rgba(0,245,255,0.4);
+  background: rgba(10,10,30,0.65);
+  z-index: 30;
+}
