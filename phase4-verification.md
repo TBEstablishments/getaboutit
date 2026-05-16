@@ -289,7 +289,62 @@ sign-off" below.
 - **Commit at sign-off (pre-merge):** `d3abc34` (this addendum then bumps to its own hash)
 - **Remaining items moved to known-issues.md:** YES
 
-## Production sign-off (filled after merge in Section 6)
+## Production sign-off (post-merge)
 
-(To be filled by the post-merge `curl` battery + visual check.)
+Merge: `fe80025` (--no-ff merge of phase4-recovery into main). Vercel
+auto-redeployed; production reflected `v=phase4` on the first poll.
+
+Full `curl` battery against `https://getaboutit.com`:
+
+```
+Game pages (cleanUrls):
+  200  /snake
+  200  /chess
+  200  /go
+  200  /backgammon
+  200  /hearts
+  200  /pong
+  200  /stack
+
+/2048 rewrite:
+  200  /2048                                  ← the Vercel rewrite works
+
+Versioned game assets:
+  200  /snake/style.css?v=phase4
+  200  /snake/game.js?v=phase4
+  200  /chess/style.css?v=phase4
+  200  /chess/game.js?v=phase4
+  200  /p2048/game.js?v=phase4
+
+Utility pages:
+  200  /stats
+  200  /settings
+  200  /stats/stats.js?v=phase4
+  200  /settings/settings.js?v=phase4
+
+Branding / OG:
+  200  /og.png
+  200  /og/snake.png
+  200  /og/chess.png
+  200  /og/p2048.png
+  200  /favicon.svg
+  308  /favicon.ico              → /favicon.svg
+  404  /apple-touch-icon.png     (deferred; known-issues.md)
+
+Cache headers:
+  /shared/core.js?v=phase4   public, max-age=31536000, immutable
+  /shared/core.js            public, max-age=0, must-revalidate
+
+Meta sanity:
+  /snake has 1 og:type meta line   ✓
+  viewport (home + snake) is "width=device-width, initial-scale=1,
+    viewport-fit=cover"   ✓  (no user-scalable=no)
+```
+
+**All targets PASS** except `/apple-touch-icon.png`, which is flagged
+in known-issues.md as deferred to a future phase (needs a 180×180
+generator).
+
+Browser-side verification (console clean, gameplay) was done by the
+user on the preview before the merge.
 
