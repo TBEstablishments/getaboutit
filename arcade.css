@@ -1,13 +1,16 @@
-/* Belt-and-suspenders against any cached lockdown CSS from prior phases. */
-html, body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
+/* Home page scrolls naturally. Game pages opt into the lockdown via
+   body.game (handled in shared/core.css). No !important needed when
+   the lockdown is scoped to a class instead of applied globally. */
+html { height: auto; overflow: visible; }
+body {
+  min-height: 100vh;
   min-height: 100dvh;
-  overscroll-behavior-y: auto !important;
-  touch-action: pan-y !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
 }
-body { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
 
 #bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 

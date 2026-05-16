@@ -1,12 +1,13 @@
-html, body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
+html { height: auto; overflow: visible; }
+body {
+  min-height: 100vh;
   min-height: 100dvh;
-  overscroll-behavior-y: auto !important;
-  touch-action: pan-y !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
 }
-body { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 .page {
   max-width: 920px;
   margin: 0 auto;

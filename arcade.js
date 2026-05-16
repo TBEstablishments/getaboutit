@@ -388,8 +388,18 @@ const searchClear = $('#searchClear');
 searchInput.addEventListener('input', () => { curSearch = searchInput.value; applyFilter(); });
 searchClear.addEventListener('click', () => { searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.focus(); });
 document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); }
-  if (e.key === 'Escape' && document.activeElement === searchInput) { searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.blur(); }
+  if (e.key === '/') {
+    const a = document.activeElement;
+    // Skip when user is already typing in an input/textarea/contenteditable
+    if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable)) return;
+    if (!searchInput) return;
+    e.preventDefault();
+    searchInput.focus();
+    return;
+  }
+  if (e.key === 'Escape' && document.activeElement === searchInput) {
+    searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.blur();
+  }
 });
 
 // IntersectionObserver for previews
