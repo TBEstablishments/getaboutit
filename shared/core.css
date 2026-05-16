@@ -223,3 +223,215 @@ body.rainbow .chrom {
   .chrom { text-shadow: 2px 0 0 var(--c-pink), -2px 0 0 var(--c-cyan), 0 0 0 #000; }
   .shell-btn { border-color: #fff; }
 }
+
+/* ========== shared HUD / typography ========== */
+.stage {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+  background: radial-gradient(ellipse at center, #150525 0%, #0a0a1e 60%, #05050f 100%);
+}
+.hud {
+  position: fixed;
+  top: calc(58px + env(safe-area-inset-top));
+  left: 50%; transform: translateX(-50%);
+  display: flex; gap: 18px;
+  font-size: clamp(9px, 1.8vw, 12px);
+  letter-spacing: 0.14em;
+  z-index: 20;
+  pointer-events: none;
+}
+.hud b { color: var(--c-yellow); font-weight: normal; }
+.big {
+  font-size: clamp(20px, 6vw, 44px);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+.sub {
+  font-size: clamp(9px, 1.8vw, 13px);
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.7);
+}
+.tap {
+  font-size: clamp(10px, 2vw, 13px);
+  letter-spacing: 0.18em;
+  color: var(--c-cyan);
+}
+.stats {
+  font-size: clamp(9px, 1.6vw, 11px);
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.75);
+}
+.stats b { color: var(--c-yellow); font-weight: normal; }
+.score {
+  font-size: clamp(36px, 12vw, 84px);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+/* ========== shared shake ========== */
+@keyframes gaiShake {
+  0%   { transform: translate(0,0); }
+  20%  { transform: translate(-3px,2px); }
+  40%  { transform: translate(3px,-2px); }
+  60%  { transform: translate(-2px,-1px); }
+  80%  { transform: translate(2px,1px); }
+  100% { transform: translate(0,0); }
+}
+.shake { animation: gaiShake 0.32s steps(6, end) 1; }
+@media (prefers-reduced-motion: reduce) {
+  .shake { animation: none !important; }
+}
+
+/* ========== toast notifications ========== */
+.gai-toast {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(10,10,30,0.92);
+  border: 1px solid var(--c-cyan);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  z-index: 9500;
+  box-shadow: 0 0 0 2px rgba(0,245,255,0.2), 0 0 18px rgba(0,245,255,0.3);
+  opacity: 0;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+.gai-toast.in { opacity: 1; transform: translateX(-50%) translateY(0); }
+.gai-toast.out { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+
+/* ========== theme overrides ========== */
+body.theme-deepnight #scanlines { opacity: 0.5; }
+body.theme-deepnight #vignette { background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.65) 100%); }
+body.theme-deepnight {
+  --c-pink: #cf0058;
+  --c-magenta: #a700a7;
+  --c-purple: #6829bd;
+  --c-deeppurple: #2e0a82;
+  --c-blue: #3650c5;
+  --c-cyan: #00c7d1;
+  --c-teal: #05cf85;
+  --c-yellow: #d1b008;
+  --c-orange: #d17a00;
+  --c-red: #c11c30;
+}
+body.theme-highcontrast #scanlines, body.theme-highcontrast #vignette { display: none; }
+body.theme-highcontrast .chrom { text-shadow: 3px 0 0 var(--c-pink), -3px 0 0 var(--c-cyan); }
+body.theme-highcontrast .tile,
+body.theme-highcontrast .shell-btn,
+body.theme-highcontrast .arcade { border-width: 2px !important; }
+body.theme-highcontrast { font-weight: bold; }
+
+/* ========== category tabs (home) ========== */
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin: 22px auto 0;
+  padding: 0 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-purple) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.tabs::-webkit-scrollbar { height: 4px; }
+.tabs::-webkit-scrollbar-thumb { background: var(--c-purple); }
+.tab {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+  font-size: clamp(8px, 1.5vw, 10px);
+  letter-spacing: 0.18em;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.tab:hover { color: #fff; border-color: rgba(255,255,255,0.45); }
+.tab:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
+.tab.active {
+  color: #fff;
+  border-color: var(--c-cyan);
+  box-shadow: 0 0 0 1px var(--c-cyan), 0 0 14px rgba(0,245,255,0.35);
+  position: relative;
+}
+.tab.active::after {
+  content: '';
+  position: absolute; left: 12px; right: 12px; bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--c-pink), var(--c-cyan));
+}
+
+/* tile category badge */
+.tile .cat {
+  position: absolute;
+  bottom: 8px; left: 14px;
+  font-size: 7px;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.45);
+}
+.tile .today-badge {
+  position: absolute;
+  top: 18px; right: 16px;
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: var(--c-teal);
+}
+
+/* ========== flash overlay helper ========== */
+.flash-overlay {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9000;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.flash-overlay.on { opacity: 1; }
+
+/* ========== achievements modal ========== */
+.ach-modal {
+  position: fixed; inset: 0;
+  background: rgba(5,5,15,0.92);
+  z-index: 9700;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding:
+    calc(32px + env(safe-area-inset-top))
+    20px
+    calc(32px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+.ach-modal h3 {
+  font-size: clamp(14px, 3vw, 22px);
+  letter-spacing: 0.08em;
+  margin-bottom: 22px;
+}
+.ach-list {
+  width: 100%;
+  max-width: 460px;
+  display: flex; flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.ach-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(10,10,30,0.7);
+}
+.ach-item.locked { opacity: 0.4; }
+.ach-item .mark { font-size: 14px; color: var(--c-yellow); }
+.ach-item .label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.ach-item .desc {
+  font-size: 8px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.14em;
+  margin-top: 4px;
+}
