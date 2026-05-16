@@ -104,6 +104,7 @@ const GAMES = [
   { key: 'asteroids',   tag: 'thrust and shoot',    color: 'cyan',    cat: 'arcade', preview: pvAsteroids },
   { key: 'bubbles',     tag: 'pop chain combos',    color: 'magenta', cat: 'arcade', preview: pvBubbles },
   { key: 'runner',      tag: 'one tap to jump',     color: 'cyan',    cat: 'arcade', preview: pvRunner },
+  { key: 'slither',     tag: 'grow and dodge',      color: 'teal',    cat: 'arcade', preview: pvSlither },
   { key: 'memory',      tag: 'match the cards',     color: 'magenta', cat: 'puzzle', preview: pvMemory },
   { key: 'minesweeper', tag: "don't touch",         color: 'red',     cat: 'puzzle', preview: pvMines, displayName: 'MINES' },
   { key: 'slide',       tag: 'order the tiles',     color: 'purple',  cat: 'puzzle', preview: pvSlide },
@@ -111,24 +112,31 @@ const GAMES = [
   { key: 'words',       tag: 'guess in six',        color: 'teal',    cat: 'puzzle', preview: pvWords },
   { key: 'sudoku',      tag: 'fill the grid',       color: 'blue',    cat: 'puzzle', preview: pvSudoku },
   { key: 'dots',        tag: 'claim the squares',   color: 'pink',    cat: 'puzzle', preview: pvDots, displayName: 'DOTS' },
+  { key: 'pixel',       tag: 'paint by numbers',    color: 'blue',    cat: 'puzzle', preview: pvPixel },
   { key: 'tictactoe',   tag: 'three in a row',      color: 'blue',    cat: 'board',  preview: pvTTT, displayName: 'TIC TAC TOE' },
   { key: 'chess',       tag: 'the eternal game',    color: 'purple',  cat: 'board',  preview: pvChess },
   { key: 'checkers',    tag: 'king me',             color: 'orange',  cat: 'board',  preview: pvCheckers },
   { key: 'connect4',    tag: 'four in a row',       color: 'yellow',  cat: 'board',  preview: pvC4, displayName: 'CONNECT 4' },
   { key: 'battleship',  tag: 'fire when ready',     color: 'deeppurple', cat: 'board', preview: pvBattleship },
+  { key: 'go',          tag: 'ancient strategy',    color: 'deeppurple', cat: 'board', preview: pvGo },
+  { key: 'backgammon',  tag: 'race for home',       color: 'orange',  cat: 'board',  preview: pvBackgammon },
   { key: 'blackjack',   tag: '21 or bust',          color: 'teal',    cat: 'cards',  preview: pvBlackjack },
   { key: 'poker',       tag: 'jacks or better',     color: 'yellow',  cat: 'cards',  preview: pvPoker },
   { key: 'solitaire',   tag: 'classic time killer', color: 'cyan',    cat: 'cards',  preview: pvSolitaire },
   { key: 'hearts',      tag: 'shoot the moon',      color: 'red',     cat: 'cards',  preview: pvHearts },
+  { key: 'cribbage',    tag: 'fifteen-two',         color: 'yellow',  cat: 'cards',  preview: pvCribbage },
+  { key: 'spider',      tag: 'harder solitaire',    color: 'magenta', cat: 'cards',  preview: pvSpider },
+  { key: 'craps',       tag: 'roll the bones',      color: 'red',     cat: 'casino', preview: pvCraps },
   { key: 'simon',       tag: 'remember the sequence', color: 'pink',  cat: 'mind',   preview: pvSimon },
-  { key: 'reaction',    tag: 'wait... TAP',         color: 'red',     cat: 'mind',   preview: pvReaction }
+  { key: 'reaction',    tag: 'wait... TAP',         color: 'red',     cat: 'mind',   preview: pvReaction },
+  { key: 'type',        tag: 'fast fingers',        color: 'cyan',    cat: 'skill',  preview: pvType, displayName: 'TYPE RACE' }
 ];
 
-// today's 3 (one arcade, one puzzle/board, one card/mind)
+// today's 3 (one arcade, one puzzle/board, one card/casino/mind/skill)
 const todayInt = parseInt(GAI.todayUTC(), 10);
 const arcadePool = GAMES.filter(g => g.cat === 'arcade');
 const puzzleBoardPool = GAMES.filter(g => g.cat === 'puzzle' || g.cat === 'board');
-const cardMindPool = GAMES.filter(g => g.cat === 'cards' || g.cat === 'mind');
+const cardMindPool = GAMES.filter(g => g.cat === 'cards' || g.cat === 'mind' || g.cat === 'casino' || g.cat === 'skill');
 const dailyTrio = [
   arcadePool[todayInt % arcadePool.length],
   puzzleBoardPool[(todayInt * 31) % puzzleBoardPool.length],
@@ -151,7 +159,7 @@ function refreshStats() {
   const total = GAI.totalPlays();
   const st = GAI.streak.get();
   if (total === 0) {
-    $('#stat-strip').innerHTML = '🕹 29 GAMES · ⚡ READY · 🔥 NEW HERE';
+    $('#stat-strip').innerHTML = '🕹 37 GAMES · ⚡ READY · 🔥 NEW HERE';
   } else {
     $('#taps-count').textContent = total.toLocaleString();
     $('#streak-count').textContent = st.current || 0;
@@ -160,6 +168,9 @@ function refreshStats() {
   }
 }
 refreshStats();
+
+// welcome back toast on returning visit
+try { GAI.welcomeBack && GAI.welcomeBack(); } catch {}
 
 // achievements badge
 function refreshAch() {
@@ -192,6 +203,31 @@ for (const g of dailyTrio) {
   dailyStrip.appendChild(a);
 }
 
+// pinned strip
+function renderPinned() {
+  const pinned = GAI.pins.get();
+  const sec = $('#pinned');
+  const strip = $('#pinnedStrip');
+  if (!pinned.length) { sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  strip.innerHTML = '';
+  for (const k of pinned) {
+    const meta = GAMES.find(g => g.key === k);
+    if (!meta) continue;
+    const a = document.createElement('a');
+    a.className = 'pinned-tile t-' + meta.color;
+    a.href = GAI.GAME_PATHS[k];
+    a.textContent = meta.displayName || GAI.GAME_NAMES[k];
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      GAI.audio.ensure();
+      GAI.transition.glitchTo(GAI.GAME_PATHS[k]);
+    });
+    strip.appendChild(a);
+  }
+}
+renderPinned();
+
 // recent
 function renderRecent() {
   const recent = GAI.storage.getJSON('gai_recent', []);
@@ -217,11 +253,14 @@ function renderRecent() {
 }
 renderRecent();
 
+// sort games by play count for default ALL view
+const GAMES_SORTED = GAMES.slice().sort((a, b) => GAI.gamePlays(b.key) - GAI.gamePlays(a.key));
+
 // tiles
 const tiles = [];
 const grid = $('#grid');
 let entranceStagger = 0;
-for (const g of GAMES) {
+for (const g of GAMES_SORTED) {
   const t = document.createElement('a');
   t.className = 'tile t-' + g.color;
   t.dataset.cat = g.cat;
@@ -274,29 +313,84 @@ for (const g of GAMES) {
     GAI.transition.glitchTo(GAI.GAME_PATHS[g.key]);
   });
   t.addEventListener('mouseenter', () => fireHoverBlip(g.key));
+  // long press / right-click → toggle pin
+  let pinTimer = null;
+  function startPress() { pinTimer = setTimeout(() => { pinTimer = null; togglePin(g.key); }, 600); }
+  function cancelPress() { if (pinTimer) { clearTimeout(pinTimer); pinTimer = null; } }
+  t.addEventListener('mousedown', (e) => { if (e.button === 0) startPress(); });
+  t.addEventListener('mouseup', cancelPress);
+  t.addEventListener('mouseleave', cancelPress);
+  t.addEventListener('touchstart', startPress, { passive: true });
+  t.addEventListener('touchend', cancelPress);
+  t.addEventListener('touchmove', cancelPress);
+  t.addEventListener('contextmenu', (e) => { e.preventDefault(); togglePin(g.key); });
+  // pinned indicator
+  if (GAI.pins.has(g.key)) {
+    const pm = document.createElement('div');
+    pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
+    pm.textContent = '📌';
+    pm.setAttribute('aria-label','Pinned');
+    t.appendChild(pm);
+  }
   grid.appendChild(t);
   tiles.push({ meta: g, el: t, canvas, ctx: canvas.getContext('2d'), tick: g.preview, state: {}, visible: true });
 }
 
-// category tabs
-const tabs = document.querySelectorAll('.tab');
-function applyFilter(cat) {
-  for (const t of tiles) {
-    const show = cat === 'all' || t.meta.cat === cat;
-    t.el.style.display = show ? '' : 'none';
+function togglePin(key) {
+  const list = GAI.pins.toggle(key);
+  GAI.audio.ensure();
+  GAI.audio.tone(880, 0.06, 'square', 0.14);
+  GAI.ui.toast(list.includes(key) ? '📌 PINNED' : '× UNPINNED', 1500);
+  renderPinned();
+  // Add/remove indicator on the tile
+  const tile = tiles.find(t => t.meta.key === key);
+  if (tile) {
+    const existing = tile.el.querySelector('[aria-label="Pinned"]');
+    if (list.includes(key) && !existing) {
+      const pm = document.createElement('div');
+      pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
+      pm.textContent = '📌';
+      pm.setAttribute('aria-label','Pinned');
+      tile.el.appendChild(pm);
+    } else if (!list.includes(key) && existing) {
+      existing.remove();
+    }
   }
-  for (const tab of tabs) tab.classList.toggle('active', tab.dataset.cat === cat);
-  sessionStorage.setItem('gai_cat', cat);
 }
-const savedCat = sessionStorage.getItem('gai_cat') || 'all';
-applyFilter(savedCat);
+
+// category tabs + search
+const tabs = document.querySelectorAll('.tab');
+let curCat = sessionStorage.getItem('gai_cat') || 'all';
+let curSearch = '';
+function applyFilter() {
+  const q = curSearch.trim().toLowerCase();
+  for (const t of tiles) {
+    const catMatch = curCat === 'all' || t.meta.cat === curCat;
+    const name = (t.meta.displayName || GAI.GAME_NAMES[t.meta.key]).toLowerCase();
+    const tag = (t.meta.tag || '').toLowerCase();
+    const qMatch = !q || name.includes(q) || tag.includes(q) || t.meta.key.includes(q);
+    t.el.style.display = (catMatch && qMatch) ? '' : 'none';
+  }
+  for (const tab of tabs) tab.classList.toggle('active', tab.dataset.cat === curCat);
+  sessionStorage.setItem('gai_cat', curCat);
+}
+applyFilter();
 for (const tab of tabs) {
   tab.addEventListener('click', () => {
     GAI.audio.ensure();
     GAI.audio.tone(560, 0.04, 'triangle', 0.10);
-    applyFilter(tab.dataset.cat);
+    curCat = tab.dataset.cat;
+    applyFilter();
   });
 }
+const searchInput = $('#searchInput');
+const searchClear = $('#searchClear');
+searchInput.addEventListener('input', () => { curSearch = searchInput.value; applyFilter(); });
+searchClear.addEventListener('click', () => { searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.focus(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); }
+  if (e.key === 'Escape' && document.activeElement === searchInput) { searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.blur(); }
+});
 
 // IntersectionObserver for previews
 const io = new IntersectionObserver((entries) => {
@@ -992,6 +1086,220 @@ function pvReaction(ctx, w, h, s, dt) {
     ctx.fillStyle = PAL[6]; ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = '#0a0a1e'; ctx.font = 'bold 14px "Press Start 2P", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('TAP!', w/2, h/2);
+  }
+}
+
+// ====== Phase 3 previews ======
+function pvSlither(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  // a snake winding
+  const N = 14;
+  for (let i = 0; i < N; i++) {
+    const t = s.t * 1.5 - i * 0.18;
+    const x = w/2 + Math.cos(t) * 56;
+    const y = h/2 + Math.sin(t * 1.4) * 32;
+    if (i === 0) {
+      ctx.fillStyle = '#ff006e';
+      ctx.beginPath(); ctx.arc(x + 1.5, y, 7, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#00f5ff';
+      ctx.beginPath(); ctx.arc(x - 1.5, y, 7, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
+    } else {
+      ctx.fillStyle = PAL[6];
+      ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  // food orbs
+  ctx.fillStyle = PAL[7]; ctx.beginPath(); ctx.arc(w*0.18, h*0.4, 3, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = PAL[0]; ctx.beginPath(); ctx.arc(w*0.82, h*0.7, 3, 0, Math.PI*2); ctx.fill();
+}
+
+function pvPixel(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  const N = 5, cell = 16;
+  const x0 = (w - N*cell)/2, y0 = (h - N*cell)/2;
+  // chromatic G pattern
+  const G = [[0,1,1,1,0],[1,0,0,0,0],[1,0,1,1,0],[1,0,0,1,0],[0,1,1,0,0]];
+  const phase = (s.t % 3) / 3;
+  const showSteps = Math.floor(phase * (N * N + 5));
+  let i = 0;
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const x = x0 + c*cell, y = y0 + r*cell;
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(x, y, cell, cell);
+    if (G[r][c] && i < showSteps) {
+      ctx.fillStyle = '#00f5ff';
+      ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+    }
+    i++;
+  }
+  // hints
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 7px "Press Start 2P", monospace';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (let r = 0; r < N; r++) ctx.fillText('3', x0 - 8, y0 + r*cell + cell/2);
+}
+
+function pvCraps(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  const phase = (s.t % 2.5) / 2.5;
+  // two dice rolling
+  const v1 = 1 + Math.floor(((phase < 0.8) ? Math.random() : 4) * 6);
+  const v2 = 1 + Math.floor(((phase < 0.8) ? Math.random() : 3) * 6);
+  GAI.dice.drawDie(ctx, w/2 - 30, h/2 - 14, 26, v1, { glow: phase >= 0.8 ? '#ffd60a' : null });
+  GAI.dice.drawDie(ctx, w/2 + 6, h/2 - 14, 26, v2, { glow: phase >= 0.8 ? '#ffd60a' : null });
+  if (phase >= 0.85) {
+    ctx.fillStyle = '#06ffa5'; ctx.font = 'bold 10px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('WIN', w/2, h - 14);
+  }
+}
+
+function pvType(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  const txt = 'PRESS START';
+  const len = txt.length;
+  const phase = (s.t % 3) / 3;
+  const typed = Math.floor(phase * (len + 4));
+  ctx.font = 'bold 13px "Press Start 2P", monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  let x = 18;
+  for (let i = 0; i < len; i++) {
+    ctx.fillStyle = i < typed ? '#06ffa5' : (i === typed ? '#fff' : 'rgba(255,255,255,0.4)');
+    ctx.fillText(txt[i], x, h/2);
+    x += 14;
+  }
+  // WPM bar
+  ctx.fillStyle = '#00f5ff';
+  ctx.fillRect(10, h - 12, (w - 20) * Math.min(1, phase * 1.2), 4);
+}
+
+function pvSpider(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  // 5 columns with face-down + face-up cards
+  const cw = 22, ch = 32;
+  const x0 = (w - 5 * (cw + 4)) / 2;
+  for (let c = 0; c < 5; c++) {
+    const x = x0 + c * (cw + 4);
+    for (let i = 0; i < 3; i++) {
+      const y = 30 + i * 6;
+      ctx.fillStyle = '#3a0ca3';
+      ctx.fillRect(x, y, cw, ch);
+    }
+    // top face-up card with chromatic suit
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x, 30 + 3 * 6, cw, ch);
+    ctx.fillStyle = c % 2 === 0 ? '#ef233c' : '#1a1a30';
+    ctx.font = 'bold 10px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(['K','Q','J','10','9'][c], x + cw/2, 30 + 3 * 6 + ch/2);
+  }
+  // trophy
+  ctx.fillStyle = '#ffd60a';
+  ctx.font = 'bold 12px "Press Start 2P", monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('🏆', 8, 8);
+}
+
+function pvCribbage(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  // peg board (top)
+  for (let i = 0; i < 30; i++) {
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fillRect(8 + i * 7, 14, 2, 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fillRect(8 + i * 7, 26, 2, 2);
+  }
+  // pegs
+  const phase = (s.t % 3) / 3;
+  const pos = Math.floor(phase * 28);
+  ctx.fillStyle = '#00f5ff';
+  ctx.beginPath(); ctx.arc(9 + pos * 7, 15, 2.5, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ff9500';
+  ctx.beginPath(); ctx.arc(9 + Math.max(0, pos - 4) * 7, 27, 2.5, 0, Math.PI*2); ctx.fill();
+  // hand of 4 cards
+  const cw = 22, ch = 30;
+  const x0 = (w - 4 * (cw + 2)) / 2;
+  const cards = ['5','5','J','5'];
+  const suits = ['♠','♥','♣','♥'];
+  for (let i = 0; i < 4; i++) {
+    const x = x0 + i * (cw + 2), y = h/2;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x, y, cw, ch);
+    ctx.fillStyle = (i === 1 || i === 3) ? '#ef233c' : '#1a1a30';
+    ctx.font = 'bold 9px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(cards[i], x + cw/2, y + ch/2 - 5);
+    ctx.fillText(suits[i], x + cw/2, y + ch/2 + 6);
+  }
+  // 29!
+  if (phase > 0.7) {
+    ctx.fillStyle = '#ffd60a';
+    ctx.font = 'bold 18px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('29!', w/2, h - 14);
+  }
+}
+
+function pvBackgammon(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  // 6 triangles top + 6 bottom
+  const triW = (w - 24) / 7;
+  for (let i = 0; i < 6; i++) {
+    const x = 12 + i * triW + (i >= 3 ? triW : 0);
+    ctx.fillStyle = i % 2 === 0 ? PAL[0] : PAL[2];
+    ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x + triW, 8); ctx.lineTo(x + triW/2, h/2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = i % 2 === 0 ? PAL[5] : PAL[2];
+    ctx.beginPath(); ctx.moveTo(x, h - 8); ctx.lineTo(x + triW, h - 8); ctx.lineTo(x + triW/2, h/2); ctx.closePath(); ctx.fill();
+  }
+  // checkers
+  for (let i = 0; i < 4; i++) {
+    ctx.fillStyle = PAL[6];
+    ctx.beginPath(); ctx.arc(12 + triW/2, 18 + i * 9, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = PAL[7];
+    ctx.beginPath(); ctx.arc(w - 12 - triW/2, h - 18 - i * 9, 4, 0, Math.PI*2); ctx.fill();
+  }
+  // dice
+  const phase = (s.t % 2.5) / 2.5;
+  if (phase < 0.7) {
+    GAI.dice.drawDie(ctx, w/2 - 22, h/2 - 12, 18, 1 + Math.floor(Math.random() * 6));
+    GAI.dice.drawDie(ctx, w/2 + 4, h/2 - 12, 18, 1 + Math.floor(Math.random() * 6));
+  } else {
+    GAI.dice.drawDie(ctx, w/2 - 22, h/2 - 12, 18, 5);
+    GAI.dice.drawDie(ctx, w/2 + 4, h/2 - 12, 18, 3);
+  }
+}
+
+function pvGo(ctx, w, h, s, dt) {
+  clr(ctx, w, h); s.t = (s.t || 0) + dt;
+  const N = 7, cell = 18;
+  const x0 = (w - N*cell)/2, y0 = (h - N*cell)/2 + 4;
+  // wood-like color
+  ctx.fillStyle = '#2e1a55';
+  ctx.fillRect(x0 - 6, y0 - 6, N*cell + 12, N*cell + 12);
+  // lines
+  ctx.strokeStyle = 'rgba(255,214,10,0.5)'; ctx.lineWidth = 1;
+  for (let i = 0; i < N; i++) {
+    ctx.beginPath(); ctx.moveTo(x0, y0 + i*cell); ctx.lineTo(x0 + (N-1)*cell, y0 + i*cell); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x0 + i*cell, y0); ctx.lineTo(x0 + i*cell, y0 + (N-1)*cell); ctx.stroke();
+  }
+  // stones (some)
+  const stones = [
+    { r: 2, c: 2, b: true },
+    { r: 2, c: 4, b: false },
+    { r: 4, c: 2, b: false },
+    { r: 4, c: 4, b: true },
+    { r: 3, c: 3, b: true }
+  ];
+  for (const st of stones) {
+    const x = x0 + st.c * cell, y = y0 + st.r * cell;
+    ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI*2);
+    ctx.fillStyle = st.b ? '#0a0a1e' : '#fff';
+    ctx.fill();
+    ctx.strokeStyle = st.b ? '#3a0ca3' : '#ff006e';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 }
 
