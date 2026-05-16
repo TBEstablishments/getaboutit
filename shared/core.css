@@ -435,3 +435,113 @@ body.theme-highcontrast { font-weight: bold; }
   letter-spacing: 0.14em;
   margin-top: 4px;
 }
+
+/* ========== play-next (game-over footer) ========== */
+.gai-play-next {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px dashed rgba(255,255,255,0.18);
+  width: min(440px, 90vw);
+}
+.gai-play-next .pn-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--c-cyan);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.gai-play-next .pn-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.gai-play-next .pn-tile {
+  font-size: clamp(8px, 1.4vw, 10px);
+  letter-spacing: 0.12em;
+  padding: 10px 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(10,10,30,0.5);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.gai-play-next .pn-tile:hover {
+  border-color: var(--c-cyan);
+  background: rgba(20,15,50,0.7);
+}
+
+/* ========== pause overlay ========== */
+.gai-pause .gai-pause-inner {
+  text-align: center;
+  display: flex; flex-direction: column; gap: 18px;
+  align-items: center;
+}
+
+/* ========== share button row ========== */
+.share-row {
+  display: flex; gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+.share-row .arcade { padding: 10px 14px; font-size: 10px; }
+
+/* ========== blitz tag ========== */
+.blitz-tag {
+  display: inline-block;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  padding: 3px 6px;
+  background: var(--c-pink);
+  color: #fff;
+  margin-left: 6px;
+}
+
+/* ========== pinned strip ========== */
+.pinned-strip {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 16px;
+}
+.pinned-tile {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid var(--c-yellow);
+  background: rgba(10,10,30,0.6);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+.pinned-tile::before { content: "📌 "; }
+
+/* ========== search bar ========== */
+.search-row {
+  display: flex; gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+}
+.search-input {
+  flex: 1;
+  background: rgba(10,10,30,0.7);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 10px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  outline: none;
+  transition: border-color 0.12s ease;
+}
+.search-input:focus { border-color: var(--c-cyan); }
+.search-toggle {
+  background: rgba(10,10,30,0.7);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ========== welcome-back toast (uses gai-toast styling) ========== */
+@media (prefers-reduced-motion: reduce) {
+  .gai-play-next .pn-tile { transition: none; }
+  .gai-pause { backdrop-filter: none; }
+}
