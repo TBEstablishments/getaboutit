@@ -42,3 +42,7 @@
   70% { transform: scale(1); opacity: 1; filter: hue-rotate(360deg); }
   100% { opacity: 0; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration h2 { animation: none; }
+}

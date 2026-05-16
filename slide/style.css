@@ -45,3 +45,7 @@
   0% { transform: scale(0.5); opacity: 1; }
   100% { transform: scale(40); opacity: 0; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple { animation: none; opacity: 0; }
+}

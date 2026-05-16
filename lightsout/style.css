@@ -59,3 +59,7 @@
   20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .banner { animation: none; opacity: 1; }
+}

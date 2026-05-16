@@ -114,3 +114,7 @@
 .dist-row { display: flex; align-items: center; gap: 6px; font-size: 9px; }
 .dist-row .bar { background: var(--c-purple); height: 14px; min-width: 16px; padding: 0 6px; display: flex; align-items: center; justify-content: flex-end; color: #fff; }
 .dist-row .bar.cur { background: var(--c-teal); color: var(--c-bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cell.flip, .cell.bounce, .win .row, .shake { animation: none !important; }
+}
