@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>MINES · GETABOUTIT</title>
+<meta name="description" content="Reveal every safe cell. Don't tap a mine." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/minesweeper" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <header class="head">
+    <h1 class="title chrom"><span>MINES</span></h1>
+    <div class="info">
+      <span>FLAGS <b id="flags">0</b>/12</span>
+      <span class="sep">·</span>
+      <span>BEST <b id="best">—</b></span>
+    </div>
+  </header>
+  <canvas id="board" aria-label="Minesweeper grid"></canvas>
+  <div class="controls">
+    <button id="mode" class="arcade cyan" type="button" aria-label="Toggle flag mode">🚩 FLAG</button>
+    <button id="reset" class="arcade" type="button">NEW</button>
+  </div>
+  <p class="status" id="status">first tap is safe</p>
+</main>
+<script>window.GAME_KEY = 'minesweeper';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
