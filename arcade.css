@@ -224,6 +224,18 @@ body {
   z-index: 5;
   font-size: 11px;
   padding: 12px 18px;
+  min-height: 44px;
+}
+/* Narrow viewports: full-width dock at the bottom so SURPRISE ME
+   doesn't overlap the corner of the tile grid. */
+@media (max-width: 600px) {
+  #surprise {
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    padding: 14px 18px;
+    text-align: center;
+  }
 }
 
 /* ===== rainbow badge ===== */
