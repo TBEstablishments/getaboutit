@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>BUBBLES · GETABOUTIT</title>
+<meta name="description" content="Bubbles — match-three pop, chain combos, race the ceiling." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/bubbles" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'bubbles';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>SCORE <b id="score">0</b></span>
+    <span>BEST <b id="best">0</b></span>
+  </div>
+  <canvas id="game" aria-label="Bubbles board"></canvas>
+  <div id="over" class="screen hidden" role="dialog" aria-label="Game over">
+    <h2 class="big chrom"><span>GAME OVER</span></h2>
+    <div class="score"><span class="chrom"><span id="final">0</span></span></div>
+    <p class="stats">BEST <b id="best2">0</b></p>
+    <p class="tap pulse">▶ TAP TO RETRY</p>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

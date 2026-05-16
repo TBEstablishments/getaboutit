@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>RUNNER · GETABOUTIT</title>
+<meta name="description" content="Space Runner — auto-run through a vaporwave canyon. One tap to jump." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/runner" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'runner';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<canvas id="game" aria-label="Runner game"></canvas>
+<div id="hud" class="hud">
+  <span><b id="score">0</b>m</span>
+  <span>BEST <b id="best">0</b>m</span>
+</div>
+<div id="splash" class="screen" role="dialog" aria-label="Start screen">
+  <h1 class="wordmark chrom"><span>RUNNER</span></h1>
+  <p class="sub">tap to jump · hold for higher</p>
+  <p class="tap pulse">▶ TAP TO PLAY</p>
+</div>
+<div id="over" class="screen hidden" role="dialog" aria-label="Game over">
+  <h2 class="big chrom"><span>WIPED OUT</span></h2>
+  <div class="score"><b id="final">0</b>m</div>
+  <p class="stats">BEST <b id="best2">0</b>m</p>
+  <p class="tap pulse">▶ TAP TO RETRY</p>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

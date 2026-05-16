@@ -1,0 +1,41 @@
+.grids {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 84px;
+}
+@media (max-width: 720px) {
+  .grids { flex-direction: column; }
+}
+.grid-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.lbl { font-size: 9px; letter-spacing: 0.18em; color: rgba(255,255,255,0.6); }
+canvas {
+  display: block;
+  background: #0a1a30;
+  border: 2px solid var(--c-deeppurple);
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 18px rgba(58,12,163,0.4);
+  touch-action: manipulation;
+}
+canvas#enemy { border-color: var(--c-pink); }
+.ctrls {
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; z-index: 20;
+}
+.ctrls .arcade { padding: 10px 14px; font-size: 10px; }
+.status {
+  position: fixed;
+  bottom: calc(32px + env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%);
+  font-size: clamp(9px, 1.7vw, 12px);
+  letter-spacing: 0.16em;
+  color: var(--c-cyan);
+  z-index: 20;
+  text-align: center;
+  white-space: nowrap;
+}
+.status.win { color: var(--c-yellow); }
+.status.lose { color: var(--c-red); }

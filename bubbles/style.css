@@ -1,0 +1,7 @@
+canvas#game {
+  display: block;
+  background: linear-gradient(180deg, #1a0635 0%, #0a0a1e 80%, #05050f 100%);
+  border: 2px solid var(--c-magenta);
+  box-shadow: 0 0 0 4px var(--c-bg), 0 0 22px rgba(209,0,209,0.35);
+  touch-action: none;
+}

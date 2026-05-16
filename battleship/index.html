@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>BATTLESHIP · GETABOUTIT</title>
+<meta name="description" content="Battleship — place your fleet, sink the enemy's, fire when ready." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/battleship" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'battleship';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>SHOTS <b id="shots">0</b></span>
+    <span>HITS <b id="hits">0</b></span>
+    <span>BEST <b id="best">—</b></span>
+  </div>
+  <div class="grids" id="grids">
+    <div class="grid-wrap"><div class="lbl">ENEMY WATERS</div><canvas id="enemy"></canvas></div>
+    <div class="grid-wrap"><div class="lbl">YOUR FLEET</div><canvas id="own"></canvas></div>
+  </div>
+  <div id="ctrls" class="ctrls">
+    <button id="rotate" class="arcade cyan" type="button">↻ ROTATE</button>
+    <button id="auto" class="arcade" type="button">⚓ AUTO PLACE</button>
+    <button id="ready" class="arcade green hidden" type="button">▶ READY</button>
+  </div>
+  <div id="status" class="status">PLACE YOUR FLEET — TAP YOUR GRID</div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
