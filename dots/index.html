@@ -3,20 +3,48 @@
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>DOTS & BOXES · GETABOUTIT</title>
 <meta name="description" content="Dots and Boxes — connect lines, claim squares, build chains." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href="https://getaboutit.com/dots" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://getaboutit.com/dots" />
+<meta property="og:title" content="DOTS · GETABOUTIT" />
+<meta property="og:description" content="claim the squares. Free, no signup." />
+<meta property="og:image" content="https://getaboutit.com/og/dots.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="DOTS · GETABOUTIT" />
+<meta name="twitter:description" content="claim the squares. Free, no signup." />
+<meta name="twitter:image" content="https://getaboutit.com/og/dots.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "DOTS",
+  "url": "https://getaboutit.com/dots",
+  "description": "claim the squares",
+  "image": "https://getaboutit.com/og/dots.png",
+  "genre": "Puzzle",
+  "gamePlatform": "WebPlatform",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any"
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-<link rel="stylesheet" href="/shared/core.css?v=phase3.1" />
-<link rel="stylesheet" href="style.css?v=phase3.1" />
+<link rel="stylesheet" href="/shared/core.css?v=phase4" />
+<link rel="stylesheet" href="/dots/style.css?v=phase4" />
 <script>window.GAME_KEY = 'dots';</script>
-<script src="/shared/core.js?v=phase3.1"></script>
-<script src="/shared/shell.js?v=phase3.1"></script>
+<script src="/shared/core.js?v=phase4"></script>
+<script src="/shared/shell.js?v=phase4"></script>
 </head>
 <body class="game">
 <div class="stage">
@@ -28,6 +56,6 @@
   <canvas id="board" aria-label="Dots and boxes board"></canvas>
   <div id="status" class="status">YOUR TURN</div>
 </div>
-<script src="game.js?v=phase3.1"></script>
+<script src="/dots/game.js?v=phase4"></script>
 </body>
 </html>

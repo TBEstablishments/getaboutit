@@ -7,7 +7,7 @@
 // stale-cache scenarios and to gate future migrations. User data
 // (scores, streak, achievements, pinned, etc.) is NEVER wiped here —
 // the version key is informational only.
-const SITE_VERSION = 'phase3.1';
+const SITE_VERSION = 'phase4';
 try {
   const stored = localStorage.getItem('gai_site_version');
   if (stored && stored !== SITE_VERSION) {
@@ -1054,11 +1054,87 @@ function themeCycle() {
   return next;
 }
 function applyTheme(t) {
-  document.body.classList.remove('theme-deepnight', 'theme-highcontrast');
-  if (t === 'deepnight') document.body.classList.add('theme-deepnight');
-  if (t === 'highcontrast') document.body.classList.add('theme-highcontrast');
+  // body may not be parsed yet if core.js loads in <head> without defer.
+  // Self-defer until DOMContentLoaded — applyTheme runs at module load AND
+  // again whenever themeSet() is called from user-triggered code.
+  const body = document.body;
+  if (!body || !body.classList) {
+    document.addEventListener('DOMContentLoaded', () => applyTheme(t), { once: true });
+    return;
+  }
+  body.classList.remove('theme-deepnight', 'theme-highcontrast');
+  if (t === 'deepnight') body.classList.add('theme-deepnight');
+  if (t === 'highcontrast') body.classList.add('theme-highcontrast');
 }
 applyTheme(themeGet());
+
+// ============== DEVICE-AWARE PROMPTS ==============
+// Splashes render "TAP TO PLAY" / "TAP TO RETRY". On a desktop with
+// a fine pointer the real input is the spacebar — patch the text and
+// bind the keyboard equivalent. Mobile pages are left alone.
+function inputMode() {
+  if (!window.matchMedia) return 'tap';
+  return window.matchMedia('(hover: none) and (pointer: coarse)').matches ? 'tap' : 'press';
+}
+const PROMPT_REPLACEMENTS = [
+  [/TAP TO PLAY/g,    'PRESS SPACE TO PLAY'],
+  [/TAP TO RETRY/g,   'PRESS SPACE TO RETRY'],
+  [/TAP TO START/g,   'PRESS SPACE TO START'],
+  [/TAP TO REMATCH/g, 'PRESS SPACE TO REMATCH'],
+  [/TAP TO RESTART/g, 'PRESS SPACE TO RESTART'],
+  [/TAP TO RESUME/g,  'PRESS SPACE TO RESUME'],
+  [/TAP TO DROP/g,    'PRESS SPACE TO DROP']
+];
+function _patchTextNode(node) {
+  if (!node || !node.nodeValue) return;
+  let v = node.nodeValue;
+  for (const [re, sub] of PROMPT_REPLACEMENTS) v = v.replace(re, sub);
+  if (v !== node.nodeValue) node.nodeValue = v;
+}
+function _walkAndPatch(root) {
+  if (!root || !document.createTreeWalker) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let n; while ((n = w.nextNode())) _patchTextNode(n);
+}
+let _promptObserver = null;
+function patchScreenPrompts() {
+  if (inputMode() === 'tap') return;
+  if (!document.body) {
+    document.addEventListener('DOMContentLoaded', patchScreenPrompts, { once: true });
+    return;
+  }
+  _walkAndPatch(document.body);
+  if (_promptObserver) return;
+  _promptObserver = new MutationObserver(muts => {
+    for (const m of muts) {
+      if (m.type === 'characterData') _patchTextNode(m.target);
+      else for (const node of m.addedNodes) {
+        if (node.nodeType === 1) _walkAndPatch(node);
+        else if (node.nodeType === 3) _patchTextNode(node);
+      }
+    }
+  });
+  _promptObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+}
+patchScreenPrompts();
+
+// Space / Enter while a splash is visible acts as a click on that splash.
+// Returns early when no splash/over screen is visible, so per-game keyboard
+// handlers (snake's arrows, blocks' rotate, etc.) keep their bindings during
+// actual gameplay.
+function _splashKeydown(e) {
+  if (e.code !== 'Space' && e.code !== 'Enter') return;
+  const a = document.activeElement;
+  if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' ||
+            a.tagName === 'BUTTON' || a.isContentEditable)) return;
+  const target = document.querySelector(
+    '#splash:not(.hidden), #over:not(.hidden), #gameover:not(.hidden)'
+  );
+  if (!target) return;
+  e.preventDefault();
+  target.click();
+}
+if (typeof document !== 'undefined') document.addEventListener('keydown', _splashKeydown);
 
 // ============== EXPORT / IMPORT ==============
 function exportDump() {
@@ -1587,7 +1663,11 @@ window.GAI = {
     countdown: uiCountdown,
     pause: uiPause,
     shareCard: uiShareCard,
-    playNext: uiPlayNext
+    playNext: uiPlayNext,
+    inputMode: inputMode,
+    playPrompt:  () => inputMode() === 'tap' ? '▶ TAP TO PLAY'  : '▶ PRESS SPACE TO PLAY',
+    retryPrompt: () => inputMode() === 'tap' ? '▶ TAP TO RETRY' : '▶ PRESS SPACE TO RETRY',
+    patchScreenPrompts: patchScreenPrompts
   },
   cards: {
     SUITS: CARD_SUITS, RANKS: CARD_RANKS,

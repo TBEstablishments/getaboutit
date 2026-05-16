@@ -2,8 +2,11 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/2048", "destination": "/p2048/index.html" },
-    { "source": "/2048/(.*)", "destination": "/p2048/$1" }
+    { "source": "/2048", "destination": "/p2048" },
+    { "source": "/2048/:path*", "destination": "/p2048/:path*" }
+  ],
+  "redirects": [
+    { "source": "/favicon.ico", "destination": "/favicon.svg", "permanent": true }
   ],
   "headers": [
     {
@@ -29,6 +32,14 @@
     },
     {
       "source": "/(.*).(css|js)",
+      "has": [{ "type": "query", "key": "v" }],
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*).(css|js)",
+      "missing": [{ "type": "query", "key": "v" }],
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]

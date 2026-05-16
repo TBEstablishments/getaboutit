@@ -3,20 +3,48 @@
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>CONNECT 4 · GETABOUTIT</title>
 <meta name="description" content="Connect Four — drop discs, four in a row wins. Free retro puzzle." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href="https://getaboutit.com/connect4" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://getaboutit.com/connect4" />
+<meta property="og:title" content="CONNECT 4 · GETABOUTIT" />
+<meta property="og:description" content="four in a row. Free, no signup." />
+<meta property="og:image" content="https://getaboutit.com/og/connect4.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="CONNECT 4 · GETABOUTIT" />
+<meta name="twitter:description" content="four in a row. Free, no signup." />
+<meta name="twitter:image" content="https://getaboutit.com/og/connect4.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "CONNECT 4",
+  "url": "https://getaboutit.com/connect4",
+  "description": "four in a row",
+  "image": "https://getaboutit.com/og/connect4.png",
+  "genre": "Board",
+  "gamePlatform": "WebPlatform",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any"
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-<link rel="stylesheet" href="/shared/core.css?v=phase3.1" />
-<link rel="stylesheet" href="style.css?v=phase3.1" />
+<link rel="stylesheet" href="/shared/core.css?v=phase4" />
+<link rel="stylesheet" href="/connect4/style.css?v=phase4" />
 <script>window.GAME_KEY = 'connect4';</script>
-<script src="/shared/core.js?v=phase3.1"></script>
-<script src="/shared/shell.js?v=phase3.1"></script>
+<script src="/shared/core.js?v=phase4"></script>
+<script src="/shared/shell.js?v=phase4"></script>
 </head>
 <body class="game">
 <div class="stage">
@@ -28,6 +56,6 @@
   <canvas id="board" aria-label="Connect Four board"></canvas>
   <div id="status" class="status">YOUR TURN</div>
 </div>
-<script src="game.js?v=phase3.1"></script>
+<script src="/connect4/game.js?v=phase4"></script>
 </body>
 </html>
