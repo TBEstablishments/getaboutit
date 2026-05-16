@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>INVADERS · GETABOUTIT</title>
+<meta name="description" content="Protect the line. Don't let them land." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/invaders" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <canvas id="game" aria-label="INVADERS"></canvas>
+  <div id="splash" class="screen">
+    <h1 class="wordmark chrom"><span>INVADERS</span></h1>
+    <p class="sub">drag to move · tap to fire</p>
+    <p class="tap pulse">▶ TAP TO PLAY</p>
+  </div>
+  <div id="over" class="screen hidden">
+    <h2 class="big chrom"><span id="result">GAME OVER</span></h2>
+    <div class="score-final"><span class="chrom"><span id="final">0</span></span></div>
+    <p class="stats">BEST <b id="best">0</b></p>
+    <p class="tap pulse">▶ TAP TO RETRY</p>
+  </div>
+  <div id="hud" class="hidden"><span class="chrom"><span id="score">0</span></span></div>
+</main>
+<script>window.GAME_KEY = 'invaders';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

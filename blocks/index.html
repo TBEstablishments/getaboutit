@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>BLOCKS · GETABOUTIT</title>
+<meta name="description" content="Stack pieces. Clear lines. Don't top out." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/blocks" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <canvas id="game" aria-label="BLOCKS"></canvas>
+  <aside class="side">
+    <div class="next">NEXT<canvas id="next" width="80" height="80"></canvas></div>
+    <div class="stats">
+      <div>SCORE<br><b><span class="chrom"><span id="score">0</span></span></b></div>
+      <div>LINES<br><b id="lines">0</b></div>
+      <div>LEVEL<br><b id="level">1</b></div>
+      <div>BEST<br><b id="best">0</b></div>
+    </div>
+  </aside>
+  <div id="splash" class="screen">
+    <h1 class="wordmark chrom"><span>BLOCKS</span></h1>
+    <p class="sub">arrows · swipe · space drops</p>
+    <p class="tap pulse">▶ TAP TO PLAY</p>
+  </div>
+  <div id="over" class="screen hidden">
+    <h2 class="big chrom"><span>TOPPED OUT</span></h2>
+    <div class="score-final"><span class="chrom"><span id="final">0</span></span></div>
+    <p class="tap pulse">▶ TAP TO RETRY</p>
+  </div>
+</main>
+<script>window.GAME_KEY = 'blocks';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

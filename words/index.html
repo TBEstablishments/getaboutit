@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>WORDS · GETABOUTIT</title>
+<meta name="description" content="Guess the five-letter word in six tries. Daily puzzle." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/words" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<main id="stage" class="stage">
+  <header class="head">
+    <h1 class="title chrom"><span>WORDS</span></h1>
+    <p class="sub" id="daily">DAILY ·</p>
+  </header>
+  <div id="board" class="board" aria-label="Word puzzle board" role="grid"></div>
+  <div id="message" class="msg" aria-live="polite"></div>
+  <div id="keyboard" class="kb" aria-label="On-screen keyboard"></div>
+  <div class="bottom">
+    <button id="hard" class="arcade cyan" type="button" aria-pressed="false">HARD</button>
+    <button id="stats" class="arcade" type="button">STATS</button>
+  </div>
+  <div id="modal" class="modal hidden" role="dialog" aria-label="Stats">
+    <div class="modal-inner">
+      <h2 class="chrom"><span>STATISTICS</span></h2>
+      <div class="stat-grid">
+        <div><b id="m-played">0</b><span>PLAYED</span></div>
+        <div><b id="m-winp">0</b><span>WIN %</span></div>
+        <div><b id="m-streak">0</b><span>STREAK</span></div>
+        <div><b id="m-max">0</b><span>BEST STREAK</span></div>
+      </div>
+      <div class="dist" id="dist"></div>
+      <button id="share" class="arcade green" type="button">SHARE</button>
+      <button id="close" class="arcade" type="button">CLOSE</button>
+    </div>
+  </div>
+</main>
+<script>window.GAME_KEY = 'words';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="words-list.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
