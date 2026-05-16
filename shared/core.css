@@ -87,6 +87,10 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .screen * { pointer-events: auto; }
+/* Default splash/over text to white so a near-black per-game stage
+   bg can't render an invisible splash. Per-game CSS still overrides
+   individual elements (.tap, .sub, etc.). */
+#splash, .splash, #over, #gameover { color: #ffffff; }
 .hidden { display: none !important; }
 
 /* ========== arcade button ========== */
