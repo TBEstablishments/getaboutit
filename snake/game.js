@@ -69,6 +69,30 @@ function startGame() {
   over.classList.add('hidden');
   hud.classList.remove('hidden');
   state = 'playing';
+  if (GAI.blitz && GAI.blitz.isOn('snake')) {
+    blitzStartTs = performance.now();
+  } else {
+    blitzStartTs = 0;
+  }
+}
+
+let blitzStartTs = 0;
+const BLITZ_DURATION_MS = 60000;
+const blitzToggle = document.getElementById('blitzToggle');
+const blitzState = document.getElementById('blitzState');
+function syncBlitzUI() {
+  if (!blitzState || !GAI.blitz) return;
+  blitzState.textContent = GAI.blitz.isOn('snake') ? 'ON' : 'OFF';
+}
+if (blitzToggle && GAI.blitz) {
+  syncBlitzUI();
+  blitzToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    GAI.audio.ensure();
+    GAI.audio.tone(560, 0.05, 'triangle', 0.10);
+    GAI.blitz.set('snake', !GAI.blitz.isOn('snake'));
+    syncBlitzUI();
+  });
 }
 
 function gameOver() {
@@ -77,9 +101,43 @@ function gameOver() {
   GAI.audio.arpeggio([440, 369.99, 311.13], 130, 'sawtooth', 0.16);
   GAI.haptic([20, 30, 20]);
   finalEl.textContent = score;
-  if (score > best) { best = score; GAI.bestScore('snake', best); }
+  const isBlitz = GAI.blitz && GAI.blitz.isOn('snake');
+  if (isBlitz) {
+    const bestBlitz = +(GAI.storage.get('gai_best_snake_blitz') || 0);
+    if (score > bestBlitz) GAI.storage.set('gai_best_snake_blitz', String(score));
+  } else if (score > best) { best = score; GAI.bestScore('snake', best); }
   bestEl.textContent = best;
-  setTimeout(() => over.classList.remove('hidden'), 300);
+  // share + play-next (rendered once per game-over)
+  setTimeout(() => {
+    over.classList.remove('hidden');
+    addOverExtras(score, best);
+  }, 300);
+}
+
+function addOverExtras(finalScore, bestScore) {
+  // remove previous extras if present
+  for (const el of over.querySelectorAll('.share-row, .gai-play-next')) el.remove();
+  const row = document.createElement('div');
+  row.className = 'share-row';
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'arcade cyan'; shareBtn.type = 'button'; shareBtn.textContent = '🔗 SHARE';
+  shareBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    GAI.audio.ensure();
+    const c = GAI.ui.shareCard({ title: 'SNAKE', score: finalScore, best: bestScore, color: '#06ffa5', key: 'snake', label: 'SCORE' });
+    c.share();
+  });
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'arcade'; copyBtn.type = 'button'; copyBtn.textContent = '⎘ COPY';
+  copyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    GAI.audio.ensure();
+    const c = GAI.ui.shareCard({ title: 'SNAKE', score: finalScore, best: bestScore, color: '#06ffa5', key: 'snake', label: 'SCORE' });
+    c.copy();
+  });
+  row.appendChild(shareBtn); row.appendChild(copyBtn);
+  over.appendChild(row);
+  GAI.ui.playNext('snake', over);
 }
 
 function step() {
@@ -127,6 +185,10 @@ function loop(now) {
     if (gold) {
       gold.life -= dt;
       if (gold.life <= 0) gold = null;
+    }
+    if (blitzStartTs > 0 && now - blitzStartTs >= BLITZ_DURATION_MS) {
+      blitzStartTs = 0;
+      gameOver();
     }
   }
   render();

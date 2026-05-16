@@ -92,7 +92,22 @@ function endGame(won) {
   finalEl.textContent = score;
   if (score > best) { best = score; GAI.bestScore('breakout', best); }
   bestEl.textContent = best;
-  setTimeout(() => over.classList.remove('hidden'), 300);
+  setTimeout(() => { over.classList.remove('hidden'); addOverExtras(score, best); }, 300);
+}
+
+function addOverExtras(finalScore, finalBest) {
+  for (const el of over.querySelectorAll('.share-row, .gai-play-next')) el.remove();
+  const row = document.createElement('div');
+  row.className = 'share-row';
+  const sBtn = document.createElement('button');
+  sBtn.className = 'arcade cyan'; sBtn.type = 'button'; sBtn.textContent = '🔗 SHARE';
+  sBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'BREAKOUT', score: finalScore, best: finalBest, color: '#ff9500', key: 'breakout', label: 'SCORE' }).share(); });
+  const cBtn = document.createElement('button');
+  cBtn.className = 'arcade'; cBtn.type = 'button'; cBtn.textContent = '⎘ COPY';
+  cBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'BREAKOUT', score: finalScore, best: finalBest, color: '#ff9500', key: 'breakout', label: 'SCORE' }).copy(); });
+  row.appendChild(sBtn); row.appendChild(cBtn);
+  over.appendChild(row);
+  GAI.ui.playNext('breakout', over);
 }
 
 let targetX = W / 2;

@@ -314,6 +314,23 @@ function endGame() {
   best2El.textContent = best;
   overScreen.classList.remove('hidden');
   GAI.audio.arpeggio([440, 369.99, 311.13, 261.63], 110, 'sawtooth', 0.16);
+  addOverExtras();
+}
+
+function addOverExtras() {
+  for (const el of overScreen.querySelectorAll('.share-row, .gai-play-next')) el.remove();
+  const row = document.createElement('div');
+  row.className = 'share-row';
+  const finalScore = score, finalBest = best;
+  const sBtn = document.createElement('button');
+  sBtn.className = 'arcade cyan'; sBtn.type = 'button'; sBtn.textContent = '🔗 SHARE';
+  sBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'BUBBLES', score: finalScore, best: finalBest, color: '#d100d1', key: 'bubbles', label: 'SCORE' }).share(); });
+  const cBtn = document.createElement('button');
+  cBtn.className = 'arcade'; cBtn.type = 'button'; cBtn.textContent = '⎘ COPY';
+  cBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'BUBBLES', score: finalScore, best: finalBest, color: '#d100d1', key: 'bubbles', label: 'SCORE' }).copy(); });
+  row.appendChild(sBtn); row.appendChild(cBtn);
+  overScreen.appendChild(row);
+  GAI.ui.playNext('bubbles', overScreen);
 }
 
 // input

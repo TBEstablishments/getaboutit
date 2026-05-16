@@ -176,6 +176,22 @@ function die() {
   over.classList.remove('hidden');
   GAI.audio.arpeggio([440, 369.99, 311.13, 261.63], 110, 'sawtooth', 0.16);
   GAI.fx.screenShake(canvas, 8, 280);
+  addOverExtras(m, best);
+}
+
+function addOverExtras(finalScore, finalBest) {
+  for (const el of over.querySelectorAll('.share-row, .gai-play-next')) el.remove();
+  const row = document.createElement('div');
+  row.className = 'share-row';
+  const sBtn = document.createElement('button');
+  sBtn.className = 'arcade cyan'; sBtn.type = 'button'; sBtn.textContent = '🔗 SHARE';
+  sBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'RUNNER', score: finalScore, best: finalBest, color: '#00f5ff', key: 'runner', label: 'METERS' }).share(); });
+  const cBtn = document.createElement('button');
+  cBtn.className = 'arcade'; cBtn.type = 'button'; cBtn.textContent = '⎘ COPY';
+  cBtn.addEventListener('click', (e) => { e.stopPropagation(); GAI.ui.shareCard({ title: 'RUNNER', score: finalScore, best: finalBest, color: '#00f5ff', key: 'runner', label: 'METERS' }).copy(); });
+  row.appendChild(sBtn); row.appendChild(cBtn);
+  over.appendChild(row);
+  GAI.ui.playNext('runner', over);
 }
 
 function draw() {
