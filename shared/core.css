@@ -1,0 +1,225 @@
+/* ========== GETABOUTIT shared core ========== */
+:root {
+  --c-pink: #ff006e;
+  --c-magenta: #d100d1;
+  --c-purple: #8338ec;
+  --c-deeppurple: #3a0ca3;
+  --c-blue: #4361ee;
+  --c-cyan: #00f5ff;
+  --c-teal: #06ffa5;
+  --c-yellow: #ffd60a;
+  --c-orange: #ff9500;
+  --c-red: #ef233c;
+  --c-bg: #0a0a1e;
+  --c-bg-deep: #05050f;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  height: 100dvh;
+  background: var(--c-bg);
+  color: #fff;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+button, input, textarea { font-family: inherit; }
+button { cursor: pointer; background: none; border: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* ========== CRT atmosphere ========== */
+#scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 90;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.04) 0px,
+    rgba(255,255,255,0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+#vignette {
+  position: fixed; inset: 0; pointer-events: none; z-index: 91;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+}
+
+/* ========== chromatic aberration ========== */
+.chrom {
+  display: inline-block;
+  color: #fff;
+  text-shadow:
+    2px 0 0 var(--c-pink),
+    -2px 0 0 var(--c-cyan),
+    0 0 6px rgba(255,255,255,0.25);
+}
+.chrom-jitter { animation: chromJitter 3.3s steps(2, end) infinite; }
+@keyframes chromJitter {
+  0%, 100% { text-shadow: 2px 0 0 var(--c-pink), -2px 0 0 var(--c-cyan), 0 0 6px rgba(255,255,255,0.25); }
+  50%      { text-shadow: 2.5px 0 0 var(--c-pink), -2.5px 0 0 var(--c-cyan), 0 0 8px rgba(255,255,255,0.3); }
+}
+
+/* ========== screens (splash, gameover, etc) ========== */
+.screen {
+  position: fixed; inset: 0; z-index: 30;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding:
+    calc(28px + env(safe-area-inset-top))
+    calc(24px + env(safe-area-inset-right))
+    calc(28px + env(safe-area-inset-bottom))
+    calc(24px + env(safe-area-inset-left));
+  gap: 22px;
+  pointer-events: none;
+}
+.screen * { pointer-events: auto; }
+.hidden { display: none !important; }
+
+/* ========== arcade button ========== */
+.arcade {
+  display: inline-block;
+  background: var(--c-pink);
+  color: #fff;
+  padding: 14px 22px;
+  font-size: clamp(10px, 2vw, 13px);
+  letter-spacing: 0.12em;
+  border-radius: 0;
+  box-shadow:
+    inset 0 -4px 0 rgba(0,0,0,0.4),
+    inset 0 4px 0 rgba(255,255,255,0.2),
+    0 0 0 3px var(--c-bg),
+    0 0 0 5px var(--c-pink),
+    0 0 18px rgba(255,0,110,0.6);
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.12s ease;
+}
+.arcade:active { transform: translateY(2px); }
+.arcade:focus-visible { outline: 2px dashed #fff; outline-offset: 6px; }
+.arcade.cyan {
+  background: var(--c-cyan); color: var(--c-bg);
+  box-shadow:
+    inset 0 -4px 0 rgba(0,0,0,0.35),
+    inset 0 4px 0 rgba(255,255,255,0.35),
+    0 0 0 3px var(--c-bg),
+    0 0 0 5px var(--c-cyan),
+    0 0 18px rgba(0,245,255,0.6);
+}
+.arcade.green {
+  background: var(--c-teal); color: var(--c-bg);
+  box-shadow:
+    inset 0 -4px 0 rgba(0,0,0,0.35),
+    inset 0 4px 0 rgba(255,255,255,0.35),
+    0 0 0 3px var(--c-bg),
+    0 0 0 5px var(--c-teal),
+    0 0 18px rgba(6,255,165,0.55);
+}
+.arcade.yellow {
+  background: var(--c-yellow); color: var(--c-bg);
+  box-shadow:
+    inset 0 -4px 0 rgba(0,0,0,0.35),
+    inset 0 4px 0 rgba(255,255,255,0.35),
+    0 0 0 3px var(--c-bg),
+    0 0 0 5px var(--c-yellow),
+    0 0 18px rgba(255,214,10,0.55);
+}
+.arcade.copied { background: var(--c-teal); color: var(--c-bg); }
+
+/* ========== shell back + mute ========== */
+.shell-btn {
+  position: fixed; z-index: 95;
+  background: rgba(10,10,30,0.7);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: #fff;
+  width: 38px; height: 38px;
+  font-size: 14px;
+  display: grid; place-items: center;
+  border-radius: 6px;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  letter-spacing: 0;
+}
+.shell-btn:hover { border-color: rgba(255,255,255,0.5); }
+.shell-btn:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
+.shell-back {
+  top: calc(12px + env(safe-area-inset-top));
+  left: calc(12px + env(safe-area-inset-left));
+  width: auto; padding: 0 10px;
+}
+.shell-mute {
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+}
+
+/* ========== page-glitch transition ========== */
+.page-glitch {
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255,0,110,0.18), rgba(0,245,255,0.18));
+  mix-blend-mode: screen;
+  animation: pageGlitch 0.22s steps(4, end) forwards;
+}
+@keyframes pageGlitch {
+  0%   { opacity: 0; transform: translate(0,0); filter: hue-rotate(0); }
+  25%  { opacity: 1; transform: translate(-6px,2px); filter: hue-rotate(40deg); }
+  50%  { opacity: 1; transform: translate(6px,-2px); filter: hue-rotate(-30deg); }
+  75%  { opacity: 1; transform: translate(-2px,1px); filter: hue-rotate(15deg); }
+  100% { opacity: 0; transform: translate(0,0); filter: hue-rotate(0); }
+}
+
+/* ========== shared keyframes ========== */
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.06); }
+}
+@keyframes glitch {
+  0%   { transform: translate(0,0); filter: hue-rotate(0); }
+  20%  { transform: translate(-3px,2px); filter: hue-rotate(20deg); }
+  40%  { transform: translate(3px,-2px); filter: hue-rotate(-15deg); }
+  60%  { transform: translate(-2px,-1px); filter: hue-rotate(10deg); }
+  80%  { transform: translate(2px,1px); filter: hue-rotate(-5deg); }
+  100% { transform: translate(0,0); filter: hue-rotate(0); }
+}
+@keyframes flameFlicker {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.18); }
+}
+
+.glitch { animation: glitch 0.4s steps(4, end) 1; }
+.pulse  { animation: pulse 1.1s ease-in-out infinite; }
+
+/* ========== wordmark ========== */
+.wordmark {
+  font-size: clamp(28px, 11vw, 104px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* ========== rainbow mode (konami unlock) ========== */
+body.rainbow .chrom {
+  animation: rainbowHue 8s linear infinite;
+}
+@keyframes rainbowHue {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* ========== a11y media queries ========== */
+@media (prefers-reduced-motion: reduce) {
+  .pulse, .chrom-jitter, .glitch, body.rainbow .chrom { animation: none !important; }
+  .page-glitch { animation: none; opacity: 0; }
+  .arcade { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  #scanlines, #vignette { display: none; }
+  .shell-btn { backdrop-filter: none; background: rgba(10,10,30,0.95); }
+}
+@media (prefers-contrast: more) {
+  .chrom { text-shadow: 2px 0 0 var(--c-pink), -2px 0 0 var(--c-cyan), 0 0 0 #000; }
+  .shell-btn { border-color: #fff; }
+}

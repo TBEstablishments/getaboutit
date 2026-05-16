@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-<title>GETABOUTIT</title>
-<meta name="description" content="A one-tap stacking game. How high can you go." />
+<title>GETABOUTIT · Free Arcade · 17 Games</title>
+<meta name="description" content="A free retro arcade. 17 classic games. No signup. Just play. Stack, Snake, 2048, Blocks, Breakout, Pong, and more." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="canonical" href="https://getaboutit.com/" />
 
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/" />
-<meta property="og:title" content="GETABOUTIT" />
-<meta property="og:description" content="A one-tap stacking game. How high can you go." />
+<meta property="og:title" content="GETABOUTIT — Free Arcade" />
+<meta property="og:description" content="17 classic games. No signup. Just play." />
 <meta property="og:image" content="https://getaboutit.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="GETABOUTIT" />
-<meta name="twitter:description" content="A one-tap stacking game. How high can you go." />
+<meta name="twitter:title" content="GETABOUTIT — Free Arcade" />
+<meta name="twitter:description" content="17 classic games. No signup. Just play." />
 <meta name="twitter:image" content="https://getaboutit.com/og.png" />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -29,47 +29,74 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="/arcade.css" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "GETABOUTIT Arcade",
+  "description": "A free arcade of 17 classic games.",
+  "url": "https://getaboutit.com/",
+  "hasPart": [
+    { "@type": "VideoGame", "name": "Stack",      "url": "https://getaboutit.com/stack",      "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Snake",      "url": "https://getaboutit.com/snake",      "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Blocks",     "url": "https://getaboutit.com/blocks",     "genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "2048",       "url": "https://getaboutit.com/2048",       "genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "Breakout",   "url": "https://getaboutit.com/breakout",   "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Pong",       "url": "https://getaboutit.com/pong",       "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Memory",     "url": "https://getaboutit.com/memory",     "genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "Minesweeper","url": "https://getaboutit.com/minesweeper","genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "Flap",       "url": "https://getaboutit.com/flap",       "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Invaders",   "url": "https://getaboutit.com/invaders",   "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Asteroids",  "url": "https://getaboutit.com/asteroids",  "genre": "Arcade" },
+    { "@type": "VideoGame", "name": "Simon",      "url": "https://getaboutit.com/simon",      "genre": "Memory" },
+    { "@type": "VideoGame", "name": "Tic Tac Toe","url": "https://getaboutit.com/tictactoe",  "genre": "Strategy" },
+    { "@type": "VideoGame", "name": "Lights Out", "url": "https://getaboutit.com/lightsout",  "genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "Slide",      "url": "https://getaboutit.com/slide",      "genre": "Puzzle" },
+    { "@type": "VideoGame", "name": "Reaction",   "url": "https://getaboutit.com/reaction",   "genre": "Skill" },
+    { "@type": "VideoGame", "name": "Words",      "url": "https://getaboutit.com/words",      "genre": "Word" }
+  ]
+}
+</script>
 </head>
 <body>
 
-<div id="stage">
-  <canvas id="game" aria-label="GETABOUTIT stacking game" role="img"></canvas>
-  <div id="scanlines" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="scanlines" aria-hidden="true"></div>
+<div id="vignette" aria-hidden="true"></div>
 
-  <div id="hud" class="hidden" aria-hidden="true">
-    <div id="hud-floor"><span class="chrom"><span>1</span></span></div>
-    <div id="hud-perfect" class="hidden"><span id="perfect-count">×2</span> PERFECT</div>
-    <div id="hud-today">TODAY 0</div>
-    <button id="mute" type="button" aria-label="Toggle sound">🔊</button>
-  </div>
+<main id="home">
+  <header class="hero">
+    <h1 id="wordmark" class="wordmark chrom chrom-jitter"><span>GETABOUTIT</span></h1>
+    <p class="tagline">free arcade · no signup · just play</p>
+    <p class="stat-strip" id="stat-strip" aria-live="polite">
+      🕹 17 GAMES · ⚡ <span id="taps-count">0</span> TAPS · <span id="streak-emoji">🔥</span> <span id="streak-count">0</span> DAY STREAK
+    </p>
+    <p class="motd" id="motd"></p>
+  </header>
 
-  <div id="splash" class="screen" role="dialog" aria-label="Start screen">
-    <h1 class="wordmark chrom"><span>GETABOUTIT</span></h1>
-    <p class="subtitle">how high can you go</p>
-    <p class="tap-prompt">▶ TAP TO PLAY</p>
-    <p class="daily-tag"><span id="daily-date">DAILY</span></p>
-  </div>
+  <a href="#" class="daily-ribbon" id="daily-ribbon">
+    <span class="d-mark">✦ DAILY PICK ✦</span>
+    <span class="d-name chrom"><span id="daily-name">STACK</span></span>
+    <span class="d-arrow">→</span>
+  </a>
 
-  <div id="gameover" class="screen hidden" role="dialog" aria-label="Game over">
-    <h2 class="collapse glitch">TOWER COLLAPSE</h2>
-    <div class="final-floor chrom"><span id="final-floor">0</span></div>
-    <div class="stats">
-      <span>BEST <b id="stat-best">0</b></span>
-      <span class="sep">·</span>
-      <span>TODAY <b id="stat-today">0</b></span>
-      <span class="sep">·</span>
-      <span>ALLTIME <b id="stat-alltime">0</b></span>
-    </div>
-    <pre id="scorecard" class="scorecard" aria-label="Shareable score card"></pre>
-    <div class="buttons">
-      <button id="btn-copy" class="arcade" type="button" aria-label="Copy score to clipboard">COPY</button>
-      <button id="btn-share" class="arcade" type="button" aria-label="Share score">SHARE</button>
-    </div>
-    <p class="tap-prompt retry">▶ TAP TO RETRY</p>
-  </div>
-</div>
+  <section class="recent hidden" id="recent" aria-label="Recently played">
+    <h2 class="recent-label">RECENTLY PLAYED</h2>
+    <div class="recent-strip" id="recent-strip"></div>
+  </section>
 
-<script src="game.js"></script>
+  <section class="grid" id="grid" aria-label="Game grid"></section>
+
+  <footer class="foot">made with care · vanilla js · no tracking</footer>
+</main>
+
+<button id="surprise" class="arcade green" type="button" aria-label="Surprise me — random game">🎲 SURPRISE ME</button>
+<div id="rainbow-badge" class="hidden" aria-label="Rainbow mode unlocked">🌈</div>
+
+<script src="/shared/core.js"></script>
+<script src="/arcade.js"></script>
 </body>
 </html>

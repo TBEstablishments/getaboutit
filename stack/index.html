@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>STACK · GETABOUTIT</title>
+<meta name="description" content="A one-tap stacking game. How high can you go." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/stack" />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://getaboutit.com/stack" />
+<meta property="og:title" content="STACK · GETABOUTIT" />
+<meta property="og:description" content="A one-tap stacking game." />
+<meta property="og:image" content="https://getaboutit.com/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="manifest" href="/manifest.webmanifest" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="stage">
+  <canvas id="game" aria-label="STACK — tap to drop blocks" role="img"></canvas>
+
+  <div id="hud" class="hidden" aria-hidden="true">
+    <div id="hud-floor"><span class="chrom"><span>1</span></span></div>
+    <div id="hud-perfect" class="hidden"><span id="perfect-count">×2</span> PERFECT</div>
+    <div id="hud-today">TODAY 0</div>
+  </div>
+
+  <div id="splash" class="screen" role="dialog" aria-label="Start screen">
+    <h1 class="wordmark chrom"><span>STACK</span></h1>
+    <p class="subtitle">how high can you go</p>
+    <p class="tap-prompt pulse">▶ TAP TO PLAY</p>
+    <p class="daily-tag"><span id="daily-date">DAILY</span></p>
+  </div>
+
+  <div id="gameover" class="screen hidden" role="dialog" aria-label="Game over">
+    <h2 class="collapse glitch">TOWER COLLAPSE</h2>
+    <div class="final-floor chrom"><span id="final-floor">0</span></div>
+    <div class="stats">
+      <span>BEST <b id="stat-best">0</b></span>
+      <span class="sep">·</span>
+      <span>TODAY <b id="stat-today">0</b></span>
+      <span class="sep">·</span>
+      <span>ALLTIME <b id="stat-alltime">0</b></span>
+    </div>
+    <pre id="scorecard" class="scorecard" aria-label="Shareable score card"></pre>
+    <div class="buttons">
+      <button id="btn-copy" class="arcade" type="button" aria-label="Copy score">COPY</button>
+      <button id="btn-share" class="arcade cyan" type="button" aria-label="Share score">SHARE</button>
+    </div>
+    <p class="tap-prompt retry pulse">▶ TAP TO RETRY</p>
+  </div>
+</div>
+
+<script>window.GAME_KEY = 'stack';</script>
+<script src="/shared/core.js"></script>
+<script src="/shared/shell.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
