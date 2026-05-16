@@ -2,367 +2,188 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>GETABOUTIT — OG image generator</title>
+<title>GETABOUTIT — OG image generator (37 games)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 <style>
   html, body {
-    margin: 0;
-    background: #0a0a1e;
-    color: #fff;
-    font-family: 'Press Start 2P', monospace;
-    min-height: 100dvh;
+    margin: 0; background: #0a0a1e; color: #fff;
+    font-family: 'Press Start 2P', monospace; min-height: 100dvh;
   }
-  .wrap {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 32px 24px 96px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  h1 { font-size: 20px; letter-spacing: 0.08em; }
-  p  { font-size: 12px; line-height: 1.6; color: #06ffa5; max-width: 60ch; }
-  .preview {
-    background: #000;
-    border: 2px solid #8338ec;
-    padding: 8px;
-    width: fit-content;
-    max-width: 100%;
-    overflow: auto;
-  }
-  canvas { display: block; max-width: 100%; height: auto; }
-  .row { display: flex; gap: 12px; flex-wrap: wrap; }
-  button {
-    font-family: inherit;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    background: #ff006e;
-    color: #fff;
-    border: none;
-    padding: 12px 18px;
-    cursor: pointer;
-    box-shadow: 0 0 0 3px #0a0a1e, 0 0 0 5px #ff006e;
-  }
-  button.cyan   { background: #00f5ff; color: #0a0a1e; box-shadow: 0 0 0 3px #0a0a1e, 0 0 0 5px #00f5ff; }
-  button.green  { background: #06ffa5; color: #0a0a1e; box-shadow: 0 0 0 3px #0a0a1e, 0 0 0 5px #06ffa5; }
-  button.yellow { background: #ffd60a; color: #0a0a1e; box-shadow: 0 0 0 3px #0a0a1e, 0 0 0 5px #ffd60a; }
-  button:active { transform: translateY(2px); }
-  hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 18px 0; }
-  .label { font-size: 10px; color: rgba(255,255,255,0.6); }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 24px 96px; }
+  h1 { font-size: 16px; letter-spacing: 0.08em; margin: 0 0 6px; }
+  p { font-size: 10px; line-height: 1.6; color: #06ffa5; max-width: 60ch; margin: 4px 0; }
+  .toolbar { position: sticky; top: 0; background: rgba(10,10,30,0.95); z-index: 10; padding: 12px 0; border-bottom: 1px solid #8338ec; margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  button { background: #ff006e; color: #fff; border: none; padding: 10px 18px; font-family: inherit; font-size: 10px; letter-spacing: 0.14em; cursor: pointer; }
+  button.alt { background: #00f5ff; color: #0a0a1e; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .card { background: #000; border: 1px solid #3a0ca3; padding: 8px; }
+  .card .label { font-size: 9px; color: #00f5ff; margin-bottom: 6px; letter-spacing: 0.18em; }
+  canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+  .save { margin-top: 6px; display: flex; gap: 6px; }
+  .save button { padding: 6px 8px; font-size: 8px; flex: 1; background: #8338ec; }
 </style>
 </head>
 <body>
-
 <div class="wrap">
+  <h1>GETABOUTIT — OG image generator</h1>
+  <p>Renders one 1200×630 OG image per game (37 total). Click SAVE ALL to download a zip-free batch (one PNG at a time). Or click individual SAVE buttons.</p>
+  <p>Saved files go to your Downloads folder named <code>og-&lt;key&gt;.png</code>. Drop them into <code>/og/</code> in the repo and update game meta tags to reference <code>https://getaboutit.com/og/&lt;key&gt;.png</code>.</p>
 
-  <h1>GETABOUTIT — image generator</h1>
-  <p>Render each asset, then click its download button. Save into the repo root next to <code>index.html</code>.</p>
-
-  <hr/>
-
-  <div>
-    <p class="label">og.png — 1200 × 630 (Open Graph / Twitter card)</p>
-    <div class="preview"><canvas id="og" width="1200" height="630"></canvas></div>
-    <div class="row" style="margin-top:12px">
-      <button onclick="render('og'); download('og','og.png')">Render &amp; Download og.png</button>
-    </div>
+  <div class="toolbar">
+    <button id="saveAll">⬇ SAVE ALL 37</button>
+    <button class="alt" id="reload">↻ RERENDER</button>
   </div>
 
-  <hr/>
-
-  <div>
-    <p class="label">apple-touch-icon.png — 180 × 180</p>
-    <div class="preview"><canvas id="apple" width="180" height="180"></canvas></div>
-    <div class="row" style="margin-top:12px">
-      <button class="cyan" onclick="render('apple'); download('apple','apple-touch-icon.png')">Render &amp; Download apple-touch-icon.png</button>
-    </div>
-  </div>
-
-  <hr/>
-
-  <div>
-    <p class="label">favicon.png — 32 × 32 (PNG fallback for favicon.svg)</p>
-    <div class="preview" style="image-rendering: pixelated"><canvas id="favicon" width="32" height="32" style="width:128px;height:128px"></canvas></div>
-    <div class="row" style="margin-top:12px">
-      <button class="green" onclick="render('favicon'); download('favicon','favicon.png')">Render &amp; Download favicon.png</button>
-    </div>
-  </div>
-
-  <hr/>
-
-  <div class="row">
-    <button class="yellow" onclick="renderAll()">Render All Previews</button>
-  </div>
-
+  <div class="grid" id="grid"></div>
 </div>
 
 <script>
-const PAL = ['#ff006e','#d100d1','#8338ec','#3a0ca3','#4361ee','#00f5ff','#06ffa5','#ffd60a','#ff9500','#ef233c'];
-const COS30 = Math.cos(Math.PI/6);
-const SIN30 = Math.sin(Math.PI/6);
+const PAL = {
+  pink: '#ff006e', magenta: '#d100d1', purple: '#8338ec', deeppurple: '#3a0ca3',
+  blue: '#4361ee', cyan: '#00f5ff', teal: '#06ffa5', yellow: '#ffd60a',
+  orange: '#ff9500', red: '#ef233c'
+};
 
-function shade(hex, m) {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
-  return `rgb(${Math.round(r*m)},${Math.round(g*m)},${Math.round(b*m)})`;
-}
+const GAMES = [
+  { key: 'stack',       name: 'STACK',       tag: 'one-tap tower',         color: 'pink'      },
+  { key: 'snake',       name: 'SNAKE',       tag: 'eat the dots',          color: 'teal'      },
+  { key: 'blocks',      name: 'BLOCKS',      tag: 'lines disappear',       color: 'cyan'      },
+  { key: 'p2048',       name: '2048',        tag: 'merge to win',          color: 'yellow'    },
+  { key: 'breakout',    name: 'BREAKOUT',    tag: 'smash the bricks',      color: 'orange'    },
+  { key: 'pong',        name: 'PONG',        tag: 'first to eleven',       color: 'purple'    },
+  { key: 'flap',        name: 'FLAP',        tag: 'mind the gap',          color: 'yellow'    },
+  { key: 'invaders',    name: 'INVADERS',    tag: 'protect the line',      color: 'teal'      },
+  { key: 'asteroids',   name: 'ASTEROIDS',   tag: 'thrust and shoot',      color: 'cyan'      },
+  { key: 'bubbles',     name: 'BUBBLES',     tag: 'pop chain combos',      color: 'magenta'   },
+  { key: 'runner',      name: 'RUNNER',      tag: 'one tap to jump',       color: 'cyan'      },
+  { key: 'slither',     name: 'SLITHER',     tag: 'grow and dodge',        color: 'teal'      },
+  { key: 'memory',      name: 'MEMORY',      tag: 'match the cards',       color: 'magenta'   },
+  { key: 'minesweeper', name: 'MINES',       tag: "don't touch",           color: 'red'       },
+  { key: 'slide',       name: 'SLIDE',       tag: 'order the tiles',       color: 'purple'    },
+  { key: 'lightsout',   name: 'LIGHTS OUT',  tag: 'turn them off',         color: 'magenta'   },
+  { key: 'words',       name: 'WORDS',       tag: 'guess in six',          color: 'teal'      },
+  { key: 'sudoku',      name: 'SUDOKU',      tag: 'fill the grid',         color: 'blue'      },
+  { key: 'dots',        name: 'DOTS',        tag: 'claim the squares',     color: 'pink'      },
+  { key: 'pixel',       name: 'PIXEL',       tag: 'paint by numbers',      color: 'blue'      },
+  { key: 'tictactoe',   name: 'TIC TAC TOE', tag: 'three in a row',        color: 'blue'      },
+  { key: 'chess',       name: 'CHESS',       tag: 'the eternal game',      color: 'purple'    },
+  { key: 'checkers',    name: 'CHECKERS',    tag: 'king me',               color: 'orange'    },
+  { key: 'connect4',    name: 'CONNECT 4',   tag: 'four in a row',         color: 'yellow'    },
+  { key: 'battleship',  name: 'BATTLESHIP',  tag: 'fire when ready',       color: 'deeppurple'},
+  { key: 'go',          name: 'GO',          tag: 'ancient strategy',      color: 'deeppurple'},
+  { key: 'backgammon',  name: 'BACKGAMMON',  tag: 'race for home',         color: 'orange'    },
+  { key: 'blackjack',   name: 'BLACKJACK',   tag: '21 or bust',            color: 'teal'      },
+  { key: 'poker',       name: 'POKER',       tag: 'jacks or better',       color: 'yellow'    },
+  { key: 'solitaire',   name: 'SOLITAIRE',   tag: 'classic time killer',   color: 'cyan'      },
+  { key: 'hearts',      name: 'HEARTS',      tag: 'shoot the moon',        color: 'red'       },
+  { key: 'cribbage',    name: 'CRIBBAGE',    tag: 'fifteen-two',           color: 'yellow'    },
+  { key: 'spider',      name: 'SPIDER',      tag: 'harder solitaire',      color: 'magenta'   },
+  { key: 'craps',       name: 'CRAPS',       tag: 'roll the bones',        color: 'red'       },
+  { key: 'simon',       name: 'SIMON',       tag: 'remember the sequence', color: 'pink'      },
+  { key: 'reaction',    name: 'REACTION',    tag: 'wait... tap',           color: 'red'       },
+  { key: 'type',        name: 'TYPE RACE',   tag: 'fast fingers',          color: 'cyan'      }
+];
 
-function drawBackground(ctx, W, H) {
-  // Deep space gradient
-  const sky = ctx.createLinearGradient(0, 0, 0, H);
-  sky.addColorStop(0, '#01000c');
-  sky.addColorStop(0.6, '#0a0220');
-  sky.addColorStop(1, '#1a0635');
-  ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, W, H);
-
-  // Starfield
-  const rand = mulberry32(202405);
-  for (let i = 0; i < Math.round(W * H / 2400); i++) {
-    const x = rand() * W;
-    const y = rand() * H * 0.95;
-    const sz = rand() * 2 + 0.6;
-    ctx.fillStyle = `rgba(255,255,255,${(0.4 + rand() * 0.6).toFixed(3)})`;
-    ctx.fillRect(x, y, sz, sz);
-  }
-
-  // Nebula glow (magenta-cyan)
-  const nebG1 = ctx.createRadialGradient(W * 0.25, H * 0.55, 20, W * 0.25, H * 0.55, W * 0.45);
-  nebG1.addColorStop(0, 'rgba(255, 0, 200, 0.45)');
-  nebG1.addColorStop(0.5, 'rgba(131, 56, 236, 0.20)');
-  nebG1.addColorStop(1, 'rgba(80, 30, 140, 0)');
-  ctx.fillStyle = nebG1;
-  ctx.fillRect(0, 0, W, H);
-
-  const nebG2 = ctx.createRadialGradient(W * 0.78, H * 0.28, 10, W * 0.78, H * 0.28, W * 0.4);
-  nebG2.addColorStop(0, 'rgba(0, 245, 255, 0.40)');
-  nebG2.addColorStop(0.6, 'rgba(0, 100, 200, 0.10)');
-  nebG2.addColorStop(1, 'rgba(0, 60, 120, 0)');
-  ctx.fillStyle = nebG2;
-  ctx.fillRect(0, 0, W, H);
-
-  // Galaxy spiral, top-right
-  ctx.save();
-  ctx.translate(W * 0.82, H * 0.20);
-  ctx.rotate(0.4);
-  const galG = ctx.createRadialGradient(0, 0, 6, 0, 0, Math.min(W, H) * 0.25);
-  galG.addColorStop(0, 'rgba(255,210,255,0.9)');
-  galG.addColorStop(0.35, 'rgba(180,120,220,0.45)');
-  galG.addColorStop(1, 'rgba(80,40,140,0)');
-  ctx.fillStyle = galG;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, Math.min(W, H) * 0.22, Math.min(W, H) * 0.06, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Earth's curved horizon at very bottom
-  const earthY = H * 1.15;
-  const earthR = W * 0.95;
-  const eg = ctx.createRadialGradient(W/2, earthY, earthR * 0.7, W/2, earthY, earthR * 1.05);
-  eg.addColorStop(0, '#1a4d8c');
-  eg.addColorStop(0.6, '#0a2540');
-  eg.addColorStop(1, '#020010');
-  ctx.fillStyle = eg;
-  ctx.beginPath();
-  ctx.arc(W/2, earthY, earthR, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(0, 245, 255, 0.5)';
-  ctx.lineWidth = Math.max(2, W/450);
-  ctx.beginPath();
-  ctx.arc(W/2, earthY, earthR + 2, Math.PI + 0.25, 2 * Math.PI - 0.25);
-  ctx.stroke();
-}
-
-function mulberry32(seed) {
-  let s = seed >>> 0;
-  return function () {
-    s = (s + 0x6D2B79F5) >>> 0;
-    let t = s;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function drawIsoBlock(ctx, cx, cy, w, d, h, color) {
-  // cx, cy = on-screen anchor for bottom front-right vertex of rhombus
-  // simplified: just draw a stack illustration block
-  const sx = w * COS30 / 2;
-  const sy = w * SIN30 / 2;
-  const dx = d * COS30 / 2;
-  const dy = d * SIN30 / 2;
-
-  const tFR = { x: cx,        y: cy - h };
-  const tBR = { x: cx + sx*2, y: cy - sy*2 - h };
-  const tBL = { x: cx,        y: cy - sy*2 - dy*2 - h };
-  const tFL = { x: cx - dx*2, y: cy - dy*2 - h };
-
-  const bFR = { x: cx,        y: cy };
-  const bBR = { x: cx + sx*2, y: cy - sy*2 };
-  const bFL = { x: cx - dx*2, y: cy - dy*2 };
-
-  // Right face
-  ctx.fillStyle = shade(color, 0.70);
-  ctx.beginPath();
-  ctx.moveTo(tFR.x, tFR.y);
-  ctx.lineTo(tBR.x, tBR.y);
-  ctx.lineTo(bBR.x, bBR.y);
-  ctx.lineTo(bFR.x, bFR.y);
-  ctx.closePath();
-  ctx.fill();
-
-  // Front face
-  ctx.fillStyle = shade(color, 0.55);
-  ctx.beginPath();
-  ctx.moveTo(tFR.x, tFR.y);
-  ctx.lineTo(tFL.x, tFL.y);
-  ctx.lineTo(bFL.x, bFL.y);
-  ctx.lineTo(bFR.x, bFR.y);
-  ctx.closePath();
-  ctx.fill();
-
-  // Top
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(tFR.x, tFR.y);
-  ctx.lineTo(tBR.x, tBR.y);
-  ctx.lineTo(tBL.x, tBL.y);
-  ctx.lineTo(tFL.x, tFL.y);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-  ctx.lineWidth = 1.4;
-  ctx.stroke();
-}
-
-function chromText(ctx, text, x, y, size, font) {
-  ctx.font = `${size}px ${font || "'Press Start 2P', monospace"}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#ff006e';
-  ctx.fillText(text, x + Math.max(2, size*0.04), y);
-  ctx.fillStyle = '#00f5ff';
-  ctx.fillText(text, x - Math.max(2, size*0.04), y);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(text, x, y);
-}
-
-function scanlines(ctx, W, H, alpha) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = '#000';
-  for (let y = 0; y < H; y += 3) ctx.fillRect(0, y, W, 1);
-  ctx.restore();
-}
-
-function renderOG() {
-  const canvas = document.getElementById('og');
-  const ctx = canvas.getContext('2d');
+function drawCard(canvas, g) {
   const W = 1200, H = 630;
-  ctx.clearRect(0, 0, W, H);
-  drawBackground(ctx, W, H);
-
-  // Tall iso tower illustration on the right — reaches the void
-  const baseX = W * 0.82;
-  const baseY = H * 0.92;
-  const bw = 96, bd = 96, bh = 22;
-  const tallStack = 14;
-  for (let i = 0; i < tallStack; i++) {
-    const shrink = 1 - i * 0.018;
-    drawIsoBlock(ctx, baseX, baseY - i * bh, bw * shrink, bd * shrink, bh, PAL[i % PAL.length]);
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const accent = PAL[g.color];
+  const bg = ctx.createRadialGradient(W/2, H*0.4, 100, W/2, H*0.4, Math.max(W, H));
+  bg.addColorStop(0, accent + '88');
+  bg.addColorStop(0.45, '#0a0a1e');
+  bg.addColorStop(1, '#05050f');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  const horY = H * 0.62;
+  ctx.strokeStyle = accent + 'b0'; ctx.lineWidth = 2;
+  for (let i = 0; i < 18; i++) {
+    const t = i / 17;
+    const y = horY + Math.pow(t, 1.8) * (H - horY);
+    ctx.globalAlpha = (1 - t) * 0.55;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
   }
-  // Glow under the top of the tower
-  const tipY = baseY - tallStack * bh;
-  const tipG = ctx.createRadialGradient(baseX, tipY, 5, baseX, tipY, 180);
-  tipG.addColorStop(0, 'rgba(255, 0, 110, 0.55)');
-  tipG.addColorStop(1, 'rgba(255, 0, 110, 0)');
-  ctx.fillStyle = tipG;
-  ctx.fillRect(0, 0, W, H);
-
-  // Wordmark — left side big
-  chromText(ctx, 'GETABOUTIT', W * 0.38, H * 0.34, 84);
-
-  // Tagline + zone teaser
-  ctx.font = "20px 'Press Start 2P', monospace";
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#06ffa5';
-  ctx.fillText('one-tap stacker · daily seed', W * 0.38, H * 0.50);
-
-  ctx.font = "16px 'Press Start 2P', monospace";
-  ctx.fillStyle = '#00f5ff';
-  ctx.fillText('✦ GROUND · NEON CITY · CLOUDS · ORBIT · NEBULA · THE VOID ✦', W * 0.38, H * 0.62);
-
-  ctx.font = "14px 'Press Start 2P', monospace";
-  ctx.fillStyle = 'rgba(0,245,255,0.85)';
-  ctx.textAlign = 'right';
-  ctx.fillText('getaboutit.com', W - 28, H - 24);
-
-  scanlines(ctx, W, H, 0.10);
+  ctx.globalAlpha = 1;
+  for (let i = -10; i <= 10; i++) {
+    const xB = W / 2 + i * (W / 8);
+    ctx.beginPath(); ctx.moveTo(xB, H); ctx.lineTo(W / 2, horY); ctx.stroke();
+  }
+  const sunG = ctx.createRadialGradient(W/2, horY, 20, W/2, horY, 280);
+  sunG.addColorStop(0, '#ffd60acc');
+  sunG.addColorStop(0.5, '#ff9500aa');
+  sunG.addColorStop(1, '#ff006e00');
+  ctx.fillStyle = sunG;
+  ctx.beginPath(); ctx.arc(W/2, horY, 280, 0, Math.PI*2); ctx.fill();
+  const lg = ctx.createLinearGradient(0, horY - 1, 0, horY + 1);
+  lg.addColorStop(0, '#ffd60a'); lg.addColorStop(1, '#ff006e');
+  ctx.fillStyle = lg; ctx.fillRect(0, horY - 2, W, 4);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
+  drawChromatic(ctx, 'GETABOUTIT', W/2, 130, 80);
+  drawChromatic(ctx, g.name, W/2, H/2 - 30, 140);
+  ctx.fillStyle = '#ffffffaa';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 28px "Press Start 2P", monospace';
+  ctx.fillText(g.tag, W/2, H/2 + 80);
+  ctx.fillStyle = '#ffd60a';
+  ctx.font = 'bold 22px "Press Start 2P", monospace';
+  const url = 'GETABOUTIT.COM/' + (g.key === 'p2048' ? '2048' : g.key.toUpperCase());
+  ctx.fillText(url, W/2, H - 60);
+  ctx.fillStyle = accent;
+  ctx.fillRect(0, 0, 8, H);
+  ctx.fillRect(W - 8, 0, 8, H);
 }
 
-function renderApple() {
-  const canvas = document.getElementById('apple');
-  const ctx = canvas.getContext('2d');
-  const W = 180, H = 180;
-  // Filled tile, no sky gradient — small icon
-  ctx.fillStyle = '#0a0a1e';
-  ctx.fillRect(0, 0, W, H);
-
-  // Two offset blocks (pink + cyan)
-  const w = 100, h = 78;
-  // back: cyan
-  ctx.fillStyle = '#00f5ff';
-  ctx.fillRect(22, 50, w, h);
-  // front: pink
-  ctx.fillStyle = '#ff006e';
-  ctx.fillRect(58, 28, w, h);
-
-  // Inner highlights
-  ctx.fillStyle = 'rgba(255,255,255,0.25)';
-  ctx.fillRect(58, 28, w, 6);
-  ctx.fillRect(22, 50, w, 6);
+function drawChromatic(ctx, text, x, y, size) {
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold ' + size + 'px "Press Start 2P", monospace';
+  ctx.fillStyle = '#ff006e'; ctx.fillText(text, x + 3, y);
+  ctx.fillStyle = '#00f5ff'; ctx.fillText(text, x - 3, y);
+  ctx.fillStyle = '#ffffff'; ctx.fillText(text, x, y);
 }
 
-function renderFavicon() {
-  const canvas = document.getElementById('favicon');
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, 32, 32);
-  // back cyan, front pink — offset stacked
-  ctx.fillStyle = '#00f5ff';
-  ctx.fillRect(4, 10, 18, 14);
-  ctx.fillStyle = '#ff006e';
-  ctx.fillRect(10, 4, 18, 14);
-}
-
-function render(which) {
-  if (which === 'og') renderOG();
-  else if (which === 'apple') renderApple();
-  else if (which === 'favicon') renderFavicon();
-}
-
-function renderAll() { renderOG(); renderApple(); renderFavicon(); }
-
-function download(canvasId, filename) {
-  const canvas = document.getElementById(canvasId);
+function saveCanvas(canvas, name) {
   canvas.toBlob((blob) => {
-    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
     a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }, 'image/png');
 }
 
-document.fonts.ready.then(renderAll);
+const grid = document.getElementById('grid');
+const cards = [];
+function render() {
+  grid.innerHTML = '';
+  cards.length = 0;
+  for (const g of GAMES) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = '<div class="label">' + g.name + ' · ' + g.key + '</div>';
+    const canvas = document.createElement('canvas');
+    card.appendChild(canvas);
+    const save = document.createElement('div');
+    save.className = 'save';
+    const btn = document.createElement('button');
+    btn.textContent = 'SAVE';
+    btn.addEventListener('click', () => saveCanvas(canvas, 'og-' + g.key + '.png'));
+    save.appendChild(btn);
+    card.appendChild(save);
+    grid.appendChild(card);
+    drawCard(canvas, g);
+    cards.push({ canvas, g });
+  }
+}
+document.fonts.ready.then(render).catch(render);
+document.getElementById('reload').addEventListener('click', render);
+document.getElementById('saveAll').addEventListener('click', async () => {
+  for (const { canvas, g } of cards) {
+    saveCanvas(canvas, 'og-' + g.key + '.png');
+    await new Promise(r => setTimeout(r, 250));
+  }
+});
 </script>
-
 </body>
 </html>
