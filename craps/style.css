@@ -1,0 +1,37 @@
+canvas#table {
+  display: block;
+  background:
+    repeating-linear-gradient(45deg, rgba(239,35,60,0.05), rgba(239,35,60,0.05) 2px, transparent 2px, transparent 12px),
+    radial-gradient(ellipse at center, #2a0a1a 0%, #1a0510 70%, #050303 100%);
+  border: 2px solid var(--c-red);
+  box-shadow: 0 0 0 4px var(--c-bg), 0 0 28px rgba(239,35,60,0.4);
+  touch-action: manipulation;
+  margin-top: 84px;
+  margin-bottom: 12px;
+}
+canvas#dice { display: block; margin-bottom: 12px; }
+.phase-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--c-yellow);
+  text-align: center;
+  margin: 8px 0;
+}
+.status {
+  font-size: clamp(10px, 2vw, 13px);
+  letter-spacing: 0.16em;
+  color: var(--c-cyan);
+  text-align: center;
+  margin-bottom: 14px;
+  min-height: 18px;
+}
+.status.win { color: var(--c-teal); }
+.status.lose { color: var(--c-red); }
+.status.hot { color: var(--c-orange); animation: hotPulse 1.2s ease-in-out infinite; }
+@keyframes hotPulse { 50% { filter: brightness(1.4); } }
+.ctrls {
+  display: flex; gap: 10px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+.ctrls .arcade { padding: 12px 18px; font-size: 11px; }
+@media (prefers-reduced-motion: reduce) { .status.hot { animation: none; } }

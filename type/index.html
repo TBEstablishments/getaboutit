@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>TYPE RACE · GETABOUTIT</title>
+<meta name="description" content="Type Race — fast fingers vs the clock. Race three AI typists." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/type" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'type';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>WPM <b id="wpm">0</b></span>
+    <span>ACC <b id="acc">100</b>%</span>
+    <span>BEST <b id="best">0</b></span>
+    <span id="timer"><b id="time">60</b>s</span>
+  </div>
+  <div id="passage" class="passage" aria-live="polite"></div>
+  <div id="bars" class="bars">
+    <div class="bar bar-p"><span class="lbl">YOU</span><div class="fill" id="barYou"></div></div>
+    <div class="bar"><span class="lbl">A 40</span><div class="fill" id="barA"></div></div>
+    <div class="bar"><span class="lbl">B 60</span><div class="fill" id="barB"></div></div>
+    <div class="bar"><span class="lbl">C 80</span><div class="fill" id="barC"></div></div>
+  </div>
+  <input type="text" id="input" class="input-box" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" placeholder="TYPE HERE…" />
+  <div id="result" class="result hidden"></div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>

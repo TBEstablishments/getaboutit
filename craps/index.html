@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>CRAPS · GETABOUTIT</title>
+<meta name="description" content="Craps — pass line bet, roll the dice, chase the streak." />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://getaboutit.com/craps" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="/shared/core.css" />
+<link rel="stylesheet" href="style.css" />
+<script>window.GAME_KEY = 'craps';</script>
+<script src="/shared/core.js" defer></script>
+<script src="/shared/shell.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div id="hud" class="hud">
+    <span>CREDITS <b id="credits">1000</b></span>
+    <span>BET <b id="bet">25</b></span>
+    <span>STREAK <b id="streak">0</b></span>
+  </div>
+  <canvas id="table" aria-label="Craps table"></canvas>
+  <div id="phaseLabel" class="phase-label">COME OUT</div>
+  <canvas id="dice" aria-label="Dice"></canvas>
+  <div id="status" class="status">TAP ROLL</div>
+  <div class="ctrls">
+    <button class="arcade cyan" id="betDown">−25</button>
+    <button class="arcade green" id="rollBtn">ROLL DICE</button>
+    <button class="arcade cyan" id="betUp">+25</button>
+  </div>
+</div>
+<script src="game.js" defer></script>
+</body>
+</html>
