@@ -1,0 +1,72 @@
+html { height: auto; overflow: visible; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  padding-bottom: calc(30px + env(safe-area-inset-bottom));
+}
+
+#bg { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 60%, rgba(0,245,255,0.10), transparent 60%); }
+
+.about-page {
+  position: relative; z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding:
+    calc(36px + env(safe-area-inset-top))
+    calc(22px + env(safe-area-inset-right))
+    16px
+    calc(22px + env(safe-area-inset-left));
+}
+
+.about-page .back-link-wrap {
+  margin: 0 0 20px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+.about-page .back-link {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+}
+.about-page .back-link:hover { color: var(--c-cyan); }
+
+.about-page .wordmark {
+  font-size: clamp(32px, 8vw, 64px);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin: 6px 0 32px;
+}
+
+.about-section { margin: 26px 0 32px; }
+.about-section h2 {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--c-cyan);
+  margin-bottom: 14px;
+}
+.about-section p {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 12px;
+}
+.about-section a {
+  color: var(--c-pink);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(255,0,110,0.45);
+}
+.about-section a:hover {
+  color: var(--c-cyan);
+  border-color: var(--c-cyan);
+}
+.about-section code {
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  font-size: 10px;
+}

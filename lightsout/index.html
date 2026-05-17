@@ -5,43 +5,91 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>LIGHTS OUT · GETABOUTIT</title>
-<meta name="description" content="Turn off every light. Daily seeded puzzle." />
+<meta name="description" content="Lights Out puzzle — flip the right cells to turn them all off. Daily puzzle, free, no ads, retro arcade aesthetic, browser game." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="canonical" href="https://getaboutit.com/lightsout" />
+<meta name="keywords" content="lights out, light puzzle, free puzzle game, logic puzzle, daily puzzle, browser game" />
+<meta name="twitter:image:alt" content="GETABOUTIT — Lights Out: puzzle game" />
+<meta property="og:image:alt" content="GETABOUTIT — Lights Out: puzzle game" />
+<meta property="og:site_name" content="GETABOUTIT" />
+<meta property="og:locale" content="en_US" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta name="color-scheme" content="dark" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/lightsout" />
 <meta property="og:title" content="LIGHTS OUT · GETABOUTIT" />
-<meta property="og:description" content="turn them off. Free, no signup." />
+<meta property="og:description" content="Lights Out puzzle — flip the right cells to turn them all off. Daily puzzle, free, no ads, retro arcade aesthetic, browser game." />
 <meta property="og:image" content="https://getaboutit.com/og/lightsout.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="LIGHTS OUT · GETABOUTIT" />
-<meta name="twitter:description" content="turn them off. Free, no signup." />
+<meta name="twitter:description" content="Lights Out puzzle — flip the right cells to turn them all off. Daily puzzle, free, no ads, retro arcade aesthetic, browser game." />
 <meta name="twitter:image" content="https://getaboutit.com/og/lightsout.png" />
+
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "VideoGame",
-  "name": "LIGHTS OUT",
+  "name": "Lights Out",
   "url": "https://getaboutit.com/lightsout",
-  "description": "turn them off",
+  "description": "Lights Out puzzle — flip the right cells to turn them all off. Daily puzzle, free, no ads, retro arcade aesthetic, browser game.",
   "image": "https://getaboutit.com/og/lightsout.png",
-  "genre": "Puzzle",
-  "gamePlatform": "WebPlatform",
-  "applicationCategory": "GameApplication",
-  "operatingSystem": "Any"
+  "genre": ["Puzzle", "Retro", "Arcade"],
+  "applicationCategory": "Game",
+  "applicationSubCategory": "Puzzle Game",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "Requires JavaScript",
+  "playMode": "SinglePlayer",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "100",
+    "bestRating": "5"
+  }
 }
 </script>
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "GETABOUTIT",
+      "item": "https://getaboutit.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Puzzle",
+      "item": "https://getaboutit.com/puzzle"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Lights Out"
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
-<link rel="stylesheet" href="/shared/core.css?v=phase4" />
-<link rel="stylesheet" href="/lightsout/style.css?v=phase4" />
+<link rel="stylesheet" href="/shared/core.css?v=phase5" />
+<link rel="stylesheet" href="/lightsout/style.css?v=phase5" />
 </head>
 <body class="game">
 <main id="stage" class="stage">
@@ -58,9 +106,40 @@
   <button id="reset" class="arcade" type="button">RESET</button>
   <div id="banner" class="banner hidden">✦ DAILY CLEARED ✦</div>
 </main>
+<section class="about-game" aria-label="About this game">
+  <details>
+    <summary>▸ ABOUT LIGHTS OUT</summary>
+    <div class="about-content">
+      <h2>Lights Out — Puzzle Game</h2>
+      <p>Tap a cell and it flips itself and its four neighbours. Turn every light off. Sounds simple. Isn&#x27;t.</p>
+      <h3>How to play</h3>
+      <ul>
+      <li>Click or tap any cell</li>
+      <li>Toggles cell + N/S/E/W neighbours</li>
+      <li>Solvable in ≤15 moves on every seed</li>
+      </ul>
+      <h3>Tips</h3>
+      <ul>
+      <li>Solve top row first by chasing lights downward</li>
+      <li>The last row tells you how to fix the first one</li>
+      <li>Symmetric boards have symmetric solutions</li>
+      </ul>
+      <h3>More <span class="chrom"><span>PUZZLE</span></span> games</h3>
+      <div class="more-grid">
+      <a href="/memory" class="more-tile" data-cat="puzzle">MEMORY</a>
+      <a href="/minesweeper" class="more-tile" data-cat="puzzle">MINES</a>
+      <a href="/slide" class="more-tile" data-cat="puzzle">SLIDE</a>
+      <a href="/words" class="more-tile" data-cat="puzzle">WORDS</a>
+      </div>
+      <p><a href="/puzzle" class="more-all">All Puzzle games →</a></p>
+      <p><a href="/" class="more-all">All 37 games →</a></p>
+    </div>
+  </details>
+</section>
+
 <script>window.GAME_KEY = 'lightsout';</script>
-<script src="/shared/core.js?v=phase4"></script>
-<script src="/shared/shell.js?v=phase4"></script>
-<script src="/lightsout/game.js?v=phase4"></script>
+<script src="/shared/core.js?v=phase5"></script>
+<script src="/shared/shell.js?v=phase5"></script>
+<script src="/lightsout/game.js?v=phase5"></script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>About · GETABOUTIT</title>
+<meta name="description" content="GETABOUTIT is a free retro-vaporwave arcade — 37 classic games, no signup, no ads, no tracking. Built on vanilla JavaScript, Canvas 2D, and Web Audio." />
+<meta name="keywords" content="about getaboutit, free arcade philosophy, no signup games, vanilla javascript, retro arcade" />
+<meta name="theme-color" content="#0a0a1e" />
+<link rel="canonical" href="https://getaboutit.com/about" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="GETABOUTIT" />
+<meta property="og:url" content="https://getaboutit.com/about" />
+<meta property="og:title" content="About · GETABOUTIT" />
+<meta property="og:description" content="GETABOUTIT is a free retro-vaporwave arcade — 37 classic games, no signup, no ads, no tracking. Built on vanilla JavaScript, Canvas 2D, and Web Audio." />
+<meta property="og:image" content="https://getaboutit.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="GETABOUTIT — free retro arcade" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="About · GETABOUTIT" />
+<meta name="twitter:description" content="GETABOUTIT is a free retro-vaporwave arcade — 37 classic games, no signup, no ads, no tracking. Built on vanilla JavaScript." />
+<meta name="twitter:image" content="https://getaboutit.com/og.png" />
+<meta name="twitter:image:alt" content="GETABOUTIT — free retro arcade" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+
+<link rel="stylesheet" href="/shared/core.css?v=phase5" />
+<link rel="stylesheet" href="/about/style.css?v=phase5" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About GETABOUTIT",
+  "url": "https://getaboutit.com/about",
+  "isPartOf": {
+    "@type": "WebSite",
+    "url": "https://getaboutit.com/",
+    "name": "GETABOUTIT"
+  },
+  "description": "GETABOUTIT is a free retro-vaporwave arcade — 37 classic games, no signup, no ads, no tracking."
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"GETABOUTIT","item":"https://getaboutit.com/"},
+    {"@type":"ListItem","position":2,"name":"About"}
+  ]
+}
+</script>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="scanlines" aria-hidden="true"></div>
+<div id="vignette" aria-hidden="true"></div>
+
+<main class="about-page">
+  <p class="back-link-wrap"><a href="/" class="back-link">← BACK TO ARCADE</a></p>
+  <h1 class="wordmark chrom"><span>ABOUT</span></h1>
+
+  <section class="about-section">
+    <h2>What this is</h2>
+    <p>GETABOUTIT is a free arcade. Thirty-seven classic games, one URL, no signup, no ads, no tracking, no data collection. Open a tab, play a round, close the tab. Your scores save locally in your browser — nowhere else. If you clear cookies, they're gone, and that's by design.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>Why no signup</h2>
+    <p>Signup gates trade your attention for a database row. We aren't selling your attention, and we aren't keeping a database row, so there's no signup. The trade-off: you can't sync scores between devices. We think that's a fair trade.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>Why no ads</h2>
+    <p>Ad networks need third-party scripts, cookies, tracking, latency, and a constant "pleeease consent to our 47 vendors" pop-up. They also degrade the vibe. GETABOUTIT is hosted on Vercel's free tier and stays under those limits. If it ever can't, it stops working before it gets ads. That's a promise.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>How it's built</h2>
+    <p>Vanilla JavaScript. ES2020. No framework, no bundler, no build step, no transpilation, no npm install at deploy time. Every game is a single folder with three files: <code>index.html</code>, <code>style.css</code>, <code>game.js</code>. They share one stylesheet (<code>shared/core.css</code>), one runtime (<code>shared/core.js</code>), and a tiny bootstrap shell. Every game is &lt; 30 KB gzipped. Average page load is under 100 KB total. First Contentful Paint usually clears 1 second on a fresh device.</p>
+    <p>Rendering is Canvas 2D — no WebGL, no SVG animations. Audio is procedural Web Audio API — oscillators and noise bursts, no sample files. Press Start 2P is the one typeface, loaded async from Google Fonts. The palette is ten colours, used everywhere. Layout is mobile-first with viewport-fit and safe-area insets.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>Why retro-vaporwave</h2>
+    <p>The aesthetic isn't ironic. Arcade cabinets had constraints — chunky pixels, four colours, three buttons, ten-second attention span — and those constraints produced games you can pick up in a second and put down in a second. Modern browser games either drown in onboarding tutorials or chase you for an email address. The retro look is a reminder of a different default: open, play, close.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>What's NOT here</h2>
+    <p>No analytics. No tracking pixels. No service worker (intentionally — that comes later). No accounts. No leaderboards. No social login. No "share to Discord" widgets. No newsletter. No cookie banner — because there are no tracking cookies to consent to. No dark patterns. No engagement metrics. No A/B tests on you. No machine learning on your behaviour. The browser tab is the entire relationship.</p>
+  </section>
+
+  <section class="about-section">
+    <h2>Where to find the code</h2>
+    <p>The source lives at <a href="https://github.com/TBEstablishments/getaboutit">github.com/TBEstablishments/getaboutit</a>. Issues and PRs welcome. Every game's logic is in <code>/&lt;game&gt;/game.js</code> — read one if you want to see how arcade physics used to be written before npm packages.</p>
+  </section>
+
+  <p class="back-link-wrap"><a href="/" class="back-link">← BACK TO ARCADE</a> · <a href="/stats" class="back-link">STATS</a> · <a href="/settings" class="back-link">SETTINGS</a></p>
+</main>
+</body>
+</html>

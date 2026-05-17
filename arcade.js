@@ -387,6 +387,19 @@ const searchInput = $('#searchInput');
 const searchClear = $('#searchClear');
 searchInput.addEventListener('input', () => { curSearch = searchInput.value; applyFilter(); });
 searchClear.addEventListener('click', () => { searchInput.value = ''; curSearch = ''; applyFilter(); searchInput.focus(); });
+
+// SearchAction handler — Google may send users to /?q=<term> after picking the
+// SearchAction sitelink. Honour ?q= and ?cat= on load.
+try {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  const cat = params.get('cat');
+  if (q) { searchInput.value = q; curSearch = q; applyFilter(); }
+  if (cat && ['arcade','puzzle','board','cards','casino','mind','skill','all'].indexOf(cat) >= 0) {
+    curCat = cat;
+    applyFilter();
+  }
+} catch {}
 document.addEventListener('keydown', (e) => {
   if (e.key === '/') {
     const a = document.activeElement;

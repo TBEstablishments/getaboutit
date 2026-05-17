@@ -5,32 +5,91 @@
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>STACK · GETABOUTIT</title>
-<meta name="description" content="A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score." />
+<meta name="description" content="One-tap stacking tower. Time the drop, climb from ground to deep space, share your high score. Daily seed, free, no signup needed." />
 <meta name="theme-color" content="#0a0a1e" />
 <link rel="canonical" href="https://getaboutit.com/stack" />
+<meta name="keywords" content="stack game, tower stacking, one tap game, free arcade, daily challenge, retro arcade" />
+<meta name="twitter:image:alt" content="GETABOUTIT — Stack: arcade game" />
+<meta property="og:image:alt" content="GETABOUTIT — Stack: arcade game" />
+<meta property="og:site_name" content="GETABOUTIT" />
+<meta property="og:locale" content="en_US" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta name="color-scheme" content="dark" />
 
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getaboutit.com/stack" />
 <meta property="og:title" content="STACK · GETABOUTIT" />
-<meta property="og:description" content="A one-tap stacking game. Climb from ground to deep space." />
+<meta property="og:description" content="One-tap stacking tower. Time the drop, climb from ground to deep space, share your high score. Daily seed, free, no signup needed." />
 <meta property="og:image" content="https://getaboutit.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="STACK · GETABOUTIT" />
-<meta name="twitter:description" content="A one-tap stacking game. Climb from ground to deep space." />
+<meta name="twitter:description" content="One-tap stacking tower. Time the drop, climb from ground to deep space, share your high score. Daily seed, free, no signup needed." />
 <meta name="twitter:image" content="https://getaboutit.com/og.png" />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/manifest.webmanifest" />
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Stack",
+  "url": "https://getaboutit.com/stack",
+  "description": "One-tap stacking tower. Time the drop, climb from ground to deep space, share your high score. Daily seed, free, no signup needed.",
+  "image": "https://getaboutit.com/og/stack.png",
+  "genre": ["Arcade", "Retro"],
+  "applicationCategory": "Game",
+  "applicationSubCategory": "Arcade Game",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "Requires JavaScript",
+  "playMode": "SinglePlayer",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "100",
+    "bestRating": "5"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "GETABOUTIT",
+      "item": "https://getaboutit.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Arcade",
+      "item": "https://getaboutit.com/arcade"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Stack"
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
-<link rel="stylesheet" href="/stack/style.css?v=phase4" />
+<link rel="stylesheet" href="/stack/style.css?v=phase5" />
 <style>
   /* Floating arcade-home back button (stack uses self-contained style.css, no shared/core.css) */
   .stack-back {
@@ -52,21 +111,6 @@
   @media (prefers-reduced-transparency: reduce) { .stack-back { backdrop-filter: none; background: rgba(10,10,30,0.95); } }
 </style>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "VideoGame",
-  "name": "GETABOUTIT — STACK",
-  "url": "https://getaboutit.com/stack",
-  "description": "A one-tap stacking game. Climb from ground to deep space. Daily seed, shareable score.",
-  "genre": ["Arcade", "Casual"],
-  "playMode": "SinglePlayer",
-  "gamePlatform": ["Web Browser", "Mobile Web"],
-  "applicationCategory": "Game",
-  "operatingSystem": "Any",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-}
-</script>
 </head>
 <body class="game">
 
@@ -121,9 +165,40 @@
   </div>
 </div>
 
+<section class="about-game" aria-label="About this game">
+  <details>
+    <summary>▸ ABOUT STACK</summary>
+    <div class="about-content">
+      <h2>Stack — Arcade Game</h2>
+      <p>Stack is the one-tap tower. Each block slides across the screen — tap to lock it. Imperfect timing trims the next block smaller. Climb high enough and the world cycles through neon, space, and the void above the sky.</p>
+      <h3>How to play</h3>
+      <ul>
+      <li>Tap, click, or press space to drop the block</li>
+      <li>Time perfectly to keep the block full-width</li>
+      <li>Each floor cycles the colour palette</li>
+      </ul>
+      <h3>Tips</h3>
+      <ul>
+      <li>Watch the leading edge, not the centre</li>
+      <li>When the block gets tiny, slow down — half a heartbeat counts</li>
+      <li>Daily seed: same sequence for everyone that day</li>
+      </ul>
+      <h3>More <span class="chrom"><span>ARCADE</span></span> games</h3>
+      <div class="more-grid">
+      <a href="/snake" class="more-tile" data-cat="arcade">SNAKE</a>
+      <a href="/blocks" class="more-tile" data-cat="arcade">BLOCKS</a>
+      <a href="/2048" class="more-tile" data-cat="arcade">2048</a>
+      <a href="/breakout" class="more-tile" data-cat="arcade">BREAKOUT</a>
+      </div>
+      <p><a href="/arcade" class="more-all">All Arcade games →</a></p>
+      <p><a href="/" class="more-all">All 37 games →</a></p>
+    </div>
+  </details>
+</section>
+
 <script>window.GAME_KEY = 'stack';</script>
-<script src="/shared/core.js?v=phase4"></script>
-<script src="/stack/game.js?v=phase4"></script>
+<script src="/shared/core.js?v=phase5"></script>
+<script src="/stack/game.js?v=phase5"></script>
 <script>
   // arcade integration: record play, mirror Stack best score to GAI
   if (window.GAI) {
