@@ -34,8 +34,14 @@
   <div class="toolbar">
     <button id="saveAll">⬇ SAVE ALL 37</button>
     <button class="alt" id="reload">↻ RERENDER</button>
+    <button id="saveIcons">⬇ SAVE ALL ICONS</button>
   </div>
 
+  <h2 style="font-size:12px;letter-spacing:0.14em;color:#00f5ff;margin:16px 0 6px;">PWA ICON SET</h2>
+  <p>Renders favicon-16/32, apple-touch-icon (180), icon-192, icon-512, maskable-icon (512 with safe-zone). Click SAVE ALL ICONS to download all six in one pass.</p>
+  <div class="grid" id="iconGrid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));"></div>
+
+  <h2 style="font-size:12px;letter-spacing:0.14em;color:#00f5ff;margin:24px 0 6px;">PER-GAME OG CARDS</h2>
   <div class="grid" id="grid"></div>
 </div>
 
@@ -181,6 +187,67 @@ document.getElementById('reload').addEventListener('click', render);
 document.getElementById('saveAll').addEventListener('click', async () => {
   for (const { canvas, g } of cards) {
     saveCanvas(canvas, 'og-' + g.key + '.png');
+    await new Promise(r => setTimeout(r, 250));
+  }
+});
+
+// ============ PWA ICONS ============
+// Draws the chromatic "G" mark at six standard surface sizes.
+// `inset` is the fractional padding (0.10 = 10% on each side); maskable
+// uses 0.24 so the icon fits within Android's safe zone after adaptive crop.
+const ICONS = [
+  { name: 'favicon-16.png',       size: 16,  inset: 0.10, mask: false },
+  { name: 'favicon-32.png',       size: 32,  inset: 0.10, mask: false },
+  { name: 'apple-touch-icon.png', size: 180, inset: 0.14, mask: false },
+  { name: 'icon-192.png',         size: 192, inset: 0.14, mask: false },
+  { name: 'icon-512.png',         size: 512, inset: 0.14, mask: false },
+  { name: 'maskable-icon.png',    size: 512, inset: 0.24, mask: true  }
+];
+function drawIcon(canvas, size, inset) {
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0a0a1e'; ctx.fillRect(0, 0, size, size);
+  const inner = size * (1 - inset * 2);
+  // Italic Arial Black "G" centered, with cyan/pink chromatic shifts then white on top.
+  const fontPx = inner * 1.0;
+  ctx.font = '900 italic ' + fontPx + 'px "Arial Black", Helvetica, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const shift = fontPx * 0.07;
+  const cx = size / 2, cy = size / 2 + fontPx * 0.05;  // small visual baseline nudge
+  ctx.fillStyle = '#00f5ff'; ctx.fillText('G', cx - shift, cy);
+  ctx.fillStyle = '#ff006e'; ctx.fillText('G', cx + shift, cy);
+  ctx.fillStyle = '#ffffff'; ctx.fillText('G', cx, cy);
+}
+const iconGrid = document.getElementById('iconGrid');
+const iconCards = [];
+function renderIcons() {
+  iconGrid.innerHTML = '';
+  iconCards.length = 0;
+  for (const ic of ICONS) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = '<div class="label">' + ic.name + ' · ' + ic.size + 'px' + (ic.mask ? ' · maskable' : '') + '</div>';
+    const canvas = document.createElement('canvas');
+    canvas.style.maxWidth = Math.min(ic.size, 180) + 'px';
+    canvas.style.imageRendering = ic.size < 64 ? 'pixelated' : 'auto';
+    card.appendChild(canvas);
+    const save = document.createElement('div');
+    save.className = 'save';
+    const btn = document.createElement('button');
+    btn.textContent = 'SAVE';
+    btn.addEventListener('click', () => saveCanvas(canvas, ic.name));
+    save.appendChild(btn);
+    card.appendChild(save);
+    iconGrid.appendChild(card);
+    drawIcon(canvas, ic.size, ic.inset);
+    iconCards.push({ canvas, ic });
+  }
+}
+document.fonts.ready.then(renderIcons).catch(renderIcons);
+document.getElementById('saveIcons').addEventListener('click', async () => {
+  for (const { canvas, ic } of iconCards) {
+    saveCanvas(canvas, ic.name);
     await new Promise(r => setTimeout(r, 250));
   }
 });
