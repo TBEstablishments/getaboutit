@@ -37,10 +37,28 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" href="https://fonts.gstatic.com/s/pressstart2p/v16/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 
-<link rel="stylesheet" href="/shared/core.css?v=phase4" />
-<link rel="stylesheet" href="/arcade.css?v=phase4" />
+<link rel="preload" href="/shared/core.css?v=phase5" as="style" />
+<link rel="preload" href="/arcade.css?v=phase5" as="style" />
+<link rel="preload" href="/shared/core.js?v=phase5" as="script" />
+<link rel="preload" href="/arcade.js?v=phase5" as="script" />
+<link rel="stylesheet" href="/shared/core.css?v=phase5" />
+<link rel="stylesheet" href="/arcade.css?v=phase5" />
+
+<!-- Critical above-the-fold inline CSS — keeps the wordmark and hero readable before arcade.css parses. -->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:auto;overflow:visible}
+body{min-height:100dvh;background:#0a0a1e;color:#fff;font-family:'Press Start 2P','Courier New',monospace;overflow-x:hidden;overflow-y:auto;-webkit-tap-highlight-color:transparent}
+.wordmark{font-size:clamp(40px,11vw,104px);letter-spacing:0.04em;line-height:1;color:#fff}
+.chrom{text-shadow:0.3px 0 0 #ff006e,-0.3px 0 0 #00f5ff,0 0 6px rgba(255,255,255,0.22)}
+#home{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:calc(36px + env(safe-area-inset-top)) 20px 24px}
+.hero{text-align:center;padding:12px 0 18px}
+.tagline{font-size:clamp(9px,1.5vw,12px);letter-spacing:0.18em;color:rgba(255,255,255,0.7);margin-top:14px}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+</style>
 
 <script type="application/ld+json">
 {
@@ -225,7 +243,7 @@
 <button id="surprise" class="arcade green" type="button" aria-label="Surprise me — random game">🎲 SURPRISE ME</button>
 <div id="rainbow-badge" class="hidden" aria-label="Rainbow mode unlocked">🌈</div>
 
-<script src="/shared/core.js?v=phase4"></script>
-<script src="/arcade.js?v=phase4"></script>
+<script src="/shared/core.js?v=phase5"></script>
+<script src="/arcade.js?v=phase5"></script>
 </body>
 </html>
