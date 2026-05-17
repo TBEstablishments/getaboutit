@@ -1,11 +1,24 @@
 /* TEAM */
-GETABOUTIT — a free retro-vaporwave arcade.
-37 classic games. No tracking. No accounts. No build step.
+Built by The Bruce (TBEstablishments)
+Made with: vanilla js, canvas 2d, web audio (procedural), no frameworks
+GitHub: https://github.com/TBEstablishments/getaboutit
+
+/* SITE */
+GETABOUTIT — a free retro-vaporwave arcade. 37 classic games.
+No tracking. No accounts. No build step. No service worker.
+Last update: 2026
+Standards: HTML5, CSS3, ES2020, JSON-LD schema, OpenGraph, WebManifest
+Hosted: Vercel
 
 /* TECH */
-Vanilla ES6+. Canvas 2D. Web Audio API (procedural — no asset files).
-LocalStorage for scores. One font: Press Start 2P from Google Fonts.
-Ten-color palette. Static deploy via Vercel.
+Vanilla ES6+ across ~1700 LOC of shared core.
+Canvas 2D for every game render path.
+Procedural audio via Web Audio API — no asset files.
+LocalStorage for scores, streaks, achievements, pinned games.
+One typeface: Press Start 2P (Google Fonts).
+Ten-color palette: pink, magenta, purple, deep purple, blue, cyan, teal, yellow, orange, red.
 
 /* THANKS */
-To everyone who plays a game on a flight, a queue, or a Tuesday afternoon.
+Press Start 2P (Google Fonts)
+The retro arcade lineage — Nokia Snake, Atari Pong, Taito Invaders, all the rest.
+Everyone who plays a game on a flight, a queue, or a Tuesday afternoon.
