@@ -1,0 +1,95 @@
+/* Category landing pages (/arcade /puzzle /board /cards /casino /mind /skill) */
+html { height: auto; overflow: visible; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+#bg { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, rgba(131,56,236,0.18), transparent 60%); }
+
+.cat-page {
+  position: relative; z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding:
+    calc(36px + env(safe-area-inset-top))
+    calc(20px + env(safe-area-inset-right))
+    20px
+    calc(20px + env(safe-area-inset-left));
+}
+
+.cat-hero { text-align: center; padding: 8px 0 18px; }
+.cat-hero .back-link-wrap { margin-bottom: 16px; }
+.cat-hero .wordmark {
+  font-size: clamp(28px, 7vw, 56px);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin: 6px 0 14px;
+}
+.cat-intro {
+  font-size: clamp(10px, 1.4vw, 12px);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.78);
+  max-width: 64ch;
+  margin: 0 auto;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 28px 0 24px;
+}
+.cat-tile {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  background: rgba(10,10,30,0.55);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 18px 18px 16px;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.cat-tile:hover,
+.cat-tile:focus-visible {
+  border-color: var(--c-cyan);
+  transform: translateY(-2px);
+  outline: none;
+}
+.cat-tile h2 {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.cat-tile[data-cat="arcade"] h2  { color: var(--c-pink); }
+.cat-tile[data-cat="puzzle"] h2  { color: var(--c-cyan); }
+.cat-tile[data-cat="board"] h2   { color: var(--c-purple); }
+.cat-tile[data-cat="cards"] h2   { color: var(--c-teal); }
+.cat-tile[data-cat="casino"] h2  { color: var(--c-red); }
+.cat-tile[data-cat="mind"] h2    { color: var(--c-yellow); }
+.cat-tile[data-cat="skill"] h2   { color: var(--c-cyan); }
+
+.cat-tile p {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Press Start 2P', monospace;
+}
+
+.cat-foot {
+  text-align: center;
+  margin-top: 28px;
+  padding-top: 18px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+.cat-foot a { color: rgba(255,255,255,0.6); text-decoration: none; }
+.cat-foot a:hover { color: var(--c-cyan); }

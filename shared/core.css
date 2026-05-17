@@ -652,3 +652,32 @@ body.theme-highcontrast { font-weight: bold; }
   content: '▸'; color: var(--c-pink);
   position: absolute; left: 0;
 }
+/* "More games" sub-block inside the about overlay — small text tiles. */
+.about-game .more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin: 6px 0 10px;
+}
+.about-game .more-tile {
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  background: rgba(10,10,30,0.7);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  padding: 10px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  min-height: 44px;
+}
+.about-game .more-tile:hover,
+.about-game .more-tile:focus-visible { border-color: var(--c-cyan); color: var(--c-cyan); outline: none; }
+.about-game .more-all {
+  color: var(--c-cyan);
+  font-size: 9px; letter-spacing: 0.18em;
+  text-decoration: none;
+  display: inline-block; margin-top: 4px;
+}
+.about-game .more-all:hover { color: #fff; }
