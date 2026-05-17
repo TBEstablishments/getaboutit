@@ -110,6 +110,27 @@
   ]
 }
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is GETABOUTIT really free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. All 37 games are completely free to play. No signup, no ads, no in-app purchases." } },
+    { "@type": "Question", "name": "Do I need to create an account?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Just click a game and play. Your scores save locally in your browser." } },
+    { "@type": "Question", "name": "Does it work on mobile?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every game is built mobile-first with touch controls. Add to your home screen for a full-screen experience." } },
+    { "@type": "Question", "name": "How often are new games added?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The arcade is curated, not constantly expanded. Quality over quantity. Daily challenges rotate among the existing 37 games." } },
+    { "@type": "Question", "name": "Does it track me or sell my data?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No tracking. No analytics. No data collection. All your game data lives only in your browser's local storage." } },
+    { "@type": "Question", "name": "Can I play offline?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Once you've loaded a game, it stays playable as long as the tab is open. We don't currently support full offline mode." } }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -161,8 +182,36 @@
 
   <section class="grid" id="grid" aria-label="Game grid"></section>
 
+  <section class="home-faq" aria-label="Frequently asked questions">
+    <h2 class="recent-label">QUESTIONS</h2>
+    <details>
+      <summary>Is GETABOUTIT really free?</summary>
+      <p>Yes. All 37 games are completely free to play. No signup, no ads, no in-app purchases.</p>
+    </details>
+    <details>
+      <summary>Do I need to create an account?</summary>
+      <p>No. Just click a game and play. Your scores save locally in your browser.</p>
+    </details>
+    <details>
+      <summary>Does it work on mobile?</summary>
+      <p>Yes. Every game is built mobile-first with touch controls. Add to your home screen for a full-screen experience.</p>
+    </details>
+    <details>
+      <summary>How often are new games added?</summary>
+      <p>The arcade is curated, not constantly expanded. Quality over quantity. Daily challenges rotate among the existing 37 games.</p>
+    </details>
+    <details>
+      <summary>Does it track me or sell my data?</summary>
+      <p>No tracking. No analytics. No data collection. All your game data lives only in your browser's local storage.</p>
+    </details>
+    <details>
+      <summary>Can I play offline?</summary>
+      <p>Once you've loaded a game, it stays playable as long as the tab is open. We don't currently support full offline mode.</p>
+    </details>
+  </section>
+
   <footer class="foot">
-    made with care · vanilla js · no tracking · <a href="/stats" class="foot-link">stats</a> · <a href="/settings" class="foot-link">settings</a> · <span id="themeIndicator"></span>
+    made with care · vanilla js · no tracking · <a href="/about" class="foot-link">about</a> · <a href="/stats" class="foot-link">stats</a> · <a href="/settings" class="foot-link">settings</a> · <span id="themeIndicator"></span>
   </footer>
 </main>
 

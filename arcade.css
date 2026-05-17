@@ -249,6 +249,52 @@ body {
   pointer-events: none;
 }
 
+/* ===== home FAQ (FAQPage schema target) ===== */
+.home-faq {
+  margin: 32px auto 16px;
+  max-width: 720px;
+  padding: 0 4px;
+}
+.home-faq .recent-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--c-cyan);
+  margin-bottom: 14px;
+}
+.home-faq details {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding: 12px 0;
+}
+.home-faq details:last-of-type { border-bottom: 1px solid rgba(255,255,255,0.12); }
+.home-faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  color: #fff;
+  padding-right: 28px;
+  position: relative;
+  min-height: 32px;
+  display: flex; align-items: center;
+}
+.home-faq summary::-webkit-details-marker { display: none; }
+.home-faq summary::after {
+  content: '+';
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  color: var(--c-pink);
+  font-size: 16px;
+  font-weight: bold;
+}
+.home-faq details[open] summary::after { content: '−'; }
+.home-faq p {
+  margin: 10px 4px 4px;
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.72);
+  font-family: 'Press Start 2P', monospace;
+}
+
 .foot {
   text-align: center;
   margin-top: 36px;
