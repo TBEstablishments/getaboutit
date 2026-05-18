@@ -192,8 +192,8 @@ Home, /about, /arcade, category landings. Public, vaporwave-maximal layer.
 
 - Outrun horizon ([§4.1](#41--outrun-horizon-spec)) at bottom 50% of viewport
 - `#0a0a1e` solid above the horizon
-- Scanlines sitewide overlay (white pixels at 4% opacity on a 1px-on / 2px-off pattern via `repeating-linear-gradient`, `mix-blend-mode: overlay` — core.css:46-54)
-- Vignette sitewide overlay (radial gradient: transparent at 55% inner, `rgba(0,0,0,0.45)` at outer edge — core.css:57)
+- Scanlines sitewide overlay: 1px-on / 2px-off overlay @ `rgba(255,255,255,0.04)`, `mix-blend-mode: overlay` (core.css:46–54). `theme-deepnight` raises layer opacity to 0.5; `theme-highcontrast` hides scanlines entirely.
+- Vignette sitewide overlay: radial gradient — transparent at 55%, `rgba(0,0,0,0.45)` at 100% (core.css:57). `theme-deepnight` raises outer ring to 0.65; `theme-highcontrast` hides the vignette.
 - Wordmark breathing at hero scale on /, smaller on /about
 - Tile grid uses each game's primary accent ([§3](#3--per-game-accent-registry))
 - All 10 colors visible in the grid — only mode where the full palette appears simultaneously
@@ -742,7 +742,7 @@ Values cited from `shared/core.css` and `arcade.css`. Where the spec calls for b
 
 ### 7.2 · Toast positions + durations
 
-Default: **bottom-center, 80px from bottom (`calc(80px + env(safe-area-inset-bottom))` per core.css:313), fade-up 0.28s ease, hold 2.2s default (overridable via `durationMs` arg to `GAI.ui.toast`), fade-down 0.28s, element removed 400ms after class swap (core.js:786).**
+Default: **bottom-center, 80px from bottom (`calc(80px + env(safe-area-inset-bottom))` per core.css:313), fade-up 280ms, hold 2.2s (overridable via `durationMs` arg to `GAI.ui.toast`), fade-down 280ms (cleanup remove +400ms) — core.css:325, core.js:783–787.**
 
 Exceptions:
 - Welcome-back → top-center, larger, 5s hold
@@ -752,6 +752,8 @@ Exceptions:
 - Error / invalid → bottom-center, BUZZ sound, 0.5px red border, 2s hold
 
 ### 7.3 · prefers-reduced-motion behavior
+
+Implementation hook: `GAI.reducedMotion` (exported in core.js) returns true when `prefers-reduced-motion: reduce` is set. Use this in any `game.js` that adds custom animation rather than re-querying the media query.
 
 Where `@media (prefers-reduced-motion: reduce)` applies (already covered in core.css:238-242 and arcade.css:325-328 for `.chrom-jitter`, `.pulse`, `.glitch`, `body.rainbow .chrom`, `.page-glitch`, `.shake`, `.arcade` transition, `body.entrance .*`):
 - Wordmark `chromBreathe` → static
@@ -811,8 +813,8 @@ All procedural via `GAI.audio`. No sample files, ever.
 
 | Effect | What it does | Where allowed | Where forbidden |
 |---|---|---|---|
-| **Scanlines** | Horizontal 1px-on, 2px-off overlay @ 4% white (`rgba(255,255,255,0.04)`, mix-blend overlay) | Sitewide, all modes | Never disable except `highcontrast` theme |
-| **Vignette** | Radial dark gradient from edges, `rgba(0,0,0,0.45)` at outer ring | Sitewide, all modes | Disable in `highcontrast` |
+| **Scanlines** | 1px-on / 2px-off overlay @ `rgba(255,255,255,0.04)`, `mix-blend-mode: overlay` (core.css:46–54) | Sitewide, all modes. `theme-deepnight` raises layer opacity to 0.5. | `theme-highcontrast` hides scanlines entirely. |
+| **Vignette** | Radial gradient: transparent at 55%, `rgba(0,0,0,0.45)` at 100% (core.css:57). `theme-deepnight` raises outer ring to 0.65. `theme-highcontrast` hides the vignette. | Sitewide, all modes | Hidden in `theme-highcontrast` |
 | **Chromatic aberration** | RGB channel separation, 2px+ offset | Wordmark ≥64px, h1 ≥24px, Game Over titles, Ticket phrase, Card title + handle | Body copy, sub-32px, leaderboard ranks, in-game scores |
 | **Glitch** | `GAI.transition.glitchTo()` page-transition (`pageGlitch` 0.22s + 200ms nav) | Floor↔Cabinet only | Floor↔Lobby (use fade), Cabinet↔Lobby (forbidden) |
 | **Breathe** | `chromBreathe` 8s `ease-in-out` chromatic pulse | Wordmark at hero scale, Card title, Ticket header | Sub-hero scales, body, anything with `prefers-reduced-motion` |
@@ -899,13 +901,13 @@ Sections:
 
 ## 13 · Mobile breakpoints + touch behavior
 
-Tile grid columns (arcade.css:145-147):
-- ≥1280px → 4
-- 900–1279 → 3
-- 480–899 → 2
-- ≤479 → 1
+Tile grid columns:
+- ≥1200px → 4 columns
+- 768–1199 → 3 columns
+- 480–767 → 2 columns
+- ≤479 → 2 columns
 
-> TBD — Spec target is 5 / 4 / 3 / 2 at breakpoints 1200 / 768 / 480 / below. Current implementation is 4 / 3 / 2 / 1 at 1280 / 900 / 480. Reconcile in a future polish pass — either bump the spec to match shipped breakpoints, or widen the grid implementation to match the spec (visual density tradeoff).
+Decision locked at 4/3/2/2 — preserves the shipped desktop max of 4 cols, sets mobile floor at 2 cols for browse-density across 37 games.
 
 Touch target floor: 44×44 (already shipped — `min-height: 44px` on `.tab`, `.search-toggle`, etc.). Surprise dock: pill at ≥600px, full-width bottom-dock at <600px (Phase 4). Mini-previews stay rendered at all sizes; at 2-col mobile, tiles enlarge and previews scale up. Game pages: `GAI.canvas.fit()` handles canvas. No horizontal scroll anywhere.
 
