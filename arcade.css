@@ -288,11 +288,11 @@ body {
 .home-faq details[open] summary::after { content: '−'; }
 .home-faq p {
   margin: 10px 4px 4px;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
   line-height: 1.7;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   color: rgba(255,255,255,0.72);
-  font-family: 'Press Start 2P', monospace;
 }
 
 .foot {

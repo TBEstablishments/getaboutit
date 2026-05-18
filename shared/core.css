@@ -12,13 +12,16 @@
   --c-red: #ef233c;
   --c-bg: #0a0a1e;
   --c-bg-deep: #05050f;
+  --font-arcade: 'Press Start 2P', 'Courier New', monospace;
+  --font-body: ui-monospace, 'SFMono-Regular', Menlo, Consolas,
+               'Liberation Mono', 'DejaVu Sans Mono', monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   background: var(--c-bg);
   color: #fff;
-  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-family: var(--font-arcade);
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   user-select: none;
@@ -605,7 +608,7 @@ body.theme-highcontrast { font-weight: bold; }
   color: #fff;
   padding: 10px 14px;
   min-height: 44px;
-  font-family: 'Press Start 2P', monospace;
+  font-family: var(--font-arcade);
   font-size: 10px;
   letter-spacing: 0.12em;
   outline: none;
@@ -642,7 +645,7 @@ body.theme-highcontrast { font-weight: bold; }
   bottom: calc(72px + env(safe-area-inset-bottom));
   right: calc(12px + env(safe-area-inset-right));
   z-index: 60;
-  font-family: 'Press Start 2P', monospace;
+  font-family: var(--font-arcade);
   font-size: 9px;
   letter-spacing: 0.14em;
   pointer-events: none;
@@ -694,7 +697,7 @@ body.theme-highcontrast { font-weight: bold; }
   color: var(--c-cyan); margin: 18px 0 8px;
 }
 .about-game .about-content p,
-.about-game .about-content li { font-family: 'Press Start 2P', monospace; }
+.about-game .about-content li { font-family: var(--font-arcade); }
 .about-game .about-content ul {
   list-style: none; padding-left: 0;
 }
@@ -719,7 +722,7 @@ body.theme-highcontrast { font-weight: bold; }
   border: 1px solid rgba(255,255,255,0.18);
   color: #fff;
   padding: 10px 8px;
-  font-family: 'Press Start 2P', monospace;
+  font-family: var(--font-arcade);
   font-size: 9px;
   letter-spacing: 0.14em;
   text-decoration: none;
