@@ -745,7 +745,7 @@ function uiSplash(opts) {
 function uiGameOver(opts) {
   opts = opts || {};
   const root = document.createElement('div');
-  root.className = 'screen hidden';
+  root.className = 'screen gai-over-overlay hidden';
   root.setAttribute('role', 'dialog');
   root.setAttribute('aria-label', 'Game over');
   const scoreHTML = opts.score != null
@@ -768,7 +768,9 @@ function uiGameOver(opts) {
       if (payload && payload.best != null) {
         const b = root.querySelector('.js-best'); if (b) b.textContent = payload.best;
       }
-      root.classList.remove('hidden');
+      // rAF so .hidden→visible transitions even when mount + show are called
+      // in the same tick (browser would otherwise batch and skip the fade).
+      requestAnimationFrame(() => root.classList.remove('hidden'));
     },
     hide() { root.classList.add('hidden'); }
   };

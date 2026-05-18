@@ -49,10 +49,10 @@ body {
   margin-bottom: 14px;
 }
 .about-section p {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  line-height: 1.85;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
   color: rgba(255,255,255,0.85);
   margin-bottom: 12px;
 }
