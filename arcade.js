@@ -11,6 +11,22 @@ if (firstVisit) {
   document.body.classList.add('entrance');
 }
 
+// Hand the wordmark off to chromBreathe once wmEnter finishes. Without
+// this, body.entrance sticks forever and the breathing animation never
+// takes over (the entrance selector's `animation: wmEnter ...` wins on
+// specificity over `.chrom-jitter`'s chromBreathe).
+const _wordmark = document.querySelector('.wordmark');
+if (_wordmark) {
+  _wordmark.addEventListener('animationend', (e) => {
+    if (e.animationName === 'wmEnter') {
+      document.body.classList.remove('entrance');
+    }
+  }, { once: true });
+  // Safety net: remove class after 1.5s regardless, in case animationend
+  // never fires (e.g. prefers-reduced-motion suppresses wmEnter entirely).
+  setTimeout(() => document.body.classList.remove('entrance'), 1500);
+}
+
 // rainbow
 if (GAI.storage.get('gai_rainbow_unlocked') === '1') {
   document.body.classList.add('rainbow');
