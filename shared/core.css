@@ -127,6 +127,38 @@ a { color: inherit; text-decoration: none; }
   #splash, #splash.hidden { transition: none; }
 }
 
+/* ========== #over + .gai-over-overlay: game-over scrim fade-in (200ms)
+   + content slide-up. 150ms on hide. Games use `<div id="over" class="screen hidden">`
+   and toggle .hidden directly; GAI.ui.gameOver() adds .gai-over-overlay
+   to its created element. We animate `> *` children so any direct-child
+   content slides up without requiring a wrapper panel. */
+#over, .gai-over-overlay {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 200ms ease, visibility 0s linear 0s;
+}
+#over.hidden, .gai-over-overlay.hidden {
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 150ms ease, visibility 0s linear 150ms;
+}
+#over > *, .gai-over-overlay > * {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+#over.hidden > *, .gai-over-overlay.hidden > * {
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  #over, #over > *,
+  .gai-over-overlay, .gai-over-overlay > * { transition: none; }
+}
+
 /* ========== arcade button ========== */
 .arcade {
   display: inline-block;
