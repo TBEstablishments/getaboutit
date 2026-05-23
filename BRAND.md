@@ -1,7 +1,7 @@
 # BRAND.md — getaboutit in one page
 
 ## What it is
-The free arcade. 37 games. No signup. No tracking. No ads. Forever.
+The free arcade. 34 games. No signup. No tracking. No ads. Forever.
 
 ## The vibe
 1985 arcade reborn for 2026 browser. Vaporwave outrun, chromatic
@@ -22,7 +22,7 @@ Wordmark, headings, scores, labels. Body copy in system monospace.
 
 ## Five signature moves
 1. The breathing wordmark
-2. Per-game color identity (37 owners)
+2. Per-game color identity (34 owners)
 3. The deterministic pixel signature (Ticket + Card + leaderboards)
 4. The reactive horizon
 5. The CRT power-on ceremony
