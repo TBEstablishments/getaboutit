@@ -9,7 +9,12 @@ body {
   overflow-y: auto;
   overscroll-behavior-y: contain;
   touch-action: pan-y;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  /* clearance for the fixed Surprise Me dock so last-row tile
+     labels aren't hidden behind it */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
+@media (max-width: 600px) {
+  body { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
 }
 
 #bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
@@ -28,9 +33,10 @@ body {
 /* ===== hero ===== */
 .hero { text-align: center; padding: 12px 0 18px; }
 .wordmark {
-  font-size: clamp(40px, 11vw, 104px);
+  font-size: clamp(26px, 8vw, 104px);
   letter-spacing: 0.04em;
   line-height: 1;
+  white-space: nowrap;
 }
 .tagline {
   margin-top: 12px;
@@ -66,6 +72,8 @@ body {
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
 }
 .daily-strip::-webkit-scrollbar { height: 4px; }
 .daily-strip::-webkit-scrollbar-thumb { background: var(--c-cyan); }
@@ -84,21 +92,15 @@ body {
 .daily-tile .d-name { font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.06em; }
 .daily-tile .d-tag { font-size: 8px; letter-spacing: 0.18em; color: rgba(255,255,255,0.6); }
 
-/* ===== achievements badge in header ===== */
+/* ===== achievements badge — inline in stat-strip ===== */
 .ach-badge {
-  position: absolute;
-  top: calc(36px + env(safe-area-inset-top));
-  right: calc(20px + env(safe-area-inset-right));
-  z-index: 6;
   display: inline-block;
-}
-.ach-badge .chip {
-  background: rgba(10,10,30,0.7);
   border: 1px solid var(--c-yellow);
   color: var(--c-yellow);
-  padding: 6px 10px;
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  padding: 2px 7px;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  vertical-align: baseline;
 }
 .ach-badge:focus-visible { outline: 2px dashed #fff; outline-offset: 3px; }
 
@@ -120,6 +122,8 @@ body {
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
 }
 .recent-strip::-webkit-scrollbar { height: 4px; }
 .recent-strip::-webkit-scrollbar-thumb { background: var(--c-purple); }
@@ -134,6 +138,18 @@ body {
   transition: transform 0.12s ease;
 }
 .recent-tile:hover { transform: translateY(-2px); }
+
+/* ===== tabs — scrim under the row so the outrun horizon
+   glow stops competing with the category buttons ===== */
+#home .tabs {
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,30,0) 0%,
+    rgba(10,10,30,0.55) 30%,
+    rgba(10,10,30,0.55) 70%,
+    rgba(10,10,30,0) 100%
+  );
+}
 
 /* ===== grid ===== */
 .grid {
@@ -216,7 +232,9 @@ body {
 .tile.t-red       { color: var(--c-red); }
 .tile .name { color: #fff; }
 
-/* ===== surprise me ===== */
+/* ===== surprise me — restyled per DESIGN.md brand cues:
+   transparent bg + 2px pink border + pink text. Reads as an
+   interactive button, not a system/deploy banner. ===== */
 #surprise {
   position: fixed;
   bottom: calc(20px + env(safe-area-inset-bottom));
@@ -225,7 +243,22 @@ body {
   font-size: 11px;
   padding: 12px 18px;
   min-height: 44px;
+  background: rgba(10,10,30,0.7);
+  color: var(--c-pink);
+  border: 2px solid var(--c-pink);
+  border-radius: 0;
+  box-shadow: none;
+  letter-spacing: 0.14em;
+  transition: color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
+#surprise:hover {
+  background: rgba(255,0,110,0.12);
+  color: #fff;
+  box-shadow: 0 0 0 1px var(--c-pink), 0 0 18px rgba(255,0,110,0.45);
+}
+#surprise:active { transform: translateY(1px); }
+#surprise:focus-visible { outline: 2px dashed #fff; outline-offset: 4px; }
+
 /* Narrow viewports: full-width dock at the bottom so SURPRISE ME
    doesn't overlap the corner of the tile grid. */
 @media (max-width: 600px) {

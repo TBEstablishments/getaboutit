@@ -27,37 +27,37 @@ const PALETTE = [
 const PALETTE_NAMES = ['pink','magenta','purple','deeppurple','blue','cyan','teal','yellow','orange','red'];
 
 const GAME_KEYS = [
-  'stack','snake','blocks','p2048','breakout','pong','memory','minesweeper',
-  'flap','invaders','asteroids','simon','tictactoe','lightsout','slide',
+  'stack','snake','blocks','p2048','breakout','pong','minesweeper',
+  'flap','invaders','asteroids','simon','tictactoe','slide',
   'reaction','words','blackjack','poker','solitaire','hearts','chess',
-  'checkers','sudoku','connect4','battleship','runner','bubbles','dots',
+  'checkers','sudoku','connect4','battleship','runner','bubbles',
   'craps','type','pixel','spider','cribbage','slither','backgammon','go'
 ];
 const GAME_PATHS = {
   stack: '/stack', snake: '/snake', blocks: '/blocks', p2048: '/2048',
-  breakout: '/breakout', pong: '/pong', memory: '/memory',
+  breakout: '/breakout', pong: '/pong',
   minesweeper: '/minesweeper', flap: '/flap', invaders: '/invaders',
   asteroids: '/asteroids', simon: '/simon', tictactoe: '/tictactoe',
-  lightsout: '/lightsout', slide: '/slide', reaction: '/reaction',
+  slide: '/slide', reaction: '/reaction',
   words: '/words', blackjack: '/blackjack', poker: '/poker',
   solitaire: '/solitaire', hearts: '/hearts', chess: '/chess',
   checkers: '/checkers', sudoku: '/sudoku', connect4: '/connect4',
   battleship: '/battleship', runner: '/runner', bubbles: '/bubbles',
-  dots: '/dots', craps: '/craps', type: '/type', pixel: '/pixel',
+  craps: '/craps', type: '/type', pixel: '/pixel',
   spider: '/spider', cribbage: '/cribbage', slither: '/slither',
   backgammon: '/backgammon', go: '/go'
 };
 const GAME_NAMES = {
   stack: 'STACK', snake: 'SNAKE', blocks: 'BLOCKS', p2048: '2048',
-  breakout: 'BREAKOUT', pong: 'PONG', memory: 'MEMORY',
+  breakout: 'BREAKOUT', pong: 'PONG',
   minesweeper: 'MINES', flap: 'FLAP', invaders: 'INVADERS',
   asteroids: 'ASTEROIDS', simon: 'SIMON', tictactoe: 'TIC TAC TOE',
-  lightsout: 'LIGHTS OUT', slide: 'SLIDE', reaction: 'REACTION',
+  slide: 'SLIDE', reaction: 'REACTION',
   words: 'WORDS', blackjack: 'BLACKJACK', poker: 'POKER',
   solitaire: 'SOLITAIRE', hearts: 'HEARTS', chess: 'CHESS',
   checkers: 'CHECKERS', sudoku: 'SUDOKU', connect4: 'CONNECT 4',
   battleship: 'BATTLESHIP', runner: 'RUNNER', bubbles: 'BUBBLES',
-  dots: 'DOTS & BOXES', craps: 'CRAPS', type: 'TYPE RACE',
+  craps: 'CRAPS', type: 'TYPE RACE',
   pixel: 'PIXEL', spider: 'SPIDER', cribbage: 'CRIBBAGE',
   slither: 'SLITHER', backgammon: 'BACKGAMMON', go: 'GO'
 };
@@ -65,8 +65,8 @@ const GAME_CATEGORIES = {
   stack: 'arcade', snake: 'arcade', blocks: 'arcade', p2048: 'arcade',
   breakout: 'arcade', pong: 'arcade', flap: 'arcade', invaders: 'arcade',
   asteroids: 'arcade', bubbles: 'arcade', runner: 'arcade', slither: 'arcade',
-  memory: 'puzzle', minesweeper: 'puzzle', slide: 'puzzle',
-  lightsout: 'puzzle', words: 'puzzle', sudoku: 'puzzle', dots: 'puzzle',
+  minesweeper: 'puzzle', slide: 'puzzle',
+  words: 'puzzle', sudoku: 'puzzle',
   pixel: 'puzzle',
   tictactoe: 'board', chess: 'board', checkers: 'board',
   connect4: 'board', battleship: 'board', go: 'board', backgammon: 'board',

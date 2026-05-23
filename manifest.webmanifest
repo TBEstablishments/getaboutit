@@ -1,7 +1,7 @@
 {
   "name": "GETABOUTIT",
   "short_name": "GETABOUTIT",
-  "description": "37 free retro arcade games — chess, 2048, snake, blackjack, sudoku and more. Daily challenges, no signup, no ads.",
+  "description": "34 free retro arcade games — chess, 2048, snake, blackjack, sudoku and more. Daily challenges, no signup, no ads.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

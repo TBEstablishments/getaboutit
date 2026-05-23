@@ -121,13 +121,10 @@ const GAMES = [
   { key: 'bubbles',     tag: 'pop chain combos',    color: 'magenta', cat: 'arcade', preview: pvBubbles },
   { key: 'runner',      tag: 'one tap to jump',     color: 'cyan',    cat: 'arcade', preview: pvRunner },
   { key: 'slither',     tag: 'grow and dodge',      color: 'teal',    cat: 'arcade', preview: pvSlither },
-  { key: 'memory',      tag: 'match the cards',     color: 'magenta', cat: 'puzzle', preview: pvMemory },
   { key: 'minesweeper', tag: "don't touch",         color: 'red',     cat: 'puzzle', preview: pvMines, displayName: 'MINES' },
   { key: 'slide',       tag: 'order the tiles',     color: 'purple',  cat: 'puzzle', preview: pvSlide },
-  { key: 'lightsout',   tag: 'turn them off',       color: 'magenta', cat: 'puzzle', preview: pvLightsOut, displayName: 'LIGHTS OUT' },
   { key: 'words',       tag: 'guess in six',        color: 'teal',    cat: 'puzzle', preview: pvWords },
   { key: 'sudoku',      tag: 'fill the grid',       color: 'blue',    cat: 'puzzle', preview: pvSudoku },
-  { key: 'dots',        tag: 'claim the squares',   color: 'pink',    cat: 'puzzle', preview: pvDots, displayName: 'DOTS' },
   { key: 'pixel',       tag: 'paint by numbers',    color: 'blue',    cat: 'puzzle', preview: pvPixel },
   { key: 'tictactoe',   tag: 'three in a row',      color: 'blue',    cat: 'board',  preview: pvTTT, displayName: 'TIC TAC TOE' },
   { key: 'chess',       tag: 'the eternal game',    color: 'purple',  cat: 'board',  preview: pvChess },
@@ -165,7 +162,7 @@ const MOTDS = [
   'thursday throws', 'friday fever', 'saturday spirit',
   'perfect day for a high score', 'short break, long climb',
   'one more game', 'tap with intent', 'press start', 'the arcade is open',
-  'perfect chess weather', 'card night', 'streak day', '29 ways to win'
+  'perfect chess weather', 'card night', 'streak day'
 ];
 const motd = MOTDS[(todayInt * 1103515245 + 12345) % MOTDS.length];
 $('#motd').textContent = '> ' + motd;
@@ -174,14 +171,10 @@ $('#motd').textContent = '> ' + motd;
 function refreshStats() {
   const total = GAI.totalPlays();
   const st = GAI.streak.get();
-  if (total === 0) {
-    $('#stat-strip').innerHTML = '🕹 37 GAMES · ⚡ READY · 🔥 NEW HERE';
-  } else {
-    $('#taps-count').textContent = total.toLocaleString();
-    $('#streak-count').textContent = st.current || 0;
-    const e = $('#streak-emoji');
-    if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
-  }
+  $('#taps-count').textContent = total.toLocaleString();
+  $('#streak-count').textContent = st.current || 0;
+  const e = $('#streak-emoji');
+  if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
 }
 refreshStats();
 
@@ -221,7 +214,7 @@ for (const g of dailyTrio) {
 
 // pinned strip
 function renderPinned() {
-  const pinned = GAI.pins.get();
+  const pinned = GAI.pins.get().filter(k => GAMES.find(g => g.key === k));
   const sec = $('#pinned');
   const strip = $('#pinnedStrip');
   if (!pinned.length) { sec.classList.add('hidden'); return; }
@@ -229,7 +222,6 @@ function renderPinned() {
   strip.innerHTML = '';
   for (const k of pinned) {
     const meta = GAMES.find(g => g.key === k);
-    if (!meta) continue;
     const a = document.createElement('a');
     a.className = 'pinned-tile t-' + meta.color;
     a.href = GAI.GAME_PATHS[k];
@@ -246,15 +238,15 @@ renderPinned();
 
 // recent
 function renderRecent() {
-  const recent = GAI.storage.getJSON('gai_recent', []);
+  const raw = GAI.storage.getJSON('gai_recent', []);
+  const recent = Array.isArray(raw) ? raw.filter(r => r && GAMES.find(g => g.key === r.key)) : [];
   const sec = $('#recent');
   const strip = $('#recent-strip');
-  if (!Array.isArray(recent) || recent.length === 0) { sec.classList.add('hidden'); return; }
+  if (recent.length === 0) { sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden');
   strip.innerHTML = '';
   for (const r of recent) {
     const meta = GAMES.find(g => g.key === r.key);
-    if (!meta) continue;
     const a = document.createElement('a');
     a.className = 'recent-tile t-' + meta.color;
     a.href = GAI.GAME_PATHS[r.key];
@@ -801,33 +793,6 @@ function pvRunner(ctx, w, h, s, dt) {
   ctx.fillStyle = PAL[5]; ctx.fillText('G', w*0.25-1.5, py);
   ctx.fillStyle = '#fff'; ctx.fillText('G', w*0.25, py);
 }
-function pvMemory(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cyc = 3, phase = (s.t % cyc) / cyc;
-  const cw = 30, ch = 38, x0 = w/2 - cw - 4, x1 = w/2 + 4, y0 = (h - ch) / 2;
-  drawMemCard(ctx, x0, y0, cw, ch, phase, true);
-  drawMemCard(ctx, x1, y0, cw, ch, phase, false);
-  if (phase > 0.7) {
-    ctx.fillStyle = `rgba(6,255,165,${((phase-0.7)/0.3 * 0.5).toFixed(3)})`;
-    ctx.fillRect(x0 - 2, y0 - 2, cw + 4, ch + 4);
-    ctx.fillRect(x1 - 2, y0 - 2, cw + 4, ch + 4);
-  }
-}
-function drawMemCard(ctx, x, y, w, h, phase, left) {
-  const flipping = phase < 0.4;
-  if (flipping) {
-    const t = left ? phase / 0.4 : Math.max(0, (phase - 0.1) / 0.3);
-    const sc = Math.abs(Math.cos(t * Math.PI));
-    ctx.save(); ctx.translate(x + w/2, y + h/2); ctx.scale(sc, 1);
-    ctx.fillStyle = PAL[2]; ctx.fillRect(-w/2, -h/2, w, h);
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 6px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('GAI', 0, 0); ctx.restore();
-  } else {
-    ctx.fillStyle = PAL[6]; ctx.fillRect(x, y, w, h);
-    ctx.fillStyle = PAL[0]; ctx.beginPath(); ctx.arc(x + w/2, y + h/2, 8, 0, Math.PI * 2); ctx.fill();
-  }
-}
 function pvMines(ctx, w, h, s, dt) {
   clr(ctx, w, h); s.t = (s.t || 0) + dt;
   const cell = 16, cols = 6, rows = 5;
@@ -856,20 +821,6 @@ function pvSlide(ctx, w, h, s, dt) {
     ctx.fillStyle = '#0a0a1e'; ctx.font = 'bold 10px "Press Start 2P", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(nums[i], x + cell/2, y + cell/2);
-  }
-}
-function pvLightsOut(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  if (!s.grid) s.grid = [[1,0,1,1,0],[0,1,1,0,1],[1,1,0,1,1],[0,1,1,1,0],[1,0,1,0,1]];
-  const phase = (s.t % 3.5) / 3.5;
-  const tog = Math.floor(phase * 6);
-  if (tog >= 5) s.grid = [[1,0,1,1,0],[0,1,1,0,1],[1,1,0,1,1],[0,1,1,1,0],[1,0,1,0,1]];
-  const cell = 18, x0 = (w - 5*cell)/2, y0 = (h - 5*cell)/2;
-  for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) {
-    const lit = s.grid[r][c];
-    ctx.fillStyle = lit ? PAL[1] : '#1f1235';
-    ctx.fillRect(x0 + c*cell + 1, y0 + r*cell + 1, cell - 2, cell - 2);
-    if (lit) { ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.fillRect(x0 + c*cell + 3, y0 + r*cell + 3, cell - 6, 2); }
   }
 }
 function pvWords(ctx, w, h, s, dt) {
@@ -906,23 +857,6 @@ function pvSudoku(ctx, w, h, s, dt) {
     const r = (i * 3 + 1) % 9, c = (i * 7 + 2) % 9;
     ctx.fillText(String((i % 9) + 1), x0 + c*cell + cell/2, y0 + r*cell + cell/2);
   }
-}
-function pvDots(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 4, cell = 22, x0 = (w - N*cell)/2, y0 = (h - N*cell)/2;
-  // dots
-  for (let r = 0; r <= N; r++) for (let c = 0; c <= N; c++) {
-    ctx.beginPath(); ctx.arc(x0 + c*cell, y0 + r*cell, 2, 0, Math.PI*2);
-    ctx.fillStyle = '#fff'; ctx.fill();
-  }
-  // claimed
-  const phase = (s.t % 3) / 3;
-  if (phase > 0.3) { ctx.fillStyle = 'rgba(255,0,110,0.55)'; ctx.fillRect(x0 + cell + 2, y0 + cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#fff'; ctx.font='bold 10px "Press Start 2P", monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('P', x0 + cell + cell/2, y0 + cell + cell/2); }
-  if (phase > 0.6) { ctx.fillStyle = 'rgba(255,214,10,0.55)'; ctx.fillRect(x0 + 2*cell + 2, y0 + 2*cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#fff'; ctx.font='bold 10px "Press Start 2P", monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('A', x0 + 2*cell + cell/2, y0 + 2*cell + cell/2); }
-  // edges
-  ctx.strokeStyle = PAL[5]; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(x0, y0 + cell); ctx.lineTo(x0 + cell, y0 + cell); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x0 + cell, y0 + cell); ctx.lineTo(x0 + cell, y0 + 2*cell); ctx.stroke();
 }
 function pvTTT(ctx, w, h, s, dt) {
   clr(ctx, w, h); s.t = (s.t || 0) + dt;
