@@ -28,9 +28,10 @@ body {
 /* ===== hero ===== */
 .hero { text-align: center; padding: 12px 0 18px; }
 .wordmark {
-  font-size: clamp(40px, 11vw, 104px);
+  font-size: clamp(26px, 8vw, 104px);
   letter-spacing: 0.04em;
   line-height: 1;
+  white-space: nowrap;
 }
 .tagline {
   margin-top: 12px;
