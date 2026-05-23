@@ -171,14 +171,10 @@ $('#motd').textContent = '> ' + motd;
 function refreshStats() {
   const total = GAI.totalPlays();
   const st = GAI.streak.get();
-  if (total === 0) {
-    $('#stat-strip').innerHTML = '🕹 34 GAMES · ⚡ READY · 🔥 NEW HERE';
-  } else {
-    $('#taps-count').textContent = total.toLocaleString();
-    $('#streak-count').textContent = st.current || 0;
-    const e = $('#streak-emoji');
-    if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
-  }
+  $('#taps-count').textContent = total.toLocaleString();
+  $('#streak-count').textContent = st.current || 0;
+  const e = $('#streak-emoji');
+  if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
 }
 refreshStats();
 
