@@ -162,7 +162,7 @@ const MOTDS = [
   'thursday throws', 'friday fever', 'saturday spirit',
   'perfect day for a high score', 'short break, long climb',
   'one more game', 'tap with intent', 'press start', 'the arcade is open',
-  'perfect chess weather', 'card night', 'streak day', '29 ways to win'
+  'perfect chess weather', 'card night', 'streak day'
 ];
 const motd = MOTDS[(todayInt * 1103515245 + 12345) % MOTDS.length];
 $('#motd').textContent = '> ' + motd;
