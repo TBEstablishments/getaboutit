@@ -214,7 +214,7 @@ for (const g of dailyTrio) {
 
 // pinned strip
 function renderPinned() {
-  const pinned = GAI.pins.get();
+  const pinned = GAI.pins.get().filter(k => GAMES.find(g => g.key === k));
   const sec = $('#pinned');
   const strip = $('#pinnedStrip');
   if (!pinned.length) { sec.classList.add('hidden'); return; }
@@ -222,7 +222,6 @@ function renderPinned() {
   strip.innerHTML = '';
   for (const k of pinned) {
     const meta = GAMES.find(g => g.key === k);
-    if (!meta) continue;
     const a = document.createElement('a');
     a.className = 'pinned-tile t-' + meta.color;
     a.href = GAI.GAME_PATHS[k];
@@ -239,15 +238,15 @@ renderPinned();
 
 // recent
 function renderRecent() {
-  const recent = GAI.storage.getJSON('gai_recent', []);
+  const raw = GAI.storage.getJSON('gai_recent', []);
+  const recent = Array.isArray(raw) ? raw.filter(r => r && GAMES.find(g => g.key === r.key)) : [];
   const sec = $('#recent');
   const strip = $('#recent-strip');
-  if (!Array.isArray(recent) || recent.length === 0) { sec.classList.add('hidden'); return; }
+  if (recent.length === 0) { sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden');
   strip.innerHTML = '';
   for (const r of recent) {
     const meta = GAMES.find(g => g.key === r.key);
-    if (!meta) continue;
     const a = document.createElement('a');
     a.className = 'recent-tile t-' + meta.color;
     a.href = GAI.GAME_PATHS[r.key];
