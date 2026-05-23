@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>GETABOUTIT — OG image generator (37 games)</title>
+<title>GETABOUTIT — OG image generator (34 games)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
@@ -28,11 +28,11 @@
 <body>
 <div class="wrap">
   <h1>GETABOUTIT — OG image generator</h1>
-  <p>Renders one 1200×630 OG image per game (37 total). Click SAVE ALL to download a zip-free batch (one PNG at a time). Or click individual SAVE buttons.</p>
+  <p>Renders one 1200×630 OG image per game (34 total). Click SAVE ALL to download a zip-free batch (one PNG at a time). Or click individual SAVE buttons.</p>
   <p>Saved files go to your Downloads folder named <code>og-&lt;key&gt;.png</code>. Drop them into <code>/og/</code> in the repo and update game meta tags to reference <code>https://getaboutit.com/og/&lt;key&gt;.png</code>.</p>
 
   <div class="toolbar">
-    <button id="saveAll">⬇ SAVE ALL 37</button>
+    <button id="saveAll">⬇ SAVE ALL 34</button>
     <button class="alt" id="reload">↻ RERENDER</button>
     <button id="saveIcons">⬇ SAVE ALL ICONS</button>
   </div>
@@ -65,13 +65,10 @@ const GAMES = [
   { key: 'bubbles',     name: 'BUBBLES',     tag: 'pop chain combos',      color: 'magenta'   },
   { key: 'runner',      name: 'RUNNER',      tag: 'one tap to jump',       color: 'cyan'      },
   { key: 'slither',     name: 'SLITHER',     tag: 'grow and dodge',        color: 'teal'      },
-  { key: 'memory',      name: 'MEMORY',      tag: 'match the cards',       color: 'magenta'   },
   { key: 'minesweeper', name: 'MINES',       tag: "don't touch",           color: 'red'       },
   { key: 'slide',       name: 'SLIDE',       tag: 'order the tiles',       color: 'purple'    },
-  { key: 'lightsout',   name: 'LIGHTS OUT',  tag: 'turn them off',         color: 'magenta'   },
   { key: 'words',       name: 'WORDS',       tag: 'guess in six',          color: 'teal'      },
   { key: 'sudoku',      name: 'SUDOKU',      tag: 'fill the grid',         color: 'blue'      },
-  { key: 'dots',        name: 'DOTS',        tag: 'claim the squares',     color: 'pink'      },
   { key: 'pixel',       name: 'PIXEL',       tag: 'paint by numbers',      color: 'blue'      },
   { key: 'tictactoe',   name: 'TIC TAC TOE', tag: 'three in a row',        color: 'blue'      },
   { key: 'chess',       name: 'CHESS',       tag: 'the eternal game',      color: 'purple'    },

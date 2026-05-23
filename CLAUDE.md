@@ -1,6 +1,6 @@
 # getaboutit
 
-A free retro-vaporwave arcade at getaboutit.com — **37 classic games**, no signup, no tracking, no build step.
+A free retro-vaporwave arcade at getaboutit.com — **34 classic games**, no signup, no tracking, no build step.
 
 ## What this is
 
@@ -43,17 +43,17 @@ If a request would break these, push back and propose an alternative.
 │   └── shell.js                            auto-mounts back+mute on every game page
 ├── stats/                                  /stats dashboard (canvas charts)
 ├── settings/                               /settings — export/import, theme, achievements
-├── stack/ snake/ blocks/ p2048/ breakout/ pong/ memory/ minesweeper/
-│   flap/ invaders/ asteroids/ simon/ tictactoe/ lightsout/ slide/
+├── stack/ snake/ blocks/ p2048/ breakout/ pong/ minesweeper/
+│   flap/ invaders/ asteroids/ simon/ tictactoe/ slide/
 │   reaction/ words/ blackjack/ poker/ solitaire/ hearts/ chess/
-│   checkers/ sudoku/ connect4/ battleship/ runner/ bubbles/ dots/
+│   checkers/ sudoku/ connect4/ battleship/ runner/ bubbles/
 │   craps/ type/ pixel/ spider/ cribbage/ slither/ backgammon/ go/
 │       ├── index.html                      sets window.GAME_KEY, loads core + game
 │       ├── style.css                       game-specific layout
 │       └── game.js                         self-contained game
 ├── favicon.svg / manifest.webmanifest / robots.txt / sitemap.xml / humans.txt
 ├── vercel.json                             cleanUrls + /2048 rewrite + headers
-├── og-generator.html                       procedural 37-variant OG image generator
+├── og-generator.html                       procedural 34-variant OG image generator
 └── README.md / CLAUDE.md / plan*.md / audit*.md
 ```
 
@@ -63,7 +63,7 @@ If a request would break these, push back and propose an alternative.
 
 Every game uses `window.GAI`. Subsystems:
 
-- `GAI.PALETTE` / `GAME_KEYS` / `GAME_PATHS` / `GAME_NAMES` / `GAME_CATEGORIES` — registry of all 37 games
+- `GAI.PALETTE` / `GAME_KEYS` / `GAME_PATHS` / `GAME_NAMES` / `GAME_CATEGORIES` — registry of all 34 games
 - `GAI.storage.{get,set,del,getJSON,setJSON}` — try/catch wrapped localStorage
 - `GAI.bestScore(key, current)` / `GAI.recordPlay(key)` / `GAI.recordWin(key)`
 - `GAI.streak.get()` / `GAI.totalPlays()` / `GAI.gamePlays(key)`
@@ -125,7 +125,7 @@ Opt-in patterns (recommended in new games):
 ## Categories (7)
 
 - **ARCADE** (12) — Stack, Snake, Blocks, 2048, Breakout, Pong, Flap, Invaders, Asteroids, Bubbles, Runner, Slither
-- **PUZZLE** (8) — Memory, Minesweeper, Slide, Lights Out, Words, Sudoku, Dots, Pixel
+- **PUZZLE** (5) — Minesweeper, Slide, Words, Sudoku, Pixel
 - **BOARD** (7) — Tic Tac Toe, Chess, Checkers, Connect 4, Battleship, Go, Backgammon
 - **CARDS** (6) — Blackjack, Poker, Solitaire, Hearts, Cribbage, Spider
 - **CASINO** (1) — Craps
@@ -180,7 +180,7 @@ Opt-in patterns (recommended in new games):
 
 ## Per-game OG images
 
-`og-generator.html` renders one 1200×630 OG per game procedurally. Open it in a browser, click SAVE ALL, drop the 37 PNGs into `/og/`, then update each game's index.html OG meta to reference `https://getaboutit.com/og/<key>.png`. (Not done yet for individual game pages — they currently share the home `og.png`.)
+`og-generator.html` renders one 1200×630 OG per game procedurally. Open it in a browser, click SAVE ALL, drop the 34 PNGs into `/og/`, then update each game's index.html OG meta to reference `https://getaboutit.com/og/<key>.png`. (Not done yet for individual game pages — they currently share the home `og.png`.)
 
 ## Deploy
 

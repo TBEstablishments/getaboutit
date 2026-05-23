@@ -2,7 +2,7 @@
 
 > free arcade · no signup · just play
 
-A retro-vaporwave arcade with **37 classic games**. No accounts. No tracking. No ads. Just a tab full of bright tiny games.
+A retro-vaporwave arcade with **34 classic games**. No accounts. No tracking. No ads. Just a tab full of bright tiny games.
 
 **Play:** [getaboutit.com](https://getaboutit.com)
 
@@ -27,13 +27,10 @@ A retro-vaporwave arcade with **37 classic games**. No accounts. No tracking. No
 ### Puzzle
 | URL | Game | About |
 | --- | --- | --- |
-| [/memory](https://getaboutit.com/memory) | MEMORY | match the cards |
 | [/minesweeper](https://getaboutit.com/minesweeper) | MINES | clear safe cells |
 | [/slide](https://getaboutit.com/slide) | SLIDE | order the tiles |
-| [/lightsout](https://getaboutit.com/lightsout) | LIGHTS OUT | turn them all off |
 | [/words](https://getaboutit.com/words) | WORDS | guess in six |
 | [/sudoku](https://getaboutit.com/sudoku) | SUDOKU | fill the grid |
-| [/dots](https://getaboutit.com/dots) | DOTS & BOXES | claim the squares |
 | [/pixel](https://getaboutit.com/pixel) | PIXEL | paint by numbers |
 
 ### Board
@@ -123,11 +120,11 @@ There's no build step. Just plain files served as-is.
 .
 ├── index.html / arcade.css / arcade.js    home page (the lobby)
 ├── shared/core.css / core.js / shell.js   GAI namespace + shared styles
-├── stack/ snake/ … go/                    one folder per game (37 total)
+├── stack/ snake/ … go/                    one folder per game (34 total)
 ├── stats/                                 stats dashboard
 ├── settings/                              progress backup, themes, achievements
 ├── favicon.svg / manifest.webmanifest
-├── og-generator.html                      37-variant procedural OG image generator
+├── og-generator.html                      34-variant procedural OG image generator
 ├── robots.txt / sitemap.xml / humans.txt
 ├── vercel.json / CLAUDE.md / README.md / plan*.md
 ```

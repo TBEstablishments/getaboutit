@@ -174,7 +174,7 @@ The moves that distinguish getaboutit.com from generic vaporwave-arcade. Lock #1
 
 1. **The breathing wordmark.** GETABOUTIT chromatic on home breathes at 0.125Hz — `chromBreathe`, 8s ease-in-out infinite (core.css:72). Same curve everywhere the wordmark renders at hero scale.
 
-2. **Game-owned color identity.** Every game has a sworn primary + secondary accent from the palette (see [§3](#3--per-game-accent-registry), the 37-row registry). The accent appears on home tile, in-cabinet bezel, Card top-3 display, OG card, achievement badge, and leaderboard rank when the player tops it. Color → game mapping develops over repeat plays.
+2. **Game-owned color identity.** Every game has a sworn primary + secondary accent from the palette (see [§3](#3--per-game-accent-registry), the 34-row registry). The accent appears on home tile, in-cabinet bezel, Card top-3 display, OG card, achievement badge, and leaderboard rank when the player tops it. Color → game mapping develops over repeat plays.
 
 3. **The deterministic pixel signature.** Every Golden Ticket has a unique pixel-grid pattern derived from the phrase hash. Same phrase, same pattern, forever. A 4-pixel vertical slice of that pattern travels onto: Card frame inner edge, leaderboard row marker, Player OG card.
 
@@ -249,31 +249,28 @@ Sound: FLIP on Ticket reveal (one per word), TICK on every leaderboard rank upda
 | 10 | Bubbles | `#ff006e` pink | rotating palette | Anchor pink, 6 palette colors as bubble types |
 | 11 | Runner | `#ff9500` orange | `#ff006e` pink | The vaporwave-sunset game — orange runner, pink sky |
 | 12 | Slither | `#8338ec` purple | `#06ffa5` teal | Deeper purple distinguishes from Snake; teal orbs |
-| 13 | Memory | `#d100d1` magenta | `#ffd60a` yellow | Magenta card backs, gold match sparkle |
-| 14 | Minesweeper | `#4361ee` blue | `#ef233c` red | Blue numbers, red flag/mine |
-| 15 | Slide | `#00f5ff` cyan | `#ffd60a` yellow | Cyan numbered tiles, yellow when solved |
-| 16 | Lights Out | `#ffd60a` yellow | `#3a0ca3` deep purple | Lit yellow vs off deep-purple, binary clarity |
-| 17 | Words | `#06ffa5` teal | `#ffd60a` yellow | Wordle-callback: right-place teal, right-letter-wrong-place yellow |
-| 18 | Sudoku | `#4361ee` blue | `#06ffa5` teal | Blue digits, teal solved-cell highlight |
-| 19 | Dots | `#ff006e` pink | `#00f5ff` cyan | You vs AI — pink lines/boxes vs cyan |
-| 20 | Pixel | full palette | `#ffffff` | Paint-by-numbers needs full palette by definition |
-| 21 | Tic Tac Toe | `#00f5ff` cyan | `#ff006e` pink | Cyan X, pink O. Maximum chromatic. |
-| 22 | Chess | `#4361ee` blue | `#ffd60a` gold | Royal blue board, gold king accent |
-| 23 | Checkers | `#ef233c` red | `#4361ee` blue | Red vs blue checkers, gold crown on kings |
-| 24 | Connect 4 | `#ffd60a` yellow | `#ef233c` red | Classic yellow + red discs |
-| 25 | Battleship | `#4361ee` blue | `#ef233c` red | Blue sea grid, red hit |
-| 26 | Go | `#ffd60a` yellow | `#ffffff` white | Honey-yellow board, white stones; bg reads as black |
-| 27 | Backgammon | `#ff9500` orange | `#ef233c` red | Warm wood board, red checkers |
-| 28 | Blackjack | `#06ffa5` teal | `#ffd60a` gold | Teal felt, gold chip on 21 |
-| 29 | Poker | `#ffd60a` yellow | `#ef233c` red | High-stake gold chip + red felt accent |
-| 30 | Solitaire | `#4361ee` blue | `#ef233c` red | Classic Windows-Solitaire blue callback, red suits |
-| 31 | Hearts | `#ef233c` red | `#d100d1` magenta | The red-suit game, queen-of-spades magenta danger |
-| 32 | Cribbage | `#06ffa5` teal | `#ffd60a` yellow | Teal pegboard, gold 29 |
-| 33 | Spider | `#3a0ca3` deep purple | `#06ffa5` teal | Spidery purple, teal completed-suit stacks |
-| 34 | Craps | `#ef233c` red | `#ffffff` white | Red felt, white dice/bones |
-| 35 | Simon | 4-quadrant | `#ffffff` | Red / yellow / blue / teal quadrants + white flash |
-| 36 | Reaction | `#ef233c` red | `#06ffa5` teal | Red GO signal, teal ready state |
-| 37 | Type Race | `#06ffa5` teal | `#ef233c` red | Teal correct chars, red mistakes |
+| 13 | Minesweeper | `#4361ee` blue | `#ef233c` red | Blue numbers, red flag/mine |
+| 14 | Slide | `#00f5ff` cyan | `#ffd60a` yellow | Cyan numbered tiles, yellow when solved |
+| 15 | Words | `#06ffa5` teal | `#ffd60a` yellow | Wordle-callback: right-place teal, right-letter-wrong-place yellow |
+| 16 | Sudoku | `#4361ee` blue | `#06ffa5` teal | Blue digits, teal solved-cell highlight |
+| 17 | Pixel | full palette | `#ffffff` | Paint-by-numbers needs full palette by definition |
+| 18 | Tic Tac Toe | `#00f5ff` cyan | `#ff006e` pink | Cyan X, pink O. Maximum chromatic. |
+| 19 | Chess | `#4361ee` blue | `#ffd60a` gold | Royal blue board, gold king accent |
+| 20 | Checkers | `#ef233c` red | `#4361ee` blue | Red vs blue checkers, gold crown on kings |
+| 21 | Connect 4 | `#ffd60a` yellow | `#ef233c` red | Classic yellow + red discs |
+| 22 | Battleship | `#4361ee` blue | `#ef233c` red | Blue sea grid, red hit |
+| 23 | Go | `#ffd60a` yellow | `#ffffff` white | Honey-yellow board, white stones; bg reads as black |
+| 24 | Backgammon | `#ff9500` orange | `#ef233c` red | Warm wood board, red checkers |
+| 25 | Blackjack | `#06ffa5` teal | `#ffd60a` gold | Teal felt, gold chip on 21 |
+| 26 | Poker | `#ffd60a` yellow | `#ef233c` red | High-stake gold chip + red felt accent |
+| 27 | Solitaire | `#4361ee` blue | `#ef233c` red | Classic Windows-Solitaire blue callback, red suits |
+| 28 | Hearts | `#ef233c` red | `#d100d1` magenta | The red-suit game, queen-of-spades magenta danger |
+| 29 | Cribbage | `#06ffa5` teal | `#ffd60a` yellow | Teal pegboard, gold 29 |
+| 30 | Spider | `#3a0ca3` deep purple | `#06ffa5` teal | Spidery purple, teal completed-suit stacks |
+| 31 | Craps | `#ef233c` red | `#ffffff` white | Red felt, white dice/bones |
+| 32 | Simon | 4-quadrant | `#ffffff` | Red / yellow / blue / teal quadrants + white flash |
+| 33 | Reaction | `#ef233c` red | `#06ffa5` teal | Red GO signal, teal ready state |
+| 34 | Type Race | `#06ffa5` teal | `#ef233c` red | Teal correct chars, red mistakes |
 
 Family note: Blue primary on 5 thinking-games (Chess, Minesweeper, Sudoku, Battleship, Solitaire) is an emergent "thinking family" — a feature, not a bug.
 
@@ -589,7 +586,7 @@ Step 12 (9800ms+)      [SAVE TO YOUR WALLET] button slides up from bottom, pulse
 <g transform="translate(240, 388)"><circle cx="22" cy="22" r="20" fill="#4361ee"/><rect x="14" y="20" width="16" height="4" fill="#ffd60a"/><rect x="14" y="24" width="16" height="8" fill="#ffd60a"/><rect x="13" y="14" width="3" height="6" fill="#ffd60a"/><rect x="20" y="12" width="3" height="8" fill="#ffd60a"/><rect x="27" y="14" width="3" height="6" fill="#ffd60a"/></g>
 <g transform="translate(296, 388)"><circle cx="22" cy="22" r="20" fill="#ef233c"/><rect x="20" y="12" width="4" height="4" fill="#ffd60a"/><rect x="18" y="16" width="8" height="6" fill="#ffd60a"/><rect x="16" y="22" width="12" height="6" fill="#ff9500"/><rect x="14" y="28" width="16" height="6" fill="#ffd60a"/></g>
 <g transform="translate(352, 388)" opacity="0.3"><circle cx="22" cy="22" r="20" fill="#3a3a4a"/><text x="22" y="28" text-anchor="middle" fill="#888888" font-family="ui-monospace, monospace" font-size="13" font-weight="700">29</text></g>
-<g transform="translate(408, 388)" opacity="0.3"><circle cx="22" cy="22" r="20" fill="#3a3a4a"/><text x="22" y="28" text-anchor="middle" fill="#888888" font-family="ui-monospace, monospace" font-size="13" font-weight="700">37</text></g>
+<g transform="translate(408, 388)" opacity="0.3"><circle cx="22" cy="22" r="20" fill="#3a3a4a"/><text x="22" y="28" text-anchor="middle" fill="#888888" font-family="ui-monospace, monospace" font-size="13" font-weight="700">34</text></g>
 <line x1="210" y1="456" x2="470" y2="456" stroke="#ffd60a" stroke-width="0.5" opacity="0.4" stroke-dasharray="3,3"/>
 <text x="340" y="480" text-anchor="middle" fill="#ffffff" opacity="0.5" font-family="ui-monospace, monospace" font-size="11" letter-spacing="3">STREAK</text>
 <g transform="translate(308, 492)">
@@ -639,7 +636,7 @@ Player may override displayed tier downward (e.g. show BRONZE despite earning GO
 | `WORDSMITH` | first Words win |
 | `GRANDMASTER` | first Chess AI win |
 | `STREAK MASTER` | 30-day streak |
-| `COMPLETIONIST` | tried all 37 games |
+| `COMPLETIONIST` | tried all 34 games |
 | `PERFECT 29` | first perfect 29 in Cribbage |
 
 **Top-3 derivation:** by lifetime plays per game (matches existing sort-by-plays heuristic). Player can pin one game as locked-top-3 via /settings → Player → drag-drop.
@@ -907,7 +904,7 @@ Tile grid columns:
 - 480–767 → 2 columns
 - ≤479 → 2 columns
 
-Decision locked at 4/3/2/2 — preserves the shipped desktop max of 4 cols, sets mobile floor at 2 cols for browse-density across 37 games.
+Decision locked at 4/3/2/2 — preserves the shipped desktop max of 4 cols, sets mobile floor at 2 cols for browse-density across 34 games.
 
 Touch target floor: 44×44 (already shipped — `min-height: 44px` on `.tab`, `.search-toggle`, etc.). Surprise dock: pill at ≥600px, full-width bottom-dock at <600px (Phase 4). Mini-previews stay rendered at all sizes; at 2-col mobile, tiles enlarge and previews scale up. Game pages: `GAI.canvas.fit()` handles canvas. No horizontal scroll anywhere.
 
