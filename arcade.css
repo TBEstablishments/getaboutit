@@ -48,7 +48,7 @@ body {
   transform: scaleX(0); opacity: 0;
 }
 .wordmark {
-  font-size: clamp(26px, 9vw, 104px);
+  font-size: clamp(20px, 7.3vw, 104px);
   letter-spacing: 0.04em;
   line-height: 1;
   white-space: nowrap;
