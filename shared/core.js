@@ -53,6 +53,29 @@ const GAME_CATEGORIES = {
   blackjack: 'cards', solitaire: 'cards'
 };
 
+// Per-game accent registry (DESIGN §3): { p: primary, s: secondary },
+// palette colors only. Single source of truth for tile border + glow,
+// in-cabinet bezel, OG cards, etc. The three "cycle" games (stack/blocks/
+// breakout) get a representative primary — DESIGN §3 leaves them open.
+const GAME_ACCENTS = {
+  stack:     { p: '#ff006e', s: '#ffffff' },
+  snake:     { p: '#06ffa5', s: '#ef233c' },
+  blocks:    { p: '#00f5ff', s: '#ffffff' },
+  p2048:     { p: '#ff9500', s: '#ffd60a' },
+  breakout:  { p: '#ef233c', s: '#ffffff' },
+  pong:      { p: '#ffffff', s: '#00f5ff' },
+  flap:      { p: '#ffd60a', s: '#06ffa5' },
+  invaders:  { p: '#06ffa5', s: '#ef233c' },
+  runner:    { p: '#ff9500', s: '#ff006e' },
+  slither:   { p: '#8338ec', s: '#06ffa5' },
+  tictactoe: { p: '#00f5ff', s: '#ff006e' },
+  chess:     { p: '#4361ee', s: '#ffd60a' },
+  checkers:  { p: '#ef233c', s: '#4361ee' },
+  connect4:  { p: '#ffd60a', s: '#ef233c' },
+  blackjack: { p: '#06ffa5', s: '#ffd60a' },
+  solitaire: { p: '#4361ee', s: '#ef233c' }
+};
+
 // ============== STORAGE ==============
 const storage = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
@@ -1670,7 +1693,7 @@ function welcomeBackCheck() {
 }
 
 window.GAI = {
-  PALETTE, PALETTE_NAMES, GAME_KEYS, GAME_PATHS, GAME_NAMES, GAME_CATEGORIES,
+  PALETTE, PALETTE_NAMES, GAME_KEYS, GAME_PATHS, GAME_NAMES, GAME_CATEGORIES, GAME_ACCENTS,
   storage, bestScore, bestKV, recordPlay, recordWin, streak, totalPlays, gamePlays,
   rng, todayUTC, dailySeed,
   audio: { ensure: ensureAudio, tone, arpeggio, noiseBurst, startPad, stopPad, setMuted, isMuted },
