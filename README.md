@@ -67,7 +67,7 @@ There's no build step. Just plain files served as-is.
 - **Search** — type `/` to focus, search any game by name or tag
 - **Sort-by-plays** — default ALL view orders by your play count, daily-drivers float to the top
 - **Surprise me** — picks a random game (never the one you just played); long-press cycles category mode
-- **Achievements** — 9 milestones to unlock; view at /settings
+- **Achievements** — 8 milestones to unlock; view at /settings
 - **Stats** — overview tiles + 30-day daily-plays chart + most-played + best scores + time per game + achievements
 - **Themes** — default, deep night, high contrast; cycle by typing "mood" on home or via /settings
 - **Export / import scores** — JSON backup at /settings, no account needed

@@ -973,7 +973,6 @@ const ACHIEVEMENT_LIST = [
   { id: 'completionist', label: 'COMPLETIONIST', desc: 'play every game at least once' },
   { id: 'cards_shark', label: 'CARDS SHARK', desc: 'win at every card game' },
   { id: 'board_general', label: 'BOARD GENERAL', desc: 'win at every board game' },
-  { id: 'royal_flush', label: 'ROYAL FLUSH', desc: 'hit a royal in poker' },
   { id: 'grandmaster', label: 'GRANDMASTER', desc: 'beat chess on hard' },
   { id: 'taps_100k', label: 'MILLION TAPS', desc: '100,000 plays across all games' }
 ];

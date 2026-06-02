@@ -158,7 +158,7 @@ Opt-in patterns (recommended in new games):
 - **Streak** — `gai_streak_global` (current/max/lastPlayDate)
 - **Recently played** — `gai_recent` (5 most recent)
 - **Surprise me** — random; long-press cycles category mode
-- **Achievements** — 9 unlock IDs in `gai_achievements`; toast on unlock; full list at `/settings` and `/stats`
+- **Achievements** — 8 unlock IDs in `gai_achievements`; toast on unlock; full list at `/settings` and `/stats`
 - **Stats** — `/stats` page: per-game best, time played, daily plays chart, most played chart, achievement grid
 - **Themes** — `gai_theme` (default | deepnight | highcontrast); type "mood" or use `/settings`
 - **Export / import scores** — JSON backup at `/settings`

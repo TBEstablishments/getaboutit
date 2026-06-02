@@ -861,7 +861,7 @@ Sections:
 **Player sees** (top-down):
 - Player: handle (read-only), displayed title (dropdown of unlocked titles), frame override (auto = highest, or manual), top-3 pin (drag-drop), Ticket display toggle, public visibility (default ON)
 - Friends: list of followed Players + unfollow buttons; "FOLLOWING YOU" sub-section + block buttons
-- Achievements: 9 unlocks (growing) with status
+- Achievements: 8 unlocks (growing) with status
 - Themes: 3 themes with previews
 - Audio: master volume, floor ambient toggle, cabinet hum toggle
 - Data: export progress as JSON, import from JSON, "PRINT MY TICKET AGAIN" button (re-runs Reveal Ceremony)
