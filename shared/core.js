@@ -297,6 +297,60 @@ function setMuted(v) {
 }
 function isMuted() { return muted; }
 
+// ============== SFX — named procedural one-shots (DESIGN §8.1) ==============
+// Layered on the audio primitives above. All respect the global mute
+// (tone/noiseBurst already gate on `muted`; sweep checks it directly) and
+// unlock via ensureAudio() on the first user gesture, same as the rest.
+// New sounds belong here, not as ad-hoc tones in game.js (DESIGN §8.3).
+function sweep(f0, f1, dur, type, gain, expo) {
+  if (muted) return;
+  if (!audioCtx) ensureAudio();
+  if (!audioCtx || !masterGain) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type || 'sawtooth';
+  o.frequency.setValueAtTime(f0, t);
+  try {
+    if (expo) o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t + dur);
+    else o.frequency.linearRampToValueAtTime(f1, t + dur);
+  } catch {}
+  gain = gain == null ? 0.16 : gain;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), t + 0.05);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.08);
+  o.connect(g).connect(masterGain);
+  o.onended = () => { try { o.disconnect(); g.disconnect(); } catch {} };
+  o.start(t);
+  o.stop(t + dur + 0.1);
+}
+
+const sfx = {
+  // TAP — 880Hz sine, generic click / tile hover-confirm
+  tap()   { tone(880, 0.04, 'sine', 0.12, 0.002, 0.02); },
+  // TICK — 1320Hz blip, tab switch / countdown / typing
+  tick()  { tone(1320, 0.015, 'square', 0.06, 0.001, 0.012); },
+  // PICK — 660 + 990Hz, selection / pin / "I chose this"
+  pick()  { tone(660, 0.06, 'square', 0.11, 0.002, 0.05); setTimeout(() => tone(990, 0.08, 'square', 0.09, 0.002, 0.06), 20); },
+  // COIN — 988 → 1319Hz, coin-insert / hero reveal
+  coin()  { tone(988, 0.04, 'square', 0.12, 0.002, 0.02); setTimeout(() => tone(1319, 0.10, 'square', 0.11, 0.002, 0.05), 55); },
+  // WIN_HI — C5→E5→G5 arpeggio, achievement / win
+  winHi() { arpeggio([523.25, 659.25, 783.99], 80, 'square', 0.12); },
+  // WIN_LO — C4→G3 descending, loss / bust
+  winLo() { tone(261.63, 0.16, 'sawtooth', 0.12, 0.002, 0.05); setTimeout(() => tone(196.0, 0.2, 'sawtooth', 0.12, 0.002, 0.08), 100); },
+  // BUZZ — 80Hz square + noise, error / invalid
+  buzz()  { tone(80, 0.08, 'square', 0.12, 0.001, 0.02); noiseBurst(0.1, 0.07); },
+  // FLIP — filtered noise burst, card flip / reveal word
+  flip()  { noiseBurst(0.06, 0.09); tone(200, 0.05, 'triangle', 0.05, 0.001, 0.03); },
+  // RISE — 220→880Hz sweep + sub-bass, CRT power-on / hero reveal
+  rise()  { sweep(220, 880, 0.4, 'sawtooth', 0.15); tone(330, 0.4, 'square', 0.04, 0.01, 0.1); tone(64, 0.5, 'sine', 0.05, 0.05, 0.4); },
+  // FALL — 880→110Hz sweep, back-to-floor
+  fall()  { sweep(880, 110, 0.3, 'sawtooth', 0.14, true); },
+  // HUM — 60Hz ambient bed (opt-in)
+  humStart() { startPad(60, 0.04); },
+  humStop()  { stopPad(); }
+};
+
 // ============== CANVAS ==============
 function fit(canvas, opts) {
   opts = opts || {};
@@ -1620,6 +1674,7 @@ window.GAI = {
   storage, bestScore, bestKV, recordPlay, recordWin, streak, totalPlays, gamePlays,
   rng, todayUTC, dailySeed,
   audio: { ensure: ensureAudio, tone, arpeggio, noiseBurst, startPad, stopPad, setMuted, isMuted },
+  sfx,
   canvas: { fit },
   input: { tap, swipe, keys, drag: inputDrag },
   chrom: chromHTML,
