@@ -56,11 +56,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:auto;overflow:visible}
 body{min-height:100dvh;background:#0a0a1e;color:#fff;font-family:'Press Start 2P','Courier New',monospace;overflow-x:hidden;overflow-y:auto;-webkit-tap-highlight-color:transparent}
-.wordmark{font-size:clamp(26px,8vw,104px);letter-spacing:0.04em;line-height:1;white-space:nowrap;color:#fff}
+#home{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 calc(20px + env(safe-area-inset-right)) 24px calc(20px + env(safe-area-inset-left))}
+.hero{min-height:100svh;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 8px;position:relative;overflow:hidden}
+.wordmark{font-size:clamp(26px,9vw,104px);letter-spacing:0.04em;line-height:1;white-space:nowrap;color:#fff;max-width:100%}
 .chrom{text-shadow:0.3px 0 0 #ff006e,-0.3px 0 0 #00f5ff,0 0 6px rgba(255,255,255,0.22)}
-#home{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:calc(36px + env(safe-area-inset-top)) 20px 24px}
-.hero{text-align:center;padding:12px 0 18px}
-.tagline{font-size:clamp(9px,1.5vw,12px);letter-spacing:0.18em;color:rgba(255,255,255,0.7);margin-top:14px}
+.hero .wordmark{text-shadow:3px 0 0 #ff006e,-3px 0 0 #00f5ff,0 0 14px rgba(255,255,255,0.25)}
+.tagline{font-size:clamp(8px,1.7vw,11px);letter-spacing:0.28em;color:rgba(255,255,255,0.5);margin-top:26px}
+.cta{font-family:'Press Start 2P','Courier New',monospace;font-size:clamp(10px,2vw,13px);letter-spacing:0.14em;color:#ffd60a;margin-top:34px;padding:16px 28px;border:2px solid #ffd60a;border-radius:4px;background:transparent;cursor:pointer}
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 </style>
 
@@ -146,15 +148,23 @@ body{min-height:100dvh;background:#0a0a1e;color:#fff;font-family:'Press Start 2P
 <div id="scanlines" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
 
+<button id="soundToggle" class="ui-btn" type="button" aria-label="Toggle sound" aria-pressed="false"></button>
+
 <main id="home">
-  <header class="hero">
+  <header class="hero" id="hero">
+    <div class="hero-bloom" aria-hidden="true"></div>
+    <div class="crt-line" aria-hidden="true"></div>
     <h1 id="wordmark" class="wordmark chrom chrom-jitter"><span>GETABOUTIT</span></h1>
-    <p class="tagline">free arcade · no signup · just play</p>
-    <p class="stat-strip" id="stat-strip" aria-live="polite">
-      <a id="achBadge" class="ach-badge" href="/settings" aria-label="Achievements">✦ <span id="achCount">0</span>/<span id="achTotal">8</span></a> · 🕹 16 GAMES · ⚡ <span id="taps-count">0</span> TAPS · <span id="streak-emoji">🔥</span> <span id="streak-count">0</span> DAY STREAK
-    </p>
-    <p class="motd" id="motd"></p>
+    <p class="tagline">16 GAMES · NO QUARTERS · NO CLOCK</p>
+    <button id="heroStart" class="cta" type="button">▸ PRESS START</button>
+    <div class="hero-horizon" aria-hidden="true"></div>
+    <div class="scroll-hint" id="scrollHint" aria-hidden="true">▼ THE FLOOR</div>
   </header>
+
+  <p class="stat-strip" id="stat-strip" aria-live="polite">
+    <a id="achBadge" class="ach-badge" href="/settings" aria-label="Achievements">✦ <span id="achCount">0</span>/<span id="achTotal">8</span></a> · 🕹 16 GAMES · ⚡ <span id="taps-count">0</span> TAPS · <span id="streak-emoji">🔥</span> <span id="streak-count">0</span> DAY STREAK
+  </p>
+  <p class="motd" id="motd"></p>
 
   <section class="daily-trio" id="dailyTrio" aria-label="Today's challenges">
     <h2 class="recent-label">TODAY'S CHALLENGES</h2>

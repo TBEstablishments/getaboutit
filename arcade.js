@@ -3,27 +3,20 @@
 const GAI = window.GAI;
 const $ = (s) => document.querySelector(s);
 
-// entrance
-const firstVisit = !sessionStorage.getItem('gai_seen');
-if (firstVisit) {
-  sessionStorage.setItem('gai_seen', '1');
-  document.body.classList.add('entrance');
-}
-
-// Hand the wordmark off to chromBreathe once wmEnter finishes. Without
-// this, body.entrance sticks forever and the breathing animation never
-// takes over (the entrance selector's `animation: wmEnter ...` wins on
-// specificity over `.chrom-jitter`'s chromBreathe).
-const _wordmark = document.querySelector('.wordmark');
-if (_wordmark) {
-  _wordmark.addEventListener('animationend', (e) => {
-    if (e.animationName === 'wmEnter') {
-      document.body.classList.remove('entrance');
-    }
-  }, { once: true });
-  // Safety net: remove class after 1.5s regardless, in case animationend
-  // never fires (e.g. prefers-reduced-motion suppresses wmEnter entirely).
-  setTimeout(() => document.body.classList.remove('entrance'), 1500);
+// ── hero boot + reveal (session-scoped) ──────────────────────────────────
+// First home load of a new browser session plays the full CRT boot + PRESS
+// START gate; same-session revisits and reduced-motion skip straight to the
+// revealed, resting page. Scoped to sessionStorage (not the persistent gai_*
+// flags) so the boot replays as a welcome the next day. The hero owns the
+// wordmark now — the old body.entrance machinery is gone; the resting state
+// is the CSS default and chromBreathe handles the breathing.
+const reduced = GAI.reducedMotion;
+const doBoot = !sessionStorage.getItem('gai_hero_booted') && !reduced;
+if (doBoot) {
+  sessionStorage.setItem('gai_hero_booted', '1');
+  document.body.classList.add('boot');
+} else {
+  document.body.classList.add('revealed');
 }
 
 // rainbow
@@ -262,7 +255,7 @@ for (const g of GAMES_SORTED) {
   t.href = GAI.GAME_PATHS[g.key];
   const isToday = dailyTrio.some(d => d.key === g.key);
   if (isToday) t.classList.add('daily');
-  if (firstVisit) {
+  if (doBoot) {
     t.style.animationDelay = (0.45 + entranceStagger * 0.03) + 's';
     entranceStagger++;
   }
@@ -458,12 +451,65 @@ document.addEventListener('pointerdown', onFirstGesture);
 document.addEventListener('keydown', onFirstGesture);
 document.addEventListener('touchstart', onFirstGesture, { passive: true });
 
+// ── hero reveal + sound toggle ───────────────────────────────────────────
+const heroEl = $('#hero');
+let revealed = document.body.classList.contains('revealed');
+function scrollToFloor() {
+  const el = $('#dailyTrio') || $('.grid');
+  if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+}
+// Tap reveals AND scrolls to the floor; natural scroll reveals only (no
+// scrollIntoView — never hijack a scroll the user is already driving).
+function reveal(fromTap) {
+  if (revealed) { if (fromTap) scrollToFloor(); return; }
+  revealed = true;
+  document.body.classList.add('revealed');
+  document.body.classList.remove('boot');
+  onFirstGesture();                 // unlock hover-blip audio on this gesture too
+  GAI.audio.ensure();
+  GAI.sfx.coin();
+  setTimeout(() => GAI.sfx.rise(), 140);
+  if (fromTap) scrollToFloor();
+}
+if (heroEl) {
+  heroEl.addEventListener('click', (e) => {
+    if (e.target.closest('.ui-btn')) return;  // sound toggle etc.
+    reveal(true);
+  });
+}
+const onScrollReveal = () => { if (!revealed) reveal(false); };
+window.addEventListener('wheel', onScrollReveal, { passive: true });
+window.addEventListener('touchmove', onScrollReveal, { passive: true });
+window.addEventListener('scroll', onScrollReveal, { passive: true });
+
+// sound toggle — reads/writes the global mute so it persists + stays in sync
+// with the in-game mute button.
+const soundToggle = $('#soundToggle');
+const SND_ON = '<svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><path d="M9 4.5q1.4 2 0 4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M10.6 3q2.4 3.5 0 7" fill="none" stroke="currentColor" stroke-width="1.1"/></svg><span>SOUND ON</span>';
+const SND_OFF = '<svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><line x1="8.5" y1="4.5" x2="12.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/><line x1="12.5" y1="4.5" x2="8.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/></svg><span>SOUND OFF</span>';
+function syncSound() {
+  if (!soundToggle) return;
+  const m = GAI.audio.isMuted();
+  soundToggle.innerHTML = m ? SND_OFF : SND_ON;
+  soundToggle.classList.toggle('muted', m);
+  soundToggle.setAttribute('aria-pressed', String(m));
+}
+if (soundToggle) {
+  syncSound();  // initialize from persisted mute state
+  soundToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    GAI.audio.ensure();
+    GAI.audio.setMuted(!GAI.audio.isMuted());
+    syncSound();
+    if (!GAI.audio.isMuted()) GAI.sfx.tap();
+  });
+}
+
 // rAF — one shared loop drives the bg + all visible tile previews. Tiles are
 // throttled to ~TILE_FPS (cheaper than 60fps, plenty for previews); the bg
 // keeps the full frame cadence for smooth scrolling stars. IntersectionObserver
 // + display:none gate which tiles tick; document.hidden pauses everything.
 let lastT = 0, tileAcc = 0;
-const reduced = GAI.reducedMotion;
 const TILE_FPS = 30, TILE_STEP = 1000 / TILE_FPS;
 let bgDrawn = false;
 let staticDrawn = false;
