@@ -147,10 +147,7 @@ $('#motd').textContent = '> ' + motd;
 
 // stats
 function refreshStats() {
-  const total = GAI.totalPlays();
-  const st = GAI.streak.get();
-  const cur = st.current || 0;
-  const taps = $('#taps-count'); if (taps) taps.textContent = total.toLocaleString();
+  const cur = GAI.streak.get().current || 0;
   const sc = $('#streak-count'); if (sc) sc.textContent = cur;
   const fl = $('#streak-flame');
   if (fl) { fl.classList.toggle('hot', cur >= 7); fl.classList.toggle('blazing', cur >= 30); }
@@ -545,9 +542,8 @@ let surpriseTimer = null;
 let surpriseCategoryMode = sessionStorage.getItem('gai_surprise_cat') || 'all';
 const surpriseBtn = $('#surprise');
 function updateSurpriseLabel() {
-  surpriseBtn.textContent = surpriseCategoryMode === 'all'
-    ? '🎲 SURPRISE ME'
-    : '🎲 ' + surpriseCategoryMode.toUpperCase();
+  const lbl = $('#surpriseLabel');
+  if (lbl) lbl.textContent = surpriseCategoryMode === 'all' ? 'SURPRISE ME' : surpriseCategoryMode.toUpperCase();
 }
 updateSurpriseLabel();
 function surprisePick() {
