@@ -190,29 +190,8 @@ for (const g of dailyTrio) {
   dailyStrip.appendChild(a);
 }
 
-// pinned strip
-function renderPinned() {
-  const pinned = GAI.pins.get().filter(k => GAMES.find(g => g.key === k));
-  const sec = $('#pinned');
-  const strip = $('#pinnedStrip');
-  if (!pinned.length) { sec.classList.add('hidden'); return; }
-  sec.classList.remove('hidden');
-  strip.innerHTML = '';
-  for (const k of pinned) {
-    const meta = GAMES.find(g => g.key === k);
-    const a = document.createElement('a');
-    a.className = 'pinned-tile t-' + meta.color;
-    a.href = GAI.GAME_PATHS[k];
-    a.textContent = meta.displayName || GAI.GAME_NAMES[k];
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      GAI.audio.ensure();
-      GAI.transition.glitchTo(GAI.GAME_PATHS[k]);
-    });
-    strip.appendChild(a);
-  }
-}
-renderPinned();
+// Pinned games fold into the grid (float to the front) via sortGrid() below —
+// no separate pinned band. recent stays as one slim strip, auto-hidden empty.
 
 // recent
 function renderRecent() {
@@ -226,7 +205,8 @@ function renderRecent() {
   for (const r of recent) {
     const meta = GAMES.find(g => g.key === r.key);
     const a = document.createElement('a');
-    a.className = 'recent-tile t-' + meta.color;
+    a.className = 'recent-tile';
+    a.style.setProperty('--acc', (GAI.GAME_ACCENTS[r.key] || {}).p || '#fff');
     a.href = GAI.GAME_PATHS[r.key];
     a.textContent = meta.displayName || GAI.GAME_NAMES[r.key];
     a.addEventListener('click', (e) => {
@@ -328,12 +308,28 @@ for (const g of GAMES_SORTED) {
   tiles.push({ meta: g, el: t, canvas, ctx: pctx, w: PVW, h: PVH, tick: (GAI.previews && GAI.previews[g.key]) || noop, state: {}, visible: true });
 }
 
+// Order the grid: pinned games float to the front (in pin order), the rest by
+// play count. Re-appending existing tile nodes preserves their canvas + state
+// + IntersectionObserver registration, so previews keep running across a sort.
+function sortGrid() {
+  const pins = GAI.pins.get();
+  const ordered = tiles.slice().sort((a, b) => {
+    const pa = pins.indexOf(a.meta.key), pb = pins.indexOf(b.meta.key);
+    if (pa >= 0 && pb >= 0) return pa - pb;
+    if (pa >= 0) return -1;
+    if (pb >= 0) return 1;
+    return GAI.gamePlays(b.meta.key) - GAI.gamePlays(a.meta.key);
+  });
+  for (const t of ordered) grid.appendChild(t.el);
+}
+sortGrid();
+
 function togglePin(key) {
   const list = GAI.pins.toggle(key);
   GAI.audio.ensure();
   GAI.sfx.pick();
   GAI.ui.toast(list.includes(key) ? 'PINNED' : 'UNPINNED', 1500);
-  renderPinned();
+  sortGrid();
   // Add/remove the pin badge on the tile cabinet
   const tile = tiles.find(t => t.meta.key === key);
   if (tile) {
@@ -413,19 +409,17 @@ for (const t of tiles) {
   try { t.tick(t.ctx, t.w, t.h, t.state, 0, performance.now()); } catch {}
 }
 
-// IntersectionObserver for previews. Pin the first 9 tiles to always
-// tick (they're above-the-fold on every viewport) — observer governs
-// the rest.
+// IntersectionObserver gates previews — observe every tile (the grid now sits
+// below the full-viewport hero, and pins reorder it, so no tile is reliably
+// above the fold). Off-screen tiles stop ticking; the margin pre-warms them
+// just before they scroll into view.
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
     const tile = tiles.find(t => t.el === e.target);
     if (tile) tile.visible = e.isIntersecting;
   }
-}, { rootMargin: '50px' });
-for (let i = 0; i < tiles.length; i++) {
-  if (i < 9) { tiles[i].visible = true; continue; }
-  io.observe(tiles[i].el);
-}
+}, { rootMargin: '120px' });
+for (const t of tiles) io.observe(t.el);
 
 // hover blip
 let lastBlip = 0;

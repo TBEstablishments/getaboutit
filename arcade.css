@@ -220,16 +220,19 @@ body.revealed .hero-bloom { animation: heroSurge 1s ease both; }
 .recent-strip::-webkit-scrollbar { height: 4px; }
 .recent-strip::-webkit-scrollbar-thumb { background: var(--c-purple); }
 .recent-tile {
+  --acc: #ffffff;
   flex: 0 0 auto;
-  padding: 10px 14px;
+  padding: 9px 13px;
   background: rgba(10,10,30,0.6);
-  border: 1px solid currentColor;
-  font-size: 10px;
+  border: 1px solid var(--acc);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 9px;
   letter-spacing: 0.12em;
   white-space: nowrap;
-  transition: transform 0.12s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.recent-tile:hover { transform: translateY(-2px); }
+.recent-tile:hover { transform: translateY(-2px); box-shadow: 0 0 14px -2px var(--acc); }
 
 /* ===== tabs — scrim under the row so the outrun horizon
    glow stops competing with the category buttons ===== */
