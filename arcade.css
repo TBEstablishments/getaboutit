@@ -143,46 +143,40 @@ body.revealed .hero-bloom { animation: heroSurge 1s ease both; }
   letter-spacing: 0.1em;
   opacity: 0.85;
 }
-#streak-emoji.hot { animation: streakPulse 1.2s ease-in-out infinite; display: inline-block; }
 @keyframes streakPulse {
   0%, 100% { transform: scale(1); filter: brightness(1); }
   50%      { transform: scale(1.15); filter: brightness(1.3); }
 }
-.motd {
-  margin-top: 10px;
-  font-size: clamp(8px, 1.4vw, 10px);
-  color: var(--c-yellow);
-  letter-spacing: 0.18em;
-  opacity: 0.75;
-}
+.motd { font-size: clamp(8px, 1.4vw, 10px); color: var(--c-yellow); letter-spacing: 0.18em; }
 
-/* ===== today's challenges ===== */
-.daily-trio { margin-top: 22px; }
-.daily-strip {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: thin;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
-          mask-image: linear-gradient(to right, #000 0%, #000 92%, transparent 100%);
+/* ===== TODAY band — slim + warm (streak + daily picks) ===== */
+.today { position: relative; margin-top: 28px; padding-top: 26px; }
+.today::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 240px; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,149,0,0.10), transparent 60%);
 }
-.daily-strip::-webkit-scrollbar { height: 4px; }
-.daily-strip::-webkit-scrollbar-thumb { background: var(--c-cyan); }
-.daily-tile {
-  flex: 1 1 200px;
-  min-width: 160px;
-  padding: 14px 16px;
-  background: rgba(10,10,30,0.7);
-  border: 1px solid var(--c-cyan);
-  box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 0 16px rgba(0,245,255,0.18);
-  display: flex; flex-direction: column; gap: 4px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+.today-head {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
 }
-.daily-tile:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(0,245,255,0.4), 0 0 26px rgba(0,245,255,0.35); }
-.daily-tile .d-mark { font-size: 8px; letter-spacing: 0.2em; color: var(--c-cyan); }
-.daily-tile .d-name { font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.06em; }
-.daily-tile .d-tag { font-size: 8px; letter-spacing: 0.18em; color: rgba(255,255,255,0.6); }
+.today-eyebrow { font-size: clamp(9px, 1.6vw, 11px); letter-spacing: 0.3em; color: var(--c-orange); }
+.streak { display: inline-flex; align-items: center; gap: 8px; font-size: clamp(8px, 1.4vw, 10px); letter-spacing: 0.12em; color: var(--c-yellow); }
+.flame { width: 12px; height: 16px; display: inline-block; }
+.flame.hot { animation: streakPulse 1.2s ease-in-out infinite; }
+.flame.blazing { animation: streakPulse 0.8s ease-in-out infinite; filter: drop-shadow(0 0 4px var(--c-orange)); }
+.today .motd { text-align: left; margin: 0 0 16px; opacity: 0.7; }
+.daily-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 640px) { .daily-row { grid-template-columns: 1fr; } }
+.daily {
+  position: relative; display: block; text-decoration: none; cursor: pointer;
+  border: 1px solid rgba(255,149,0,0.30); border-radius: 8px; padding: 16px 16px 14px;
+  background: linear-gradient(160deg, rgba(255,149,0,0.06), rgba(10,10,30,0.2));
+  transition: transform 0.25s cubic-bezier(.2,.7,.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.daily:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,0.4); border-color: rgba(255,149,0,0.6); }
+.daily-cat { font-size: 8px; letter-spacing: 0.2em; color: var(--c-cyan); margin-bottom: 8px; }
+.daily-name { font-size: clamp(12px, 1.8vw, 15px); letter-spacing: 0.04em; color: #fff; margin-bottom: 6px; }
+.daily-desc { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.02em; color: rgba(255,255,255,0.5); }
 
 /* ===== achievements badge — inline in stat-strip ===== */
 .ach-badge {
@@ -327,7 +321,7 @@ body.revealed .hero-bloom { animation: heroSurge 1s ease both; }
   font-size: 7px; letter-spacing: 0.1em; color: var(--c-yellow);
   background: rgba(0,0,0,0.55); padding: 3px 5px; border-radius: 3px;
 }
-.chip.daily {
+.chip.daymark {
   top: 6px; left: 8px;
   font-size: 11px; color: var(--c-yellow);
   filter: drop-shadow(0 0 4px rgba(255,214,10,0.6));
@@ -449,5 +443,5 @@ body.boot .tile { animation: tileRise 0.5s cubic-bezier(.2,.7,.2,1) both; }
 @media (prefers-reduced-motion: reduce) {
   body.boot .tile { animation: none; }
   .hero .wordmark, .hero-bloom, .scroll-hint, .crt-line, .cta { animation: none !important; }
-  #streak-emoji.hot { animation: none; }
+  .flame.hot, .flame.blazing { animation: none; }
 }

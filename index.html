@@ -162,13 +162,19 @@ body{min-height:100dvh;background:#0a0a1e;color:#fff;font-family:'Press Start 2P
   </header>
 
   <p class="stat-strip" id="stat-strip" aria-live="polite">
-    <a id="achBadge" class="ach-badge" href="/settings" aria-label="Achievements">✦ <span id="achCount">0</span>/<span id="achTotal">8</span></a> · 🕹 16 GAMES · ⚡ <span id="taps-count">0</span> TAPS · <span id="streak-emoji">🔥</span> <span id="streak-count">0</span> DAY STREAK
+    <a id="achBadge" class="ach-badge" href="/settings" aria-label="Achievements">✦ <span id="achCount">0</span>/<span id="achTotal">8</span></a> · 🕹 16 GAMES · ⚡ <span id="taps-count">0</span> TAPS
   </p>
-  <p class="motd" id="motd"></p>
 
-  <section class="daily-trio" id="dailyTrio" aria-label="Today's challenges">
-    <h2 class="recent-label">TODAY'S CHALLENGES</h2>
-    <div class="daily-strip" id="dailyStrip"></div>
+  <section class="today" id="dailyTrio" aria-label="Today's challenges">
+    <div class="today-head">
+      <span class="today-eyebrow">▸ TODAY</span>
+      <span class="streak">
+        <svg class="flame" id="streak-flame" viewBox="0 0 14 18" aria-hidden="true"><rect x="6" y="0" width="2" height="2" fill="#ffd60a"/><rect x="5" y="2" width="4" height="3" fill="#ffd60a"/><rect x="4" y="5" width="6" height="3" fill="#ff9500"/><rect x="3" y="8" width="8" height="4" fill="#ffd60a"/><rect x="2" y="12" width="10" height="4" fill="#ef233c"/><rect x="4" y="12" width="6" height="3" fill="#ff9500"/><rect x="3" y="16" width="8" height="2" fill="#ef233c"/></svg>
+        <span id="streak-count">0</span> DAY STREAK
+      </span>
+    </div>
+    <p class="motd" id="motd"></p>
+    <div class="daily-row" id="dailyStrip"></div>
   </section>
 
   <section class="recent hidden" id="recent" aria-label="Recently played">

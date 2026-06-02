@@ -149,10 +149,11 @@ $('#motd').textContent = '> ' + motd;
 function refreshStats() {
   const total = GAI.totalPlays();
   const st = GAI.streak.get();
-  $('#taps-count').textContent = total.toLocaleString();
-  $('#streak-count').textContent = st.current || 0;
-  const e = $('#streak-emoji');
-  if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
+  const cur = st.current || 0;
+  const taps = $('#taps-count'); if (taps) taps.textContent = total.toLocaleString();
+  const sc = $('#streak-count'); if (sc) sc.textContent = cur;
+  const fl = $('#streak-flame');
+  if (fl) { fl.classList.toggle('hot', cur >= 7); fl.classList.toggle('blazing', cur >= 30); }
 }
 refreshStats();
 
@@ -178,10 +179,10 @@ refreshTheme();
 const dailyStrip = $('#dailyStrip');
 for (const g of dailyTrio) {
   const a = document.createElement('a');
-  a.className = 'daily-tile t-' + g.color;
+  a.className = 'daily';
   a.href = GAI.GAME_PATHS[g.key];
   const name = g.displayName || GAI.GAME_NAMES[g.key];
-  a.innerHTML = '<span class="d-mark">✦ ' + g.cat.toUpperCase() + ' ·</span><span class="d-name chrom"><span>' + name + '</span></span><span class="d-tag">' + g.tag + '</span>';
+  a.innerHTML = '<div class="daily-cat">' + g.cat.toUpperCase() + '</div><div class="daily-name">' + name + '</div><div class="daily-desc">' + g.tag + '</div>';
   a.addEventListener('click', (e) => {
     e.preventDefault();
     GAI.audio.ensure();
@@ -241,8 +242,7 @@ for (const g of GAMES_SORTED) {
   t.dataset.cat = g.cat;
   t.dataset.key = g.key;
   t.href = GAI.GAME_PATHS[g.key];
-  const isToday = dailyTrio.some(d => d.key === g.key);
-  if (isToday) t.classList.add('daily');
+  const isToday = dailyTrio.some(d => d.key === g.key);  // the ✦ chip marks it
   if (doBoot) {
     t.style.animationDelay = (0.45 + entranceStagger * 0.03) + 's';
     entranceStagger++;
@@ -271,7 +271,7 @@ for (const g of GAMES_SORTED) {
   // daily ✦ marker — only when it's a daily pick
   if (isToday) {
     const star = document.createElement('div');
-    star.className = 'chip daily';
+    star.className = 'chip daymark';
     star.textContent = '✦';
     star.setAttribute('aria-label', "Today's challenge");
     cab.appendChild(star);
