@@ -93,3 +93,12 @@ There's no build step. Just plain files served as-is.
 ├── robots.txt / sitemap.xml / humans.txt
 ├── vercel.json / CLAUDE.md / README.md / plan*.md
 ```
+
+## License
+
+Code is released under the [MIT License](LICENSE).
+
+The **GETABOUTIT** name, wordmark, visual brand, and the curated
+Golden Ticket word list are **not** covered by the MIT license and
+remain the property of the project. Fork the code freely — just give
+your arcade its own name and identity.
