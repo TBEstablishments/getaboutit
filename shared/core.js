@@ -7,7 +7,7 @@
 // stale-cache scenarios and to gate future migrations. User data
 // (scores, streak, achievements, pinned, etc.) is NEVER wiped here —
 // the version key is informational only.
-const SITE_VERSION = 'phase5';
+const SITE_VERSION = 'phase6';
 try {
   const stored = localStorage.getItem('gai_site_version');
   if (stored && stored !== SITE_VERSION) {
