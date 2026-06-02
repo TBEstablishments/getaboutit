@@ -62,7 +62,11 @@ const storage = {
     try {
       const v = localStorage.getItem(k);
       if (v == null) return fallback;
-      return JSON.parse(v);
+      const parsed = JSON.parse(v);
+      // A stored literal "null" (or "undefined") parses cleanly to null —
+      // JSON.parse does NOT throw, so it slipped past the catch and callers
+      // got null instead of the fallback. Treat it as missing.
+      return parsed == null ? fallback : parsed;
     } catch { return fallback; }
   },
   setJSON(k, obj) {
@@ -132,7 +136,10 @@ function isYesterday(prev, today) {
 
 const streak = {
   get() {
-    const st = storage.getJSON('gai_streak_global', { current: 0, max: 0, lastPlayDate: null });
+    let st = storage.getJSON('gai_streak_global', { current: 0, max: 0, lastPlayDate: null });
+    // Defensive: a corrupt or legacy value (a bare `null`, a string, a number)
+    // must not blank the home page when we read st.lastPlayDate below.
+    if (!st || typeof st !== 'object') st = { current: 0, max: 0, lastPlayDate: null };
     // decay: if today is more than 1 day past lastPlayDate, current is 0 (not yet incremented)
     const today = todayUTC();
     if (st.lastPlayDate && st.lastPlayDate !== today) {
