@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GETABOUTIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#ff006e;--magenta:#d100d1;--purple:#8338ec;--dpurple:#3a0ca3;
+    --blue:#4361ee;--cyan:#00f5ff;--teal:#06ffa5;--yellow:#ffd60a;
+    --orange:#ff9500;--red:#ef233c;--bg:#0a0a1e;--white:#fff;
+    --arcade:'Press Start 2P','Courier New',monospace;
+    --body:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+    --warm:rgba(255,149,0,.30);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:hidden;position:relative}
+
+  .sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:1px;opacity:.5}
+  .star.tw{animation:tw 5s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.16}50%{opacity:.8}}
+  .scanlines{position:fixed;inset:0;z-index:95;pointer-events:none;mix-blend-mode:overlay;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+  .vignette{position:fixed;inset:0;z-index:96;pointer-events:none;
+    background:radial-gradient(ellipse at center,transparent 54%,rgba(0,0,0,.5) 100%)}
+  .wrap{position:relative;z-index:2}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:40px 16px 0;position:relative;overflow:hidden}
+  .hero-bloom{position:absolute;left:50%;bottom:-26vh;transform:translateX(-50%);
+    width:155vw;height:92vh;pointer-events:none;filter:blur(8px);
+    background:radial-gradient(ellipse at center,var(--warm) 0%,rgba(255,0,110,.16) 32%,rgba(58,12,163,.10) 56%,transparent 72%);
+    animation:rise 1.6s ease .5s both}
+  .crt-line{position:absolute;left:8%;right:8%;top:50%;height:3px;background:#fff;
+    box-shadow:0 0 30px 4px rgba(255,255,255,.8);border-radius:2px;transform:scaleX(0);opacity:0;
+    animation:crt 1s ease both}
+  @keyframes crt{0%{transform:scaleX(0);opacity:0}14%{transform:scaleX(1);opacity:1}
+    60%{transform:scaleX(1) scaleY(1);opacity:1}100%{transform:scaleX(1) scaleY(40);opacity:0}}
+
+  .wordmark{font-family:var(--arcade);font-size:clamp(1.4rem,8vw,5.5rem);line-height:1;letter-spacing:0;
+    color:var(--white);white-space:nowrap;max-width:100%;
+    animation:glitchIn 1s steps(1) .55s both,breathe 8s ease-in-out 1.6s infinite}
+  @keyframes breathe{0%,100%{text-shadow:3px 0 var(--pink),-3px 0 var(--cyan)}
+    50%{text-shadow:5px 0 var(--pink),-5px 0 var(--cyan);filter:brightness(1.04)}}
+  @keyframes glitchIn{
+    0%{opacity:0;text-shadow:18px 0 var(--pink),-18px 0 var(--cyan)}
+    20%{opacity:1;text-shadow:-14px 0 var(--pink),12px 0 var(--cyan);transform:translateX(6px)}
+    40%{text-shadow:10px 0 var(--pink),-10px 0 var(--cyan);transform:translateX(-4px)}
+    60%{text-shadow:-6px 0 var(--pink),6px 0 var(--cyan);transform:translateX(2px)}
+    80%{text-shadow:4px 0 var(--pink),-4px 0 var(--cyan)}
+    100%{opacity:1;text-shadow:3px 0 var(--pink),-3px 0 var(--cyan);transform:translateX(0)}}
+
+  .tagline{font-family:var(--arcade);font-size:clamp(.46rem,1.7vw,.66rem);letter-spacing:.28em;
+    color:rgba(255,255,255,.5);margin-top:26px;animation:fadeUp .5s ease 1.5s both}
+  .cta{font-family:var(--arcade);font-size:clamp(.6rem,2vw,.82rem);letter-spacing:.14em;color:var(--yellow);
+    margin-top:38px;padding:17px 30px;border:2px solid var(--yellow);border-radius:4px;cursor:pointer;
+    background:transparent;text-transform:uppercase;transition:all .25s;
+    animation:fadeUp .5s ease 1.7s both,coinPulse 1.3s ease-in-out 2.4s infinite}
+  .cta:hover{background:rgba(255,214,10,.12)}
+  @keyframes coinPulse{0%,100%{box-shadow:0 0 0 rgba(255,214,10,0);transform:scale(1)}
+    50%{box-shadow:0 0 26px rgba(255,214,10,.45);transform:scale(1.03)}}
+  .coin{position:absolute;left:50%;top:62%;width:14px;height:14px;border-radius:50%;background:var(--yellow);
+    box-shadow:0 0 10px var(--yellow);opacity:0;transform:translateX(-50%)}
+  body.revealed .coin{animation:coinDrop .6s ease both}
+  body.revealed .hero-bloom{animation:surge 1s ease both}
+  @keyframes coinDrop{0%{opacity:1;top:55%}100%{opacity:0;top:80%}}
+  @keyframes surge{0%{opacity:1}30%{opacity:1;filter:blur(8px) brightness(1.55)}100%{opacity:1;filter:blur(8px) brightness(1)}}
+
+  .horizon{position:absolute;left:0;right:0;bottom:88px;height:1px;
+    background:linear-gradient(to right,transparent,var(--orange),var(--pink),var(--orange),transparent);
+    box-shadow:0 0 24px 2px rgba(255,149,0,.35);animation:fadeUp .8s ease 1.3s both}
+  .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:var(--arcade);
+    font-size:.48rem;letter-spacing:.26em;color:rgba(255,255,255,.4);
+    animation:fadeUp .6s ease 2.6s both,bob 2.4s ease-in-out 3.2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,5px)}}
+
+  @keyframes rise{0%{opacity:.1}100%{opacity:1}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  .today{position:relative;max-width:1080px;margin:0 auto;padding:90px 20px 30px}
+  .today::before{content:'';position:absolute;left:0;right:0;top:0;height:280px;z-index:-1;
+    background:radial-gradient(ellipse at 50% 0%,rgba(255,149,0,.10),transparent 60%)}
+  .today-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .today-eyebrow{font-family:var(--arcade);font-size:.6rem;letter-spacing:.3em;color:var(--orange)}
+  .streak{font-family:var(--arcade);font-size:.54rem;letter-spacing:.12em;color:var(--yellow);display:flex;align-items:center;gap:8px}
+  .flame{display:inline-block;width:14px;height:18px}
+  .daily-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:640px){.daily-row{grid-template-columns:1fr}}
+  .daily{position:relative;border:1px solid rgba(255,149,0,.3);border-radius:8px;padding:18px 18px 16px;
+    background:linear-gradient(160deg,rgba(255,149,0,.06),rgba(10,10,30,.2));cursor:pointer;
+    transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s}
+  .daily:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.4);border-color:rgba(255,149,0,.6)}
+  .daily-cat{font-family:var(--arcade);font-size:.46rem;letter-spacing:.2em;color:var(--cyan);margin-bottom:10px}
+  .daily-name{font-family:var(--arcade);font-size:.84rem;letter-spacing:.04em;color:var(--white);margin-bottom:7px}
+  .daily-desc{font-family:var(--body);font-size:.8rem;color:rgba(255,255,255,.5)}
+
+  .floor{max-width:1080px;margin:0 auto;padding:70px 20px 40px}
+  .floor-eyebrow{font-family:var(--arcade);font-size:.6rem;letter-spacing:.3em;color:var(--cyan);margin-bottom:12px}
+  .floor-title{font-family:var(--arcade);font-size:clamp(1rem,4vw,1.7rem);letter-spacing:.04em;margin-bottom:10px;
+    text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .floor-sub{font-family:var(--body);font-size:.92rem;line-height:1.7;color:rgba(255,255,255,.5);max-width:420px;margin-bottom:34px}
+
+  .controls-row{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+  .search{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;padding:14px 16px;
+    border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(255,255,255,.02)}
+  .search input{flex:1;background:transparent;border:none;outline:none;color:var(--white);
+    font-family:var(--arcade);font-size:.54rem;letter-spacing:.08em}
+  .search input::placeholder{color:rgba(255,255,255,.32)}
+  .surprise{font-family:var(--arcade);font-size:.54rem;letter-spacing:.1em;color:var(--pink);
+    padding:0 20px;border:2px solid var(--pink);border-radius:6px;background:transparent;cursor:pointer;
+    display:flex;align-items:center;gap:9px;transition:all .2s;white-space:nowrap}
+  .surprise:hover{background:rgba(255,0,110,.12);box-shadow:0 0 20px rgba(255,0,110,.3)}
+  .die{width:16px;height:16px;display:inline-block}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:50px}
+  .tab{font-family:var(--arcade);font-size:.56rem;letter-spacing:.1em;padding:13px 16px;
+    border:1px solid rgba(255,255,255,.18);border-radius:4px;color:rgba(255,255,255,.55);cursor:pointer;
+    background:transparent;transition:all .18s}
+  .tab.active{color:var(--white);border-color:var(--cyan);box-shadow:0 0 14px rgba(0,245,255,.25);border-bottom:2px solid var(--cyan)}
+  .tab:hover{color:var(--white)}
+
+  .shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:48px 36px}
+  @media(max-width:900px){.shelf{grid-template-columns:repeat(3,1fr);gap:42px 26px}}
+  @media(max-width:560px){.shelf{grid-template-columns:repeat(2,1fr);gap:38px 20px}}
+
+  .toy-wrap{display:flex;flex-direction:column;align-items:center;transition:opacity .3s,transform .3s}
+  .toy-wrap.hide{display:none}
+  .toy{position:relative;width:100%;aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;overflow:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+  .toy::before{content:'';position:absolute;inset:0;border-radius:14px;z-index:1;
+    background:linear-gradient(160deg,rgba(255,255,255,.22),transparent 42%,rgba(0,0,0,.28))}
+  .toy::after{content:'';position:absolute;inset:0;border-radius:14px;z-index:3;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(0,0,0,.10) 0 1px,transparent 1px 3px);opacity:.5}
+  .toy svg,.toy canvas{position:relative;z-index:2;width:58%;height:58%;image-rendering:pixelated}
+  .toy.live{align-items:stretch;justify-content:stretch}
+  .toy.live canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
+  .live-badge{position:absolute;top:7px;right:8px;z-index:4;font-family:var(--arcade);font-size:.34rem;
+    letter-spacing:.12em;color:var(--bg);background:rgba(255,255,255,.85);padding:2px 4px;border-radius:2px}
+  .pedestal{position:relative;width:100%;height:28px;margin-top:6px}
+  .pedestal::before{content:'';position:absolute;left:10%;right:10%;top:6px;height:2px;
+    background:linear-gradient(to right,transparent,rgba(255,255,255,.18),transparent)}
+  .pedestal::after{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:78%;height:24px;border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(255,149,0,.3),transparent 70%);transition:all .3s}
+  .toy-wrap:hover .toy{transform:translateY(-12px);box-shadow:0 18px 40px rgba(0,0,0,.5),0 0 30px -4px var(--acc)}
+  .toy-wrap:hover .pedestal::after{width:92%;height:30px;background:radial-gradient(ellipse at center,rgba(255,149,0,.5),transparent 72%)}
+  .toy.press{transform:translateY(-4px) scale(.97)!important}
+  .toy-name{font-family:var(--arcade);font-size:.6rem;letter-spacing:.05em;margin-top:14px;text-align:center}
+  .toy-desc{font-family:var(--body);font-size:.74rem;color:rgba(255,255,255,.45);margin-top:5px;text-align:center}
+
+  .a-teal{--acc:#06ffa5;background:linear-gradient(150deg,#0bd690,#06ffa5)}
+  .a-orange{--acc:#ff9500;background:linear-gradient(150deg,#e07e00,#ff9500)}
+  .a-blue{--acc:#4361ee;background:linear-gradient(150deg,#2f49c9,#4361ee)}
+  .a-white{--acc:#fff;background:linear-gradient(150deg,#c7c7d6,#fff)}
+  .a-yellow{--acc:#ffd60a;background:linear-gradient(150deg,#e0b800,#ffd60a)}
+  .a-pink{--acc:#ff006e;background:linear-gradient(150deg,#cc0058,#ff006e)}
+  .a-purple{--acc:#8338ec;background:linear-gradient(150deg,#5f28b0,#8338ec)}
+  .a-red{--acc:#ef233c;background:linear-gradient(150deg,#b81a2e,#ef233c)}
+  .a-cyan{--acc:#00f5ff;background:linear-gradient(150deg,#0bb6c9,#00f5ff)}
+  .a-dark{--acc:#06ffa5;background:linear-gradient(160deg,#0d0d24,#05050f)}
+
+  .footer{position:relative;text-align:center;padding:90px 20px 70px;margin-top:50px}
+  .footer::before{content:'';position:absolute;left:0;right:0;bottom:0;height:300px;z-index:-1;
+    background:radial-gradient(ellipse at 50% 100%,rgba(255,149,0,.12),transparent 65%)}
+  .creed{font-family:var(--arcade);font-size:.56rem;line-height:2.3;letter-spacing:.12em;color:rgba(255,255,255,.5)}
+  .creed b{color:var(--white)}
+  .foot-line{font-family:var(--body);font-size:.9rem;color:rgba(255,255,255,.4);margin:22px 0 30px}
+  .foot-wordmark{font-family:var(--arcade);font-size:1rem;letter-spacing:0;color:var(--white);
+    text-shadow:2px 0 var(--pink),-2px 0 var(--cyan);animation:breathe 8s ease-in-out infinite}
+  .foot-links{margin-top:22px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+  .foot-links a{font-family:var(--arcade);font-size:.48rem;letter-spacing:.12em;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s}
+  .foot-links a:hover{color:var(--cyan)}
+
+  .ui-btn{position:fixed;z-index:120;font-family:var(--arcade);font-size:.46rem;letter-spacing:.1em;
+    color:rgba(255,255,255,.45);background:rgba(8,8,20,.7);border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;padding:8px 12px;cursor:pointer;backdrop-filter:blur(6px);transition:all .2s;
+    display:flex;align-items:center;gap:7px}
+  .ui-btn:hover{color:var(--yellow);border-color:rgba(255,214,10,.4)}
+  .sound{right:14px;top:14px}
+  .replay{right:14px;bottom:14px}
+
+  .coin-rain{position:fixed;top:-20px;width:12px;height:12px;border-radius:50%;background:var(--yellow);
+    box-shadow:0 0 8px var(--yellow);z-index:130;pointer-events:none}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}.wordmark{opacity:1}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body class="cozy">
+
+<div class="sky" id="sky"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<button class="ui-btn sound" id="sound"><svg id="soundIcon" width="13" height="13" viewBox="0 0 13 13"><path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><path d="M9 4.5q1.4 2 0 4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M10.6 3q2.4 3.5 0 7" fill="none" stroke="currentColor" stroke-width="1.1"/></svg> SOUND ON</button>
+
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="hero-bloom"></div>
+    <div class="crt-line"></div>
+    <h1 class="wordmark">GETABOUTIT</h1>
+    <p class="tagline">16 GAMES &middot; NO QUARTERS &middot; NO CLOCK</p>
+    <button class="cta" id="cta">&#9656; PRESS START</button>
+    <div class="coin"></div>
+    <div class="horizon"></div>
+    <div class="scroll-hint">&#9660; THE FLOOR</div>
+  </section>
+
+  <section class="today reveal">
+    <div class="today-head">
+      <span class="today-eyebrow">&#9656; TODAY</span>
+      <span class="streak">
+        <svg class="flame" viewBox="0 0 14 18"><rect x="6" y="0" width="2" height="2" fill="#ffd60a"/><rect x="5" y="2" width="4" height="3" fill="#ffd60a"/><rect x="4" y="5" width="6" height="3" fill="#ff9500"/><rect x="3" y="8" width="8" height="4" fill="#ffd60a"/><rect x="2" y="12" width="10" height="4" fill="#ef233c"/><rect x="4" y="12" width="6" height="3" fill="#ff9500"/><rect x="3" y="16" width="8" height="2" fill="#ef233c"/></svg>
+        2 DAY STREAK
+      </span>
+    </div>
+    <div class="daily-row">
+      <div class="daily"><div class="daily-cat">ARCADE</div><div class="daily-name">SNAKE</div><div class="daily-desc">beat 24 today</div></div>
+      <div class="daily"><div class="daily-cat">BOARD</div><div class="daily-name">CHESS</div><div class="daily-desc">today's opening</div></div>
+      <div class="daily"><div class="daily-cat">CARDS</div><div class="daily-name">BLACKJACK</div><div class="daily-desc">five hands, one seed</div></div>
+    </div>
+  </section>
+
+  <section class="floor reveal">
+    <div class="floor-eyebrow">&#9656; THE FLOOR</div>
+    <h2 class="floor-title">CHOOSE YOUR GAME</h2>
+    <p class="floor-sub">sixteen machines. one quarter. no closing time.</p>
+
+    <div class="controls-row">
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4.2" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.4"/><line x1="9.2" y1="9.2" x2="12.5" y2="12.5" stroke="rgba(255,255,255,.4)" stroke-width="1.4"/></svg>
+        <input placeholder="SEARCH (PRESS /)" id="search">
+      </div>
+      <button class="surprise" id="surprise">
+        <svg class="die" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="none" stroke="#ff006e" stroke-width="1.4"/><circle cx="5" cy="5" r="1.3" fill="#ff006e"/><circle cx="11" cy="5" r="1.3" fill="#ff006e"/><circle cx="8" cy="8" r="1.3" fill="#ff006e"/><circle cx="5" cy="11" r="1.3" fill="#ff006e"/><circle cx="11" cy="11" r="1.3" fill="#ff006e"/></svg>
+        SURPRISE ME
+      </button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-f="all">ALL</button>
+      <button class="tab" data-f="arcade">ARCADE</button>
+      <button class="tab" data-f="board">BOARD</button>
+      <button class="tab" data-f="cards">CARDS</button>
+    </div>
+
+    <div class="shelf" id="shelf">
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-purple"><svg viewBox="0 0 24 24"><rect x="7" y="13" width="11" height="3" fill="#fff" opacity=".9"/><rect x="6" y="9.5" width="11" height="3" fill="#3a0ca3"/><rect x="8" y="6" width="11" height="3" fill="#ff006e"/></svg></div><div class="pedestal"></div><div class="toy-name">STACK</div><div class="toy-desc">build it high</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy live a-dark"><span class="live-badge">LIVE</span><canvas id="snakeCanvas" width="120" height="120"></canvas></div><div class="pedestal"></div><div class="toy-name">SNAKE</div><div class="toy-desc">eat. grow. don't bite.</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-cyan"><svg viewBox="0 0 24 24"><rect x="7" y="9" width="10" height="3.2" fill="#063a4d"/><rect x="10.4" y="12.2" width="3.2" height="3.2" fill="#063a4d"/></svg></div><div class="pedestal"></div><div class="toy-name">BLOCKS</div><div class="toy-desc">clear the lines</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-orange"><svg viewBox="0 0 24 24"><text x="12" y="15.5" font-family="'Press Start 2P',monospace" font-size="5" fill="#5a2d00" text-anchor="middle" font-weight="700">2048</text></svg></div><div class="pedestal"></div><div class="toy-name">2048</div><div class="toy-desc">merge to win</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-pink"><svg viewBox="0 0 24 24"><rect x="5" y="6" width="4" height="2.2" fill="#fff"/><rect x="10" y="6" width="4" height="2.2" fill="#ffd60a"/><rect x="15" y="6" width="4" height="2.2" fill="#06ffa5"/><rect x="5" y="9" width="4" height="2.2" fill="#00f5ff"/><rect x="10" y="9" width="4" height="2.2" fill="#fff"/><rect x="15" y="9" width="4" height="2.2" fill="#ffd60a"/><circle cx="12" cy="17" r="1.6" fill="#fff"/></svg></div><div class="pedestal"></div><div class="toy-name">BREAKOUT</div><div class="toy-desc">break the wall</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy live a-dark"><span class="live-badge">LIVE</span><canvas id="pongCanvas" width="120" height="120"></canvas></div><div class="pedestal"></div><div class="toy-name">PONG</div><div class="toy-desc">first to eleven</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-yellow"><svg viewBox="0 0 24 24"><rect x="7" y="10" width="7" height="5" fill="#5a4800"/><rect x="6" y="11.5" width="1.5" height="2.5" fill="#5a4800"/><rect x="14" y="11" width="3" height="1.5" fill="#ff9500"/><rect x="9" y="8.5" width="3" height="1.5" fill="#5a4800"/><rect x="12.5" y="11.5" width="1.6" height="1.6" fill="#0a0a1e"/></svg></div><div class="pedestal"></div><div class="toy-name">FLAP</div><div class="toy-desc">mind the gap</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-teal"><svg viewBox="0 0 24 24"><rect x="9" y="7" width="6" height="2" fill="#063d2a"/><rect x="7" y="9" width="10" height="2" fill="#063d2a"/><rect x="6" y="11" width="12" height="2" fill="#063d2a"/><rect x="7" y="14" width="2" height="2" fill="#063d2a"/><rect x="11" y="14" width="2" height="2" fill="#063d2a"/><rect x="15" y="14" width="2" height="2" fill="#063d2a"/></svg></div><div class="pedestal"></div><div class="toy-name">INVADERS</div><div class="toy-desc">hold the line</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy live a-dark"><span class="live-badge">LIVE</span><canvas id="runnerCanvas" width="120" height="120"></canvas></div><div class="pedestal"></div><div class="toy-name">RUNNER</div><div class="toy-desc">run. jump. repeat.</div></div>
+
+      <div class="toy-wrap" data-cat="arcade"><div class="toy a-purple"><svg viewBox="0 0 24 24"><rect x="7" y="8" width="9" height="2.4" fill="#2a0a4d"/><rect x="14" y="8" width="2.4" height="8" fill="#2a0a4d"/><rect x="8" y="14" width="8" height="2.4" fill="#2a0a4d"/><rect x="8" y="11" width="2.4" height="3" fill="#2a0a4d"/><rect x="5" y="9" width="2.6" height="2.6" fill="#06ffa5"/></svg></div><div class="pedestal"></div><div class="toy-name">SLITHER</div><div class="toy-desc">grow and dodge</div></div>
+
+      <div class="toy-wrap" data-cat="board"><div class="toy a-cyan"><svg viewBox="0 0 24 24"><rect x="10" y="6" width="1.3" height="12" fill="#063a4d"/><rect x="13.6" y="6" width="1.3" height="12" fill="#063a4d"/><rect x="6" y="10" width="12" height="1.3" fill="#063a4d"/><rect x="6" y="13.6" width="12" height="1.3" fill="#063a4d"/><circle cx="8" cy="8" r="1.5" fill="none" stroke="#ff006e" stroke-width="0.9"/><rect x="15.8" y="14.6" width="2.4" height="0.9" fill="#0a0a1e" transform="rotate(45 17 15)"/><rect x="15.8" y="14.6" width="2.4" height="0.9" fill="#0a0a1e" transform="rotate(-45 17 15)"/></svg></div><div class="pedestal"></div><div class="toy-name">TIC TAC TOE</div><div class="toy-desc">three in a row</div></div>
+
+      <div class="toy-wrap" data-cat="board"><div class="toy a-blue"><svg viewBox="0 0 24 24"><rect x="8" y="6" width="8" height="1.8" fill="#ffd60a"/><rect x="8" y="7.8" width="1.8" height="3" fill="#ffd60a"/><rect x="14.2" y="7.8" width="1.8" height="3" fill="#ffd60a"/><rect x="11.1" y="7.8" width="1.8" height="3" fill="#ffd60a"/><rect x="8" y="10.8" width="8" height="2" fill="#ffd60a"/><rect x="9" y="12.8" width="6" height="4.4" fill="#ffd60a"/><rect x="6.5" y="17.2" width="11" height="2.2" fill="#ffd60a"/></svg></div><div class="pedestal"></div><div class="toy-name">CHESS</div><div class="toy-desc">the long game</div></div>
+
+      <div class="toy-wrap" data-cat="board"><div class="toy a-red"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="4" fill="#5a0a12"/><rect x="9" y="7" width="6" height="1.6" fill="#ffd60a"/><rect x="9" y="6" width="1.5" height="2" fill="#ffd60a"/><rect x="11.5" y="5.5" width="1.5" height="2.5" fill="#ffd60a"/><rect x="14" y="6" width="1.5" height="2" fill="#ffd60a"/></svg></div><div class="pedestal"></div><div class="toy-name">CHECKERS</div><div class="toy-desc">king me</div></div>
+
+      <div class="toy-wrap" data-cat="board"><div class="toy a-yellow"><svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="2.1" fill="#ef233c"/><circle cx="13" cy="9" r="2.1" fill="#5a4800"/><circle cx="8" cy="14" r="2.1" fill="#5a4800"/><circle cx="13" cy="14" r="2.1" fill="#ef233c"/><circle cx="16" cy="11.5" r="2.1" fill="#ef233c"/></svg></div><div class="pedestal"></div><div class="toy-name">CONNECT 4</div><div class="toy-desc">four to win</div></div>
+
+      <div class="toy-wrap" data-cat="cards"><div class="toy a-teal"><svg viewBox="0 0 24 24"><text x="12" y="15" font-family="'Press Start 2P',monospace" font-size="6.5" fill="#ffd60a" text-anchor="middle" font-weight="700">21</text></svg></div><div class="pedestal"></div><div class="toy-name">BLACKJACK</div><div class="toy-desc">hit or stand</div></div>
+
+      <div class="toy-wrap" data-cat="cards"><div class="toy a-blue"><svg viewBox="0 0 24 24"><rect x="8" y="6" width="8" height="11" rx="1" fill="#fff"/><polygon points="12,9 14.5,12.5 9.5,12.5" fill="#0a0a1e"/><rect x="11.4" y="12.3" width="1.2" height="2" fill="#0a0a1e"/></svg></div><div class="pedestal"></div><div class="toy-name">SOLITAIRE</div><div class="toy-desc">the classic</div></div>
+    </div>
+  </section>
+
+  <footer class="footer reveal">
+    <p class="creed">NO SIGNUP &nbsp;&middot;&nbsp; NO ADS &nbsp;&middot;&nbsp; NO TRACKING<br><b>NO ONE WATCHING.</b></p>
+    <p class="foot-line">you weren't gonna get anything done anyway. go on &mdash; getaboutit.</p>
+    <div class="foot-wordmark">GETABOUTIT</div>
+    <div class="foot-links"><a href="#">ABOUT</a><a href="#">STATS</a><a href="#">SETTINGS</a><a href="#">GITHUB</a></div>
+  </footer>
+</div>
+
+<button class="ui-btn replay" id="replay">&#8635; REPLAY INTRO</button>
+
+<script>
+const sky=document.getElementById('sky');
+for(let i=0;i<48;i++){const s=document.createElement('div');s.className='star'+(Math.random()>.6?' tw':'');
+  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*72+'%';s.style.animationDelay=Math.random()*5+'s';
+  const sc=Math.random()*1.5+.5;s.style.transform='scale('+sc+')';sky.appendChild(s);}
+
+let actx=null, muted=false;
+function ac(){ if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(actx&&actx.state==='suspended')actx.resume(); return actx; }
+function tone(freq,dur,type,vol,when){
+  const a=ac(); if(!a)return; const t=a.currentTime+(when||0);
+  const o=a.createOscillator(),g=a.createGain();
+  o.type=type||'square'; o.frequency.setValueAtTime(freq,t);
+  o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(muted?0.0001:(vol||0.12),t+0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.start(t); o.stop(t+dur+0.03);
+}
+const S={
+  tap(){tone(880,0.06,'square',0.10);},
+  tick(){tone(1320,0.03,'square',0.05);},
+  pick(){tone(660,0.07,'square',0.11);tone(990,0.09,'square',0.09,0.02);},
+  coin(){tone(988,0.05,'square',0.12);tone(1319,0.10,'square',0.11,0.05);},
+  win(){tone(523,0.10,'square',0.12);tone(659,0.10,'square',0.12,0.10);tone(784,0.18,'square',0.12,0.20);},
+  rise(){const a=ac(); if(!a)return; const t=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(220,t);
+    o.frequency.exponentialRampToValueAtTime(880,t+0.5);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(muted?0.0001:0.16,t+0.06);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.6);
+    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+0.65);
+    tone(330,0.5,'square',0.05);
+    const o2=a.createOscillator(),g2=a.createGain();
+    o2.type='sine'; o2.frequency.value=64;
+    g2.gain.setValueAtTime(0.0001,t);
+    g2.gain.exponentialRampToValueAtTime(muted?0.0001:0.05,t+0.4);
+    g2.gain.exponentialRampToValueAtTime(0.0001,t+1.8);
+    o2.connect(g2); g2.connect(a.destination); o2.start(t); o2.stop(t+1.9);
+  }
+};
+const soundBtn=document.getElementById('sound'), soundIcon=document.getElementById('soundIcon');
+soundBtn.onclick=(e)=>{e.stopPropagation(); muted=!muted;
+  soundBtn.lastChild.textContent=muted?' SOUND OFF':' SOUND ON';
+  soundIcon.innerHTML=muted
+    ?'<path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><line x1="8.5" y1="4.5" x2="12.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/><line x1="12.5" y1="4.5" x2="8.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/>'
+    :'<path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><path d="M9 4.5q1.4 2 0 4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M10.6 3q2.4 3.5 0 7" fill="none" stroke="currentColor" stroke-width="1.1"/>';
+  if(!muted)S.tap();
+};
+
+const body=document.body,hero=document.getElementById('hero'),today=document.querySelector('.today');
+function reveal(){
+  if(!body.classList.contains('revealed')){
+    body.classList.add('revealed'); S.coin(); setTimeout(()=>S.rise(),140);
+    setTimeout(()=>today.scrollIntoView({behavior:'smooth'}),520);
+  }else{today.scrollIntoView({behavior:'smooth'});}
+}
+hero.addEventListener('click',e=>{if(e.target.closest('.ui-btn'))return;reveal();});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  S.tap(); document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  const f=t.dataset.f;
+  document.querySelectorAll('.toy-wrap').forEach(w=>w.classList.toggle('hide',f!=='all'&&w.dataset.cat!==f));
+});
+document.getElementById('search').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.toy-wrap').forEach(w=>{
+    const name=w.querySelector('.toy-name').textContent.toLowerCase();
+    w.classList.toggle('hide',q&&!name.includes(q));});
+});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();document.getElementById('search').focus();}});
+
+document.querySelectorAll('.toy-wrap').forEach(w=>{
+  const toy=w.querySelector('.toy');
+  w.addEventListener('mouseenter',()=>S.tick());
+  toy.addEventListener('click',()=>{S.pick();toy.classList.add('press');setTimeout(()=>toy.classList.remove('press'),140);});
+});
+document.querySelectorAll('.daily').forEach(d=>d.addEventListener('click',()=>S.pick()));
+
+document.getElementById('surprise').onclick=()=>{
+  S.win();
+  const toys=[...document.querySelectorAll('.toy-wrap:not(.hide)')];
+  const pick=toys[Math.floor(Math.random()*toys.length)];
+  pick.scrollIntoView({behavior:'smooth',block:'center'});
+  const t=pick.querySelector('.toy');t.style.transform='translateY(-16px) scale(1.06)';
+  t.style.boxShadow='0 0 36px var(--acc)';
+  setTimeout(()=>{t.style.transform='';t.style.boxShadow='';},900);
+};
+
+document.getElementById('replay').onclick=(e)=>{e.stopPropagation();location.reload();};
+
+const kc=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];let kp=0;
+document.addEventListener('keydown',e=>{
+  kp=(e.key.toLowerCase()===kc[kp]||e.key===kc[kp])?kp+1:0;
+  if(kp===kc.length){kp=0;coinStorm();}
+});
+function coinStorm(){
+  S.win();
+  for(let i=0;i<18;i++){setTimeout(()=>{
+    const c=document.createElement('div');c.className='coin-rain';
+    c.style.left=Math.random()*100+'vw';document.body.appendChild(c);
+    const dur=1200+Math.random()*900;
+    c.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(105vh) rotate(540deg)'}],{duration:dur,easing:'cubic-bezier(.4,0,.7,1)'});
+    setTimeout(()=>c.remove(),dur);
+  },i*70);}
+}
+
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+(function(){
+  const cv=document.getElementById('snakeCanvas'),x=cv.getContext('2d'),N=8,C=15;
+  let sn=[{x:3,y:4},{x:2,y:4},{x:1,y:4}],dir={x:1,y:0},food={x:6,y:2},MAX=10;
+  function empty(){let p;do{p={x:(Math.random()*N)|0,y:(Math.random()*N)|0};}while(sn.some(s=>s.x===p.x&&s.y===p.y));return p;}
+  function choose(){const opts=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];let best=dir,bd=1e9;
+    for(const o of opts){if(o.x===-dir.x&&o.y===-dir.y)continue;
+      const nx=(sn[0].x+o.x+N)%N,ny=(sn[0].y+o.y+N)%N;
+      if(sn.some(s=>s.x===nx&&s.y===ny))continue;
+      const d=Math.abs(nx-food.x)+Math.abs(ny-food.y);if(d<bd){bd=d;best=o;}}dir=best;}
+  function draw(){
+    x.fillStyle='#06070f';x.fillRect(0,0,120,120);
+    x.fillStyle='#ef233c';x.fillRect(food.x*C+3,food.y*C+3,C-6,C-6);
+    sn.forEach((s,i)=>{x.fillStyle=i===0?'#06ffa5':'#0bd690';x.fillRect(s.x*C+1,s.y*C+1,C-2,C-2);});
+  }
+  function step(){choose();const h={x:(sn[0].x+dir.x+N)%N,y:(sn[0].y+dir.y+N)%N};
+    sn.unshift(h);if(h.x===food.x&&h.y===food.y){food=empty();if(sn.length>MAX)sn.pop();}else sn.pop();draw();}
+  draw(); if(!reduce)setInterval(step,270);
+})();
+
+(function(){
+  const cv=document.getElementById('pongCanvas'),x=cv.getContext('2d');
+  let ball={x:60,y:60,vx:2.1,vy:1.5},p1=50,p2=50;
+  function draw(){
+    x.fillStyle='#06070f';x.fillRect(0,0,120,120);
+    x.fillStyle='rgba(255,255,255,.18)';for(let i=8;i<120;i+=16)x.fillRect(59,i,2,8);
+    x.fillStyle='#fff';x.fillRect(8,p1-15,5,30);x.fillRect(107,p2-15,5,30);
+    x.fillStyle='#00f5ff';x.fillRect(ball.x-3,ball.y-3,6,6);
+  }
+  function loop(){
+    ball.x+=ball.vx;ball.y+=ball.vy;
+    if(ball.y<6||ball.y>114)ball.vy*=-1;
+    p1+=Math.max(-1.7,Math.min(1.7,(ball.y-p1)*0.5));
+    p2+=Math.max(-1.7,Math.min(1.7,(ball.y-p2)*0.5));
+    if(ball.x<15&&Math.abs(ball.y-p1)<17&&ball.vx<0)ball.vx=Math.abs(ball.vx);
+    if(ball.x>105&&Math.abs(ball.y-p2)<17&&ball.vx>0)ball.vx=-Math.abs(ball.vx);
+    if(ball.x<-2||ball.x>122){ball.x=60;ball.y=60;ball.vx=(Math.random()>.5?1:-1)*2.1;ball.vy=(Math.random()*2-1)*1.7;}
+    draw();requestAnimationFrame(loop);
+  }
+  draw(); if(!reduce)loop();
+})();
+
+(function(){
+  const cv=document.getElementById('runnerCanvas'),x=cv.getContext('2d'),G=92;
+  let y=0,vy=0,onG=true,obs=[],sp=18,t=0,speed=2.4;
+  function draw(){
+    x.fillStyle='#06070f';x.fillRect(0,0,120,120);
+    x.fillStyle='rgba(255,255,255,.25)';x.fillRect(0,G+14,120,2);
+    const ry=G+y, f=(t>>3)&1;
+    x.fillStyle='#ff9500';
+    x.fillRect(30,ry-18,8,8);
+    x.fillRect(28,ry-10,10,10);
+    x.fillRect(24,ry-8,4,3);
+    x.fillStyle='#e07e00';
+    x.fillRect(28,ry,3,4+(f?0:-1));
+    x.fillRect(34,ry,3,4+(f?-1:0));
+    x.fillStyle='#3a0ca3';
+    obs.forEach(o=>x.fillRect(o.x,G+4,8,10));
+  }
+  function loop(){
+    t++; vy+=0.9; y+=vy; if(y>=0){y=0;vy=0;onG=true;}
+    if(--sp<=0){obs.push({x:120});sp=58+Math.random()*42;}
+    obs.forEach(o=>o.x-=speed); obs=obs.filter(o=>o.x>-12);
+    const near=obs.find(o=>o.x>26&&o.x<52); if(near&&onG){vy=-11;onG=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  draw(); if(!reduce)loop();
+})();
+</script>
+</body>
+</html>
