@@ -179,6 +179,11 @@ body {
     transform: translateY(-4px);
     background: rgba(20,15,50,0.75);
     box-shadow: 0 0 0 2px currentColor, 0 8px 24px rgba(0,0,0,0.5), 0 0 18px rgba(255,255,255,0.05);
+    /* Raise the lifted tile above its neighbours and the section above it so the
+       -4px lift + 2px ring never render behind anything. Scoped inside #home's
+       z-index:1 context, so scanlines/vignette/surprise still overlay it. */
+    position: relative;
+    z-index: 10;
   }
   .tile:hover .preview { filter: brightness(1.18); }
 }

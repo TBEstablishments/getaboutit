@@ -117,43 +117,25 @@ const GAMES = [
   { key: 'pong',        tag: 'first to eleven',     color: 'purple',  cat: 'arcade', preview: pvPong },
   { key: 'flap',        tag: 'mind the gap',        color: 'yellow',  cat: 'arcade', preview: pvFlap },
   { key: 'invaders',    tag: 'protect the line',    color: 'teal',    cat: 'arcade', preview: pvInvaders },
-  { key: 'asteroids',   tag: 'thrust and shoot',    color: 'cyan',    cat: 'arcade', preview: pvAsteroids },
-  { key: 'bubbles',     tag: 'pop chain combos',    color: 'magenta', cat: 'arcade', preview: pvBubbles },
   { key: 'runner',      tag: 'one tap to jump',     color: 'cyan',    cat: 'arcade', preview: pvRunner },
   { key: 'slither',     tag: 'grow and dodge',      color: 'teal',    cat: 'arcade', preview: pvSlither },
-  { key: 'minesweeper', tag: "don't touch",         color: 'red',     cat: 'puzzle', preview: pvMines, displayName: 'MINES' },
-  { key: 'slide',       tag: 'order the tiles',     color: 'purple',  cat: 'puzzle', preview: pvSlide },
-  { key: 'words',       tag: 'guess in six',        color: 'teal',    cat: 'puzzle', preview: pvWords },
-  { key: 'sudoku',      tag: 'fill the grid',       color: 'blue',    cat: 'puzzle', preview: pvSudoku },
-  { key: 'pixel',       tag: 'paint by numbers',    color: 'blue',    cat: 'puzzle', preview: pvPixel },
   { key: 'tictactoe',   tag: 'three in a row',      color: 'blue',    cat: 'board',  preview: pvTTT, displayName: 'TIC TAC TOE' },
   { key: 'chess',       tag: 'the eternal game',    color: 'purple',  cat: 'board',  preview: pvChess },
   { key: 'checkers',    tag: 'king me',             color: 'orange',  cat: 'board',  preview: pvCheckers },
   { key: 'connect4',    tag: 'four in a row',       color: 'yellow',  cat: 'board',  preview: pvC4, displayName: 'CONNECT 4' },
-  { key: 'battleship',  tag: 'fire when ready',     color: 'deeppurple', cat: 'board', preview: pvBattleship },
-  { key: 'go',          tag: 'ancient strategy',    color: 'deeppurple', cat: 'board', preview: pvGo },
-  { key: 'backgammon',  tag: 'race for home',       color: 'orange',  cat: 'board',  preview: pvBackgammon },
   { key: 'blackjack',   tag: '21 or bust',          color: 'teal',    cat: 'cards',  preview: pvBlackjack },
-  { key: 'poker',       tag: 'jacks or better',     color: 'yellow',  cat: 'cards',  preview: pvPoker },
-  { key: 'solitaire',   tag: 'classic time killer', color: 'cyan',    cat: 'cards',  preview: pvSolitaire },
-  { key: 'hearts',      tag: 'shoot the moon',      color: 'red',     cat: 'cards',  preview: pvHearts },
-  { key: 'cribbage',    tag: 'fifteen-two',         color: 'yellow',  cat: 'cards',  preview: pvCribbage },
-  { key: 'spider',      tag: 'harder solitaire',    color: 'magenta', cat: 'cards',  preview: pvSpider },
-  { key: 'craps',       tag: 'roll the bones',      color: 'red',     cat: 'casino', preview: pvCraps },
-  { key: 'simon',       tag: 'remember the sequence', color: 'pink',  cat: 'mind',   preview: pvSimon },
-  { key: 'reaction',    tag: 'wait... TAP',         color: 'red',     cat: 'mind',   preview: pvReaction },
-  { key: 'type',        tag: 'fast fingers',        color: 'cyan',    cat: 'skill',  preview: pvType, displayName: 'TYPE RACE' }
+  { key: 'solitaire',   tag: 'classic time killer', color: 'cyan',    cat: 'cards',  preview: pvSolitaire }
 ];
 
-// today's 3 (one arcade, one puzzle/board, one card/casino/mind/skill)
+// today's 3 — one arcade, one board, one card
 const todayInt = parseInt(GAI.todayUTC(), 10);
 const arcadePool = GAMES.filter(g => g.cat === 'arcade');
-const puzzleBoardPool = GAMES.filter(g => g.cat === 'puzzle' || g.cat === 'board');
-const cardMindPool = GAMES.filter(g => g.cat === 'cards' || g.cat === 'mind' || g.cat === 'casino' || g.cat === 'skill');
+const boardPool = GAMES.filter(g => g.cat === 'board');
+const cardPool = GAMES.filter(g => g.cat === 'cards');
 const dailyTrio = [
   arcadePool[todayInt % arcadePool.length],
-  puzzleBoardPool[(todayInt * 31) % puzzleBoardPool.length],
-  cardMindPool[(todayInt * 17) % cardMindPool.length]
+  boardPool[(todayInt * 31) % boardPool.length],
+  cardPool[(todayInt * 17) % cardPool.length]
 ];
 
 // MOTDs
@@ -309,12 +291,6 @@ for (const g of GAMES_SORTED) {
     star.setAttribute('aria-label', "Today's challenge");
     t.appendChild(star);
   }
-  if (g.key === 'poker' && GAI.storage.get('gai_poker_royal') === '1') {
-    const crown = document.createElement('div');
-    crown.style.cssText = 'position:absolute;top:14px;right:14px;font-size:14px;';
-    crown.textContent = '👑';
-    t.appendChild(crown);
-  }
   t.addEventListener('click', (e) => {
     e.preventDefault();
     GAI.audio.ensure();
@@ -369,6 +345,9 @@ function togglePin(key) {
 // category tabs + search
 const tabs = document.querySelectorAll('.tab');
 let curCat = sessionStorage.getItem('gai_cat') || 'all';
+// A removed category (puzzle/casino/mind/skill) left in this session's gai_cat
+// would filter the grid to zero tiles with no active tab — fall back to ALL.
+if (!['all', 'arcade', 'board', 'cards'].includes(curCat)) curCat = 'all';
 let curSearch = '';
 function applyFilter() {
   const q = curSearch.trim().toLowerCase();
@@ -403,7 +382,7 @@ try {
   const q = params.get('q');
   const cat = params.get('cat');
   if (q) { searchInput.value = q; curSearch = q; applyFilter(); }
-  if (cat && ['arcade','puzzle','board','cards','casino','mind','skill','all'].indexOf(cat) >= 0) {
+  if (cat && ['arcade','board','cards','all'].indexOf(cat) >= 0) {
     curCat = cat;
     applyFilter();
   }
@@ -528,7 +507,7 @@ surpriseBtn.addEventListener('click', (e) => {
 surpriseBtn.addEventListener('pointerdown', () => {
   surpriseTimer = setTimeout(() => {
     surpriseTimer = null;
-    const cats = ['all','arcade','puzzle','board','cards','mind'];
+    const cats = ['all','arcade','board','cards'];
     const i = cats.indexOf(surpriseCategoryMode);
     surpriseCategoryMode = cats[(i + 1) % cats.length];
     sessionStorage.setItem('gai_surprise_cat', surpriseCategoryMode);
@@ -731,46 +710,6 @@ function drawAlien(ctx, x, y, color) {
   const u = 2;
   for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) if (px[r][c]) ctx.fillRect(x + c*u, y + r*u, u, u);
 }
-function pvAsteroids(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  if (!s.ax) { s.ax = w/2; s.ay = h/2; s.av = 18; s.ad = 0.5; }
-  ctx.save(); ctx.translate(w * 0.3, h * 0.5); ctx.rotate(s.t * 0.4);
-  ctx.strokeStyle = PAL[5]; ctx.lineWidth = 1.5;
-  ctx.shadowColor = PAL[5]; ctx.shadowBlur = 6;
-  ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(6, 6); ctx.lineTo(-6, 6); ctx.closePath(); ctx.stroke();
-  ctx.restore(); ctx.shadowBlur = 0;
-  s.ax += Math.cos(s.ad) * s.av * dt; s.ay += Math.sin(s.ad) * s.av * dt;
-  if (s.ax < -10) s.ax = w + 10; if (s.ax > w + 10) s.ax = -10;
-  if (s.ay < -10) s.ay = h + 10; if (s.ay > h + 10) s.ay = -10;
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.beginPath();
-  for (let i = 0; i <= 7; i++) {
-    const a = i / 7 * Math.PI * 2 + s.t * 0.3;
-    const r = 10 + (i % 2 === 0 ? 0 : 3);
-    const x = s.ax + Math.cos(a) * r, y = s.ay + Math.sin(a) * r;
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-}
-function pvBubbles(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const r = 11, cols = 5;
-  for (let row = 0; row < 4; row++) for (let c = 0; c < cols; c++) {
-    const off = row % 2 === 1 ? r : 0;
-    const x = 18 + c * (r * 2 + 2) + off;
-    const y = 14 + row * (r * 1.7);
-    if (x > w - 14) continue;
-    const ci = (row * 7 + c + (s.t|0)) % 6;
-    ctx.fillStyle = ['#ff006e','#ffd60a','#06ffa5','#00f5ff','#8338ec','#ff9500'][ci];
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
-  }
-  // shooter
-  const sx = w/2, sy = h - 18;
-  ctx.fillStyle = PAL[0];
-  ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fill();
-  const aim = Math.sin(s.t * 1.4) * 0.6 - Math.PI/2;
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.setLineDash([2, 4]);
-  ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + Math.cos(aim) * 40, sy + Math.sin(aim) * 40); ctx.stroke(); ctx.setLineDash([]);
-}
 function pvRunner(ctx, w, h, s, dt) {
   clr(ctx, w, h); s.t = (s.t || 0) + dt;
   const horY = h * 0.7;
@@ -792,71 +731,6 @@ function pvRunner(ctx, w, h, s, dt) {
   ctx.fillStyle = PAL[0]; ctx.fillText('G', w*0.25+1.5, py);
   ctx.fillStyle = PAL[5]; ctx.fillText('G', w*0.25-1.5, py);
   ctx.fillStyle = '#fff'; ctx.fillText('G', w*0.25, py);
-}
-function pvMines(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 16, cols = 6, rows = 5;
-  const x0 = (w - cols*cell)/2, y0 = (h - rows*cell)/2;
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    ctx.fillStyle = (r + c) % 2 === 0 ? '#2a1a4a' : '#1f1235';
-    ctx.fillRect(x0 + c*cell + 1, y0 + r*cell + 1, cell - 2, cell - 2);
-  }
-  if (((s.t % 2) / 2) > 0.5) {
-    const cx = x0 + 2 * cell, cy = y0 + 2 * cell;
-    ctx.fillStyle = '#0a0a1e'; ctx.fillRect(cx + 1, cy + 1, cell - 2, cell - 2);
-    ctx.fillStyle = PAL[5]; ctx.font = 'bold 10px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('3', cx + cell/2, cy + cell/2);
-  }
-}
-function pvSlide(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 24, x0 = (w - 3*cell)/2, y0 = (h - 3*cell)/2;
-  const slide = Math.sin((s.t % 3) / 3 * Math.PI * 2) * 0.3;
-  const nums = ['3','7','1'];
-  for (let i = 0; i < 3; i++) {
-    const off = (i === 1 ? slide * cell : 0);
-    const x = x0 + i*cell + off, y = y0 + cell;
-    ctx.fillStyle = PAL[(i + Math.floor(s.t)) % PAL.length];
-    ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
-    ctx.fillStyle = '#0a0a1e'; ctx.font = 'bold 10px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(nums[i], x + cell/2, y + cell/2);
-  }
-}
-function pvWords(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 22, letters = ['G','A','M','E','S'];
-  const colors = [PAL[6], PAL[7], '#3a2a4a', PAL[6], PAL[7]];
-  const x0 = (w - 5*cell - 4*2)/2, y0 = (h - cell)/2;
-  const revealed = Math.floor((s.t % 3) / 3 * 6);
-  for (let i = 0; i < 5; i++) {
-    const x = x0 + i * (cell + 2);
-    const shown = i < revealed;
-    ctx.fillStyle = shown ? colors[i] : '#1f1235';
-    ctx.fillRect(x, y0, cell, cell);
-    if (shown) {
-      ctx.fillStyle = '#fff'; ctx.font = 'bold 10px "Press Start 2P", monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(letters[i], x + cell/2, y0 + cell/2);
-    }
-  }
-}
-function pvSudoku(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 14, x0 = (w - 9*cell)/2, y0 = (h - 9*cell)/2;
-  for (let i = 0; i <= 9; i++) {
-    ctx.strokeStyle = i % 3 === 0 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)';
-    ctx.lineWidth = i % 3 === 0 ? 1.5 : 0.5;
-    ctx.beginPath(); ctx.moveTo(x0 + i*cell, y0); ctx.lineTo(x0 + i*cell, y0 + 9*cell); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x0, y0 + i*cell); ctx.lineTo(x0 + 9*cell, y0 + i*cell); ctx.stroke();
-  }
-  const idx = Math.floor(s.t * 1.2) % 9;
-  ctx.fillStyle = PAL[5]; ctx.font = 'bold 9px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (let i = 0; i <= idx; i++) {
-    const r = (i * 3 + 1) % 9, c = (i * 7 + 2) % 9;
-    ctx.fillText(String((i % 9) + 1), x0 + c*cell + cell/2, y0 + r*cell + cell/2);
-  }
 }
 function pvTTT(ctx, w, h, s, dt) {
   clr(ctx, w, h); s.t = (s.t || 0) + dt;
@@ -943,29 +817,6 @@ function pvC4(ctx, w, h, s, dt) {
     ctx.fillStyle = board[r][c] === 1 ? PAL[9] : PAL[7]; ctx.fill();
   }
 }
-function pvBattleship(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 6, cell = 16;
-  const x0 = (w - N*cell)/2, y0 = (h - N*cell)/2;
-  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
-    ctx.fillStyle = (r + c) % 2 === 0 ? '#0a1a30' : '#091428';
-    ctx.fillRect(x0 + c*cell, y0 + r*cell, cell, cell);
-  }
-  // ship hit
-  ctx.fillStyle = PAL[9];
-  ctx.fillRect(x0 + 2*cell + 3, y0 + 2*cell + 3, cell - 6, cell - 6);
-  // miss markers
-  ctx.fillStyle = '#fff';
-  ctx.beginPath(); ctx.arc(x0 + 4*cell + cell/2, y0 + 1*cell + cell/2, 2, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x0 + 1*cell + cell/2, y0 + 4*cell + cell/2, 2, 0, Math.PI*2); ctx.fill();
-  // shockwave
-  const phase = (s.t % 2.4) / 2.4;
-  if (phase < 0.4) {
-    const radius = phase / 0.4 * cell * 0.8;
-    ctx.strokeStyle = `rgba(239,35,60,${(1 - phase/0.4).toFixed(2)})`; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(x0 + 2*cell + cell/2, y0 + 2*cell + cell/2, radius, 0, Math.PI*2); ctx.stroke();
-  }
-}
 function pvBlackjack(ctx, w, h, s, dt) {
   clr(ctx, w, h); s.t = (s.t || 0) + dt;
   const cw = 38, ch = 54;
@@ -975,22 +826,6 @@ function pvBlackjack(ctx, w, h, s, dt) {
   ctx.font = 'bold 11px "Press Start 2P", monospace';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('21', w / 2, h - 12);
-}
-function pvPoker(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cw = 28, ch = 40;
-  const cards = [['A','♠'],['K','♠'],['Q','♠'],['J','♠'],['10','♠']];
-  const phase = (s.t % 4) / 4;
-  const rainbow = phase > 0.6;
-  for (let i = 0; i < 5; i++) {
-    drawMiniCard(ctx, 12 + i * (cw + 4), (h - ch) / 2 + (rainbow ? Math.sin(s.t * 3 + i * 0.8) * 3 : 0), cw, ch, cards[i][0], cards[i][1], false);
-  }
-  if (rainbow) {
-    ctx.fillStyle = PAL[7];
-    ctx.font = 'bold 8px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('ROYAL', w/2, h - 10);
-  }
 }
 function drawMiniCard(ctx, x, y, w, h, rank, suit, red) {
   ctx.fillStyle = '#fff'; GAI.fx.roundRect(ctx, x, y, w, h, 4); ctx.fill();
@@ -1022,56 +857,6 @@ function pvSolitaire(ctx, w, h, s, dt) {
     drawMiniCard(ctx, x, y, 18, 24, ['A','2','3','4','5'][i], '♠', false);
   }
 }
-function pvHearts(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // four cards from four positions converging to center
-  const phase = (s.t % 3) / 3;
-  const cards = [['Q','♠'],['A','♥'],['K','♦'],['J','♣']];
-  const reds = [false, true, true, false];
-  const positions = [
-    { x: w/2 - 16, y: h - 36 },     // bottom (player)
-    { x: 8, y: h/2 - 20 },           // left
-    { x: w/2 - 16, y: 4 },           // top
-    { x: w - 40, y: h/2 - 20 }       // right
-  ];
-  const cx = w/2 - 16, cy = h/2 - 20;
-  for (let i = 0; i < 4; i++) {
-    const t = Math.min(1, phase * 2);
-    const x = positions[i].x + (cx - positions[i].x) * t;
-    const y = positions[i].y + (cy - positions[i].y) * t;
-    drawMiniCard(ctx, x, y, 32, 40, cards[i][0], cards[i][1], reds[i]);
-  }
-}
-function pvSimon(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const phase = (s.t % 2.4) / 2.4;
-  const idx = Math.floor(phase * 4);
-  const colors = [PAL[0], PAL[5], PAL[6], PAL[7]];
-  const cx = w/2, cy = h/2, sz = 30;
-  for (let i = 0; i < 4; i++) {
-    const qx = cx + (i % 2 === 0 ? -sz : 0);
-    const qy = cy + (i < 2 ? -sz : 0);
-    const active = i === idx;
-    ctx.fillStyle = active ? colors[i] : shadeColor(colors[i], 0.3);
-    if (active) { ctx.shadowColor = colors[i]; ctx.shadowBlur = 14; }
-    ctx.fillRect(qx + 1, qy + 1, sz - 2, sz - 2);
-    ctx.shadowBlur = 0;
-  }
-  ctx.fillStyle = '#0a0a1e'; ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI*2); ctx.fill();
-}
-function pvReaction(ctx, w, h, s, dt) {
-  s.t = (s.t || 0) + dt;
-  const phase = (s.t % 3) / 3;
-  if (phase < 0.5) {
-    ctx.fillStyle = PAL[9]; ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('WAIT', w/2, h/2);
-  } else {
-    ctx.fillStyle = PAL[6]; ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#0a0a1e'; ctx.font = 'bold 14px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('TAP!', w/2, h/2);
-  }
-}
 
 // ====== Phase 3 previews ======
 function pvSlither(ctx, w, h, s, dt) {
@@ -1099,192 +884,11 @@ function pvSlither(ctx, w, h, s, dt) {
   ctx.fillStyle = PAL[0]; ctx.beginPath(); ctx.arc(w*0.82, h*0.7, 3, 0, Math.PI*2); ctx.fill();
 }
 
-function pvPixel(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 5, cell = 16;
-  const x0 = (w - N*cell)/2, y0 = (h - N*cell)/2;
-  // chromatic G pattern
-  const G = [[0,1,1,1,0],[1,0,0,0,0],[1,0,1,1,0],[1,0,0,1,0],[0,1,1,0,0]];
-  const phase = (s.t % 3) / 3;
-  const showSteps = Math.floor(phase * (N * N + 5));
-  let i = 0;
-  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
-    const x = x0 + c*cell, y = y0 + r*cell;
-    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-    ctx.lineWidth = 0.5;
-    ctx.strokeRect(x, y, cell, cell);
-    if (G[r][c] && i < showSteps) {
-      ctx.fillStyle = '#00f5ff';
-      ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
-    }
-    i++;
-  }
-  // hints
-  ctx.fillStyle = '#fff'; ctx.font = 'bold 7px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (let r = 0; r < N; r++) ctx.fillText('3', x0 - 8, y0 + r*cell + cell/2);
-}
 
-function pvCraps(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const phase = (s.t % 2.5) / 2.5;
-  // two dice rolling
-  const v1 = 1 + Math.floor(((phase < 0.8) ? Math.random() : 4) * 6);
-  const v2 = 1 + Math.floor(((phase < 0.8) ? Math.random() : 3) * 6);
-  GAI.dice.drawDie(ctx, w/2 - 30, h/2 - 14, 26, v1, { glow: phase >= 0.8 ? '#ffd60a' : null });
-  GAI.dice.drawDie(ctx, w/2 + 6, h/2 - 14, 26, v2, { glow: phase >= 0.8 ? '#ffd60a' : null });
-  if (phase >= 0.85) {
-    ctx.fillStyle = '#06ffa5'; ctx.font = 'bold 10px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('WIN', w/2, h - 14);
-  }
-}
 
-function pvType(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const txt = 'PRESS START';
-  const len = txt.length;
-  const phase = (s.t % 3) / 3;
-  const typed = Math.floor(phase * (len + 4));
-  ctx.font = 'bold 13px "Press Start 2P", monospace';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  let x = 18;
-  for (let i = 0; i < len; i++) {
-    ctx.fillStyle = i < typed ? '#06ffa5' : (i === typed ? '#fff' : 'rgba(255,255,255,0.4)');
-    ctx.fillText(txt[i], x, h/2);
-    x += 14;
-  }
-  // WPM bar
-  ctx.fillStyle = '#00f5ff';
-  ctx.fillRect(10, h - 12, (w - 20) * Math.min(1, phase * 1.2), 4);
-}
 
-function pvSpider(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // 5 columns with face-down + face-up cards
-  const cw = 22, ch = 32;
-  const x0 = (w - 5 * (cw + 4)) / 2;
-  for (let c = 0; c < 5; c++) {
-    const x = x0 + c * (cw + 4);
-    for (let i = 0; i < 3; i++) {
-      const y = 30 + i * 6;
-      ctx.fillStyle = '#3a0ca3';
-      ctx.fillRect(x, y, cw, ch);
-    }
-    // top face-up card with chromatic suit
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(x, 30 + 3 * 6, cw, ch);
-    ctx.fillStyle = c % 2 === 0 ? '#ef233c' : '#1a1a30';
-    ctx.font = 'bold 10px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(['K','Q','J','10','9'][c], x + cw/2, 30 + 3 * 6 + ch/2);
-  }
-  // trophy
-  ctx.fillStyle = '#ffd60a';
-  ctx.font = 'bold 12px "Press Start 2P", monospace';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillText('🏆', 8, 8);
-}
 
-function pvCribbage(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // peg board (top)
-  for (let i = 0; i < 30; i++) {
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    ctx.fillRect(8 + i * 7, 14, 2, 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    ctx.fillRect(8 + i * 7, 26, 2, 2);
-  }
-  // pegs
-  const phase = (s.t % 3) / 3;
-  const pos = Math.floor(phase * 28);
-  ctx.fillStyle = '#00f5ff';
-  ctx.beginPath(); ctx.arc(9 + pos * 7, 15, 2.5, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#ff9500';
-  ctx.beginPath(); ctx.arc(9 + Math.max(0, pos - 4) * 7, 27, 2.5, 0, Math.PI*2); ctx.fill();
-  // hand of 4 cards
-  const cw = 22, ch = 30;
-  const x0 = (w - 4 * (cw + 2)) / 2;
-  const cards = ['5','5','J','5'];
-  const suits = ['♠','♥','♣','♥'];
-  for (let i = 0; i < 4; i++) {
-    const x = x0 + i * (cw + 2), y = h/2;
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(x, y, cw, ch);
-    ctx.fillStyle = (i === 1 || i === 3) ? '#ef233c' : '#1a1a30';
-    ctx.font = 'bold 9px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(cards[i], x + cw/2, y + ch/2 - 5);
-    ctx.fillText(suits[i], x + cw/2, y + ch/2 + 6);
-  }
-  // 29!
-  if (phase > 0.7) {
-    ctx.fillStyle = '#ffd60a';
-    ctx.font = 'bold 18px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('29!', w/2, h - 14);
-  }
-}
 
-function pvBackgammon(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // 6 triangles top + 6 bottom
-  const triW = (w - 24) / 7;
-  for (let i = 0; i < 6; i++) {
-    const x = 12 + i * triW + (i >= 3 ? triW : 0);
-    ctx.fillStyle = i % 2 === 0 ? PAL[0] : PAL[2];
-    ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x + triW, 8); ctx.lineTo(x + triW/2, h/2); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = i % 2 === 0 ? PAL[5] : PAL[2];
-    ctx.beginPath(); ctx.moveTo(x, h - 8); ctx.lineTo(x + triW, h - 8); ctx.lineTo(x + triW/2, h/2); ctx.closePath(); ctx.fill();
-  }
-  // checkers
-  for (let i = 0; i < 4; i++) {
-    ctx.fillStyle = PAL[6];
-    ctx.beginPath(); ctx.arc(12 + triW/2, 18 + i * 9, 4, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = PAL[7];
-    ctx.beginPath(); ctx.arc(w - 12 - triW/2, h - 18 - i * 9, 4, 0, Math.PI*2); ctx.fill();
-  }
-  // dice
-  const phase = (s.t % 2.5) / 2.5;
-  if (phase < 0.7) {
-    GAI.dice.drawDie(ctx, w/2 - 22, h/2 - 12, 18, 1 + Math.floor(Math.random() * 6));
-    GAI.dice.drawDie(ctx, w/2 + 4, h/2 - 12, 18, 1 + Math.floor(Math.random() * 6));
-  } else {
-    GAI.dice.drawDie(ctx, w/2 - 22, h/2 - 12, 18, 5);
-    GAI.dice.drawDie(ctx, w/2 + 4, h/2 - 12, 18, 3);
-  }
-}
 
-function pvGo(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 7, cell = 18;
-  const x0 = (w - N*cell)/2, y0 = (h - N*cell)/2 + 4;
-  // wood-like color
-  ctx.fillStyle = '#2e1a55';
-  ctx.fillRect(x0 - 6, y0 - 6, N*cell + 12, N*cell + 12);
-  // lines
-  ctx.strokeStyle = 'rgba(255,214,10,0.5)'; ctx.lineWidth = 1;
-  for (let i = 0; i < N; i++) {
-    ctx.beginPath(); ctx.moveTo(x0, y0 + i*cell); ctx.lineTo(x0 + (N-1)*cell, y0 + i*cell); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x0 + i*cell, y0); ctx.lineTo(x0 + i*cell, y0 + (N-1)*cell); ctx.stroke();
-  }
-  // stones (some)
-  const stones = [
-    { r: 2, c: 2, b: true },
-    { r: 2, c: 4, b: false },
-    { r: 4, c: 2, b: false },
-    { r: 4, c: 4, b: true },
-    { r: 3, c: 3, b: true }
-  ];
-  for (const st of stones) {
-    const x = x0 + st.c * cell, y = y0 + st.r * cell;
-    ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI*2);
-    ctx.fillStyle = st.b ? '#0a0a1e' : '#fff';
-    ctx.fill();
-    ctx.strokeStyle = st.b ? '#3a0ca3' : '#ff006e';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-}
 
 })();

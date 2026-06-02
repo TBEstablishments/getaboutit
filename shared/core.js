@@ -7,7 +7,7 @@
 // stale-cache scenarios and to gate future migrations. User data
 // (scores, streak, achievements, pinned, etc.) is NEVER wiped here —
 // the version key is informational only.
-const SITE_VERSION = 'phase5';
+const SITE_VERSION = 'phase6';
 try {
   const stored = localStorage.getItem('gai_site_version');
   if (stored && stored !== SITE_VERSION) {
@@ -27,54 +27,30 @@ const PALETTE = [
 const PALETTE_NAMES = ['pink','magenta','purple','deeppurple','blue','cyan','teal','yellow','orange','red'];
 
 const GAME_KEYS = [
-  'stack','snake','blocks','p2048','breakout','pong','minesweeper',
-  'flap','invaders','asteroids','simon','tictactoe','slide',
-  'reaction','words','blackjack','poker','solitaire','hearts','chess',
-  'checkers','sudoku','connect4','battleship','runner','bubbles',
-  'craps','type','pixel','spider','cribbage','slither','backgammon','go'
+  'stack','snake','blocks','p2048','breakout','pong','flap','invaders','runner','slither',
+  'tictactoe','chess','checkers','connect4',
+  'blackjack','solitaire'
 ];
 const GAME_PATHS = {
   stack: '/stack', snake: '/snake', blocks: '/blocks', p2048: '/2048',
-  breakout: '/breakout', pong: '/pong',
-  minesweeper: '/minesweeper', flap: '/flap', invaders: '/invaders',
-  asteroids: '/asteroids', simon: '/simon', tictactoe: '/tictactoe',
-  slide: '/slide', reaction: '/reaction',
-  words: '/words', blackjack: '/blackjack', poker: '/poker',
-  solitaire: '/solitaire', hearts: '/hearts', chess: '/chess',
-  checkers: '/checkers', sudoku: '/sudoku', connect4: '/connect4',
-  battleship: '/battleship', runner: '/runner', bubbles: '/bubbles',
-  craps: '/craps', type: '/type', pixel: '/pixel',
-  spider: '/spider', cribbage: '/cribbage', slither: '/slither',
-  backgammon: '/backgammon', go: '/go'
+  breakout: '/breakout', pong: '/pong', flap: '/flap', invaders: '/invaders',
+  runner: '/runner', slither: '/slither',
+  tictactoe: '/tictactoe', chess: '/chess', checkers: '/checkers', connect4: '/connect4',
+  blackjack: '/blackjack', solitaire: '/solitaire'
 };
 const GAME_NAMES = {
   stack: 'STACK', snake: 'SNAKE', blocks: 'BLOCKS', p2048: '2048',
-  breakout: 'BREAKOUT', pong: 'PONG',
-  minesweeper: 'MINES', flap: 'FLAP', invaders: 'INVADERS',
-  asteroids: 'ASTEROIDS', simon: 'SIMON', tictactoe: 'TIC TAC TOE',
-  slide: 'SLIDE', reaction: 'REACTION',
-  words: 'WORDS', blackjack: 'BLACKJACK', poker: 'POKER',
-  solitaire: 'SOLITAIRE', hearts: 'HEARTS', chess: 'CHESS',
-  checkers: 'CHECKERS', sudoku: 'SUDOKU', connect4: 'CONNECT 4',
-  battleship: 'BATTLESHIP', runner: 'RUNNER', bubbles: 'BUBBLES',
-  craps: 'CRAPS', type: 'TYPE RACE',
-  pixel: 'PIXEL', spider: 'SPIDER', cribbage: 'CRIBBAGE',
-  slither: 'SLITHER', backgammon: 'BACKGAMMON', go: 'GO'
+  breakout: 'BREAKOUT', pong: 'PONG', flap: 'FLAP', invaders: 'INVADERS',
+  runner: 'RUNNER', slither: 'SLITHER',
+  tictactoe: 'TIC TAC TOE', chess: 'CHESS', checkers: 'CHECKERS', connect4: 'CONNECT 4',
+  blackjack: 'BLACKJACK', solitaire: 'SOLITAIRE'
 };
 const GAME_CATEGORIES = {
   stack: 'arcade', snake: 'arcade', blocks: 'arcade', p2048: 'arcade',
   breakout: 'arcade', pong: 'arcade', flap: 'arcade', invaders: 'arcade',
-  asteroids: 'arcade', bubbles: 'arcade', runner: 'arcade', slither: 'arcade',
-  minesweeper: 'puzzle', slide: 'puzzle',
-  words: 'puzzle', sudoku: 'puzzle',
-  pixel: 'puzzle',
-  tictactoe: 'board', chess: 'board', checkers: 'board',
-  connect4: 'board', battleship: 'board', go: 'board', backgammon: 'board',
-  blackjack: 'cards', poker: 'cards', solitaire: 'cards', hearts: 'cards',
-  cribbage: 'cards', spider: 'cards',
-  craps: 'casino',
-  simon: 'mind', reaction: 'mind',
-  type: 'skill'
+  runner: 'arcade', slither: 'arcade',
+  tictactoe: 'board', chess: 'board', checkers: 'board', connect4: 'board',
+  blackjack: 'cards', solitaire: 'cards'
 };
 
 // ============== STORAGE ==============
@@ -86,7 +62,11 @@ const storage = {
     try {
       const v = localStorage.getItem(k);
       if (v == null) return fallback;
-      return JSON.parse(v);
+      const parsed = JSON.parse(v);
+      // A stored literal "null" (or "undefined") parses cleanly to null —
+      // JSON.parse does NOT throw, so it slipped past the catch and callers
+      // got null instead of the fallback. Treat it as missing.
+      return parsed == null ? fallback : parsed;
     } catch { return fallback; }
   },
   setJSON(k, obj) {
@@ -156,7 +136,10 @@ function isYesterday(prev, today) {
 
 const streak = {
   get() {
-    const st = storage.getJSON('gai_streak_global', { current: 0, max: 0, lastPlayDate: null });
+    let st = storage.getJSON('gai_streak_global', { current: 0, max: 0, lastPlayDate: null });
+    // Defensive: a corrupt or legacy value (a bare `null`, a string, a number)
+    // must not blank the home page when we read st.lastPlayDate below.
+    if (!st || typeof st !== 'object') st = { current: 0, max: 0, lastPlayDate: null };
     // decay: if today is more than 1 day past lastPlayDate, current is 0 (not yet incremented)
     const today = todayUTC();
     if (st.lastPlayDate && st.lastPlayDate !== today) {
@@ -988,9 +971,8 @@ const ACHIEVEMENT_LIST = [
   { id: 'streak_3', label: 'STREAK STARTER', desc: 'play 3 days in a row' },
   { id: 'streak_30', label: 'STREAK MASTER', desc: 'play 30 days in a row' },
   { id: 'completionist', label: 'COMPLETIONIST', desc: 'play every game at least once' },
-  { id: 'cards_shark', label: 'CARDS SHARK', desc: 'win at all four card games' },
-  { id: 'board_general', label: 'BOARD GENERAL', desc: 'win at all five board games' },
-  { id: 'royal_flush', label: 'ROYAL FLUSH', desc: 'hit a royal in poker' },
+  { id: 'cards_shark', label: 'CARDS SHARK', desc: 'win at every card game' },
+  { id: 'board_general', label: 'BOARD GENERAL', desc: 'win at every board game' },
   { id: 'grandmaster', label: 'GRANDMASTER', desc: 'beat chess on hard' },
   { id: 'taps_100k', label: 'MILLION TAPS', desc: '100,000 plays across all games' }
 ];
@@ -1025,8 +1007,8 @@ function achievementsCheck() {
   if (totalPlays() >= 100000) achievementsUnlock('taps_100k');
   // Card games & board games
   const winList = storage.getJSON('gai_wins', {});
-  const cardKeys = ['blackjack','poker','solitaire','hearts'];
-  const boardKeys = ['tictactoe','chess','checkers','connect4','battleship'];
+  const cardKeys = ['blackjack','solitaire'];
+  const boardKeys = ['tictactoe','chess','checkers','connect4'];
   if (cardKeys.every(k => winList[k])) achievementsUnlock('cards_shark');
   if (boardKeys.every(k => winList[k])) achievementsUnlock('board_general');
 }

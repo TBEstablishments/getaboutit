@@ -1,10 +1,10 @@
 # getaboutit
 
-A free retro-vaporwave arcade at getaboutit.com — **34 classic games**, no signup, no tracking, no build step.
+A free retro-vaporwave arcade at getaboutit.com — **16 classic games**, no signup, no tracking, no build step.
 
 ## What this is
 
-GETABOUTIT is the entire identity — domain, arcade name, brand. The home page is the lobby. Each game lives at its own clean URL (`/snake`, `/chess`, `/go`, `/backgammon`, …) and is fully self-contained.
+GETABOUTIT is the entire identity — domain, arcade name, brand. The home page is the lobby. Each game lives at its own clean URL (`/snake`, `/chess`, `/blackjack`, `/connect4`, …) and is fully self-contained.
 
 ## Hard constraints
 
@@ -43,17 +43,15 @@ If a request would break these, push back and propose an alternative.
 │   └── shell.js                            auto-mounts back+mute on every game page
 ├── stats/                                  /stats dashboard (canvas charts)
 ├── settings/                               /settings — export/import, theme, achievements
-├── stack/ snake/ blocks/ p2048/ breakout/ pong/ minesweeper/
-│   flap/ invaders/ asteroids/ simon/ tictactoe/ slide/
-│   reaction/ words/ blackjack/ poker/ solitaire/ hearts/ chess/
-│   checkers/ sudoku/ connect4/ battleship/ runner/ bubbles/
-│   craps/ type/ pixel/ spider/ cribbage/ slither/ backgammon/ go/
+├── stack/ snake/ blocks/ p2048/ breakout/ pong/ flap/
+│   invaders/ runner/ slither/ tictactoe/ chess/ checkers/
+│   connect4/ blackjack/ solitaire/
 │       ├── index.html                      sets window.GAME_KEY, loads core + game
 │       ├── style.css                       game-specific layout
 │       └── game.js                         self-contained game
 ├── favicon.svg / manifest.webmanifest / robots.txt / sitemap.xml / humans.txt
 ├── vercel.json                             cleanUrls + /2048 rewrite + headers
-├── og-generator.html                       procedural 34-variant OG image generator
+├── og-generator.html                       procedural 16-variant OG image generator
 └── README.md / CLAUDE.md / plan*.md / audit*.md
 ```
 
@@ -63,7 +61,7 @@ If a request would break these, push back and propose an alternative.
 
 Every game uses `window.GAI`. Subsystems:
 
-- `GAI.PALETTE` / `GAME_KEYS` / `GAME_PATHS` / `GAME_NAMES` / `GAME_CATEGORIES` — registry of all 34 games
+- `GAI.PALETTE` / `GAME_KEYS` / `GAME_PATHS` / `GAME_NAMES` / `GAME_CATEGORIES` — registry of all 16 games
 - `GAI.storage.{get,set,del,getJSON,setJSON}` — try/catch wrapped localStorage
 - `GAI.bestScore(key, current)` / `GAI.recordPlay(key)` / `GAI.recordWin(key)`
 - `GAI.streak.get()` / `GAI.totalPlays()` / `GAI.gamePlays(key)`
@@ -118,19 +116,15 @@ In `game.js`, never instantiate `AudioContext` at module load — use `GAI.audio
 Opt-in patterns (recommended in new games):
 - Call `GAI.stats.sessionStart(key)` at boot and `GAI.stats.sessionEnd(key)` on `pagehide`
 - Append `GAI.ui.shareCard({title, score, best, color, key, label})` buttons + `GAI.ui.playNext(key, container)` to the game-over screen
-- Use `GAI.input.drag` for drag-based input (solitaire, backgammon, battleship-placement)
+- Use `GAI.input.drag` for drag-based input (e.g. solitaire)
 - Use `GAI.ai.minimax` or `GAI.ai.mcts` for AI opponents
 - Use `GAI.dice.drawDie` / `GAI.dice.rollWithAnim` for any dice rendering
 
-## Categories (7)
+## Categories (3)
 
-- **ARCADE** (12) — Stack, Snake, Blocks, 2048, Breakout, Pong, Flap, Invaders, Asteroids, Bubbles, Runner, Slither
-- **PUZZLE** (5) — Minesweeper, Slide, Words, Sudoku, Pixel
-- **BOARD** (7) — Tic Tac Toe, Chess, Checkers, Connect 4, Battleship, Go, Backgammon
-- **CARDS** (6) — Blackjack, Poker, Solitaire, Hearts, Cribbage, Spider
-- **CASINO** (1) — Craps
-- **MIND** (2) — Simon, Reaction
-- **SKILL** (1) — Type Race
+- **ARCADE** (10) — Stack, Snake, Blocks, 2048, Breakout, Pong, Flap, Invaders, Runner, Slither
+- **BOARD** (4) — Tic Tac Toe, Chess, Checkers, Connect 4
+- **CARDS** (2) — Blackjack, Solitaire
 
 ## Workflow
 
@@ -164,7 +158,7 @@ Opt-in patterns (recommended in new games):
 - **Streak** — `gai_streak_global` (current/max/lastPlayDate)
 - **Recently played** — `gai_recent` (5 most recent)
 - **Surprise me** — random; long-press cycles category mode
-- **Achievements** — 9 unlock IDs in `gai_achievements`; toast on unlock; full list at `/settings` and `/stats`
+- **Achievements** — 8 unlock IDs in `gai_achievements`; toast on unlock; full list at `/settings` and `/stats`
 - **Stats** — `/stats` page: per-game best, time played, daily plays chart, most played chart, achievement grid
 - **Themes** — `gai_theme` (default | deepnight | highcontrast); type "mood" or use `/settings`
 - **Export / import scores** — JSON backup at `/settings`
@@ -175,12 +169,10 @@ Opt-in patterns (recommended in new games):
 - **Konami code** (↑↑↓↓←→←→BA) — toggles `gai_rainbow_unlocked`
 - **`gai` typed on home** — CRT-collapse effect
 - **100+ lifetime plays** — adds ⚡ VETERAN ⚡ tag below the wordmark
-- **Royal flush** — adds sticky 👑 to the poker tile after first royal
-- **Perfect 29** — adds sticky 29 badge to the cribbage tile after first perfect hand
 
 ## Per-game OG images
 
-`og-generator.html` renders one 1200×630 OG per game procedurally. Open it in a browser, click SAVE ALL, drop the 34 PNGs into `/og/`, then update each game's index.html OG meta to reference `https://getaboutit.com/og/<key>.png`. (Not done yet for individual game pages — they currently share the home `og.png`.)
+`og-generator.html` renders one 1200×630 OG per game procedurally. Open it in a browser, click SAVE ALL, drop the 16 PNGs into `/og/`, then update each game's index.html OG meta to reference `https://getaboutit.com/og/<key>.png`. (Not done yet for individual game pages — they currently share the home `og.png`.)
 
 ## Deploy
 
