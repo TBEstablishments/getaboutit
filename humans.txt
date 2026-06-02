@@ -4,7 +4,7 @@ Made with: vanilla js, canvas 2d, web audio (procedural), no frameworks
 GitHub: https://github.com/TBEstablishments/getaboutit
 
 /* SITE */
-GETABOUTIT — a free retro-vaporwave arcade. 37 classic games.
+GETABOUTIT — a free retro-vaporwave arcade. 16 classic games.
 No tracking. No accounts. No build step. No service worker.
 Last update: 2026
 Standards: HTML5, CSS3, ES2020, JSON-LD schema, OpenGraph, WebManifest

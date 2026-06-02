@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>GETABOUTIT — OG image generator (34 games)</title>
+<title>GETABOUTIT — OG image generator (16 games)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
@@ -28,11 +28,11 @@
 <body>
 <div class="wrap">
   <h1>GETABOUTIT — OG image generator</h1>
-  <p>Renders one 1200×630 OG image per game (34 total). Click SAVE ALL to download a zip-free batch (one PNG at a time). Or click individual SAVE buttons.</p>
+  <p>Renders one 1200×630 OG image per game (16 total). Click SAVE ALL to download a zip-free batch (one PNG at a time). Or click individual SAVE buttons.</p>
   <p>Saved files go to your Downloads folder named <code>og-&lt;key&gt;.png</code>. Drop them into <code>/og/</code> in the repo and update game meta tags to reference <code>https://getaboutit.com/og/&lt;key&gt;.png</code>.</p>
 
   <div class="toolbar">
-    <button id="saveAll">⬇ SAVE ALL 34</button>
+    <button id="saveAll">⬇ SAVE ALL 16</button>
     <button class="alt" id="reload">↻ RERENDER</button>
     <button id="saveIcons">⬇ SAVE ALL ICONS</button>
   </div>
@@ -61,32 +61,14 @@ const GAMES = [
   { key: 'pong',        name: 'PONG',        tag: 'first to eleven',       color: 'purple'    },
   { key: 'flap',        name: 'FLAP',        tag: 'mind the gap',          color: 'yellow'    },
   { key: 'invaders',    name: 'INVADERS',    tag: 'protect the line',      color: 'teal'      },
-  { key: 'asteroids',   name: 'ASTEROIDS',   tag: 'thrust and shoot',      color: 'cyan'      },
-  { key: 'bubbles',     name: 'BUBBLES',     tag: 'pop chain combos',      color: 'magenta'   },
   { key: 'runner',      name: 'RUNNER',      tag: 'one tap to jump',       color: 'cyan'      },
   { key: 'slither',     name: 'SLITHER',     tag: 'grow and dodge',        color: 'teal'      },
-  { key: 'minesweeper', name: 'MINES',       tag: "don't touch",           color: 'red'       },
-  { key: 'slide',       name: 'SLIDE',       tag: 'order the tiles',       color: 'purple'    },
-  { key: 'words',       name: 'WORDS',       tag: 'guess in six',          color: 'teal'      },
-  { key: 'sudoku',      name: 'SUDOKU',      tag: 'fill the grid',         color: 'blue'      },
-  { key: 'pixel',       name: 'PIXEL',       tag: 'paint by numbers',      color: 'blue'      },
   { key: 'tictactoe',   name: 'TIC TAC TOE', tag: 'three in a row',        color: 'blue'      },
   { key: 'chess',       name: 'CHESS',       tag: 'the eternal game',      color: 'purple'    },
   { key: 'checkers',    name: 'CHECKERS',    tag: 'king me',               color: 'orange'    },
   { key: 'connect4',    name: 'CONNECT 4',   tag: 'four in a row',         color: 'yellow'    },
-  { key: 'battleship',  name: 'BATTLESHIP',  tag: 'fire when ready',       color: 'deeppurple'},
-  { key: 'go',          name: 'GO',          tag: 'ancient strategy',      color: 'deeppurple'},
-  { key: 'backgammon',  name: 'BACKGAMMON',  tag: 'race for home',         color: 'orange'    },
   { key: 'blackjack',   name: 'BLACKJACK',   tag: '21 or bust',            color: 'teal'      },
-  { key: 'poker',       name: 'POKER',       tag: 'jacks or better',       color: 'yellow'    },
-  { key: 'solitaire',   name: 'SOLITAIRE',   tag: 'classic time killer',   color: 'cyan'      },
-  { key: 'hearts',      name: 'HEARTS',      tag: 'shoot the moon',        color: 'red'       },
-  { key: 'cribbage',    name: 'CRIBBAGE',    tag: 'fifteen-two',           color: 'yellow'    },
-  { key: 'spider',      name: 'SPIDER',      tag: 'harder solitaire',      color: 'magenta'   },
-  { key: 'craps',       name: 'CRAPS',       tag: 'roll the bones',        color: 'red'       },
-  { key: 'simon',       name: 'SIMON',       tag: 'remember the sequence', color: 'pink'      },
-  { key: 'reaction',    name: 'REACTION',    tag: 'wait... tap',           color: 'red'       },
-  { key: 'type',        name: 'TYPE RACE',   tag: 'fast fingers',          color: 'cyan'      }
+  { key: 'solitaire',   name: 'SOLITAIRE',   tag: 'classic time killer',   color: 'cyan'      }
 ];
 
 function drawCard(canvas, g) {

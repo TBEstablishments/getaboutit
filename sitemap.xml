@@ -2,12 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://getaboutit.com/</loc><lastmod>2026-05-17</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://getaboutit.com/arcade</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://getaboutit.com/puzzle</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://getaboutit.com/board</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://getaboutit.com/cards</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://getaboutit.com/casino</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://getaboutit.com/mind</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://getaboutit.com/skill</loc><lastmod>2026-05-17</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://getaboutit.com/stack</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/snake</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/blocks</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -16,32 +12,14 @@
   <url><loc>https://getaboutit.com/pong</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/flap</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/invaders</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/asteroids</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/bubbles</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/runner</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/slither</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/minesweeper</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/slide</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/words</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/sudoku</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/pixel</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/tictactoe</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/chess</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/checkers</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/connect4</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/battleship</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/go</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/backgammon</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/blackjack</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/poker</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/solitaire</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/hearts</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/cribbage</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/spider</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/craps</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/simon</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/reaction</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://getaboutit.com/type</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://getaboutit.com/about</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://getaboutit.com/stats</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://getaboutit.com/settings</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
