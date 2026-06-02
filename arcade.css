@@ -403,6 +403,10 @@ body.revealed .hero-bloom { animation: heroSurge 1s ease both; }
 .foot-links .ach-link:hover { color: #fff; }
 #themeIndicator { color: rgba(255,255,255,0.4); font-size: clamp(8px, 1.2vw, 9px); letter-spacing: 0.12em; }
 
+/* ===== scroll-reveal sections ===== */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
 /* ===== boot tile entrance — only the first home load of a session ===== */
 body.boot .tile { animation: tileRise 0.5s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes tileRise {
@@ -414,4 +418,5 @@ body.boot .tile { animation: tileRise 0.5s cubic-bezier(.2,.7,.2,1) both; }
   body.boot .tile { animation: none; }
   .hero .wordmark, .hero-bloom, .scroll-hint, .crt-line, .cta { animation: none !important; }
   .flame.hot, .flame.blazing { animation: none; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 }

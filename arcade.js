@@ -418,6 +418,20 @@ const io = new IntersectionObserver((entries) => {
 }, { rootMargin: '120px' });
 for (const t of tiles) io.observe(t.el);
 
+// scroll-reveal sections — fade-up as they enter view (separate observer from
+// the preview IO). reduced-motion → instant, no transform.
+const revealEls = document.querySelectorAll('.reveal');
+if (reduced) {
+  revealEls.forEach(el => el.classList.add('in'));
+} else {
+  const revIO = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); revIO.unobserve(e.target); }
+    }
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revIO.observe(el));
+}
+
 // hover blip
 let lastBlip = 0;
 let hasGesture = false;
