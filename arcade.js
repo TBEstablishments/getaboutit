@@ -345,6 +345,9 @@ function togglePin(key) {
 // category tabs + search
 const tabs = document.querySelectorAll('.tab');
 let curCat = sessionStorage.getItem('gai_cat') || 'all';
+// A removed category (puzzle/casino/mind/skill) left in this session's gai_cat
+// would filter the grid to zero tiles with no active tab — fall back to ALL.
+if (!['all', 'arcade', 'board', 'cards'].includes(curCat)) curCat = 'all';
 let curSearch = '';
 function applyFilter() {
   const q = curSearch.trim().toLowerCase();
