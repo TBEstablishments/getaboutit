@@ -247,9 +247,17 @@ const PVW = 240, PVH = 160; // logical preview canvas dimensions
 const tiles = [];
 const grid = $('#grid');
 let entranceStagger = 0;
+function pinBadge() {
+  const d = document.createElement('div');
+  d.className = 'chip pin';
+  d.setAttribute('aria-label', 'Pinned');
+  d.innerHTML = '<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><rect x="3" y="1" width="4" height="3.4" fill="#ff006e"/><rect x="4.2" y="4" width="1.6" height="4.6" fill="#fff"/></svg>';
+  return d;
+}
 for (const g of GAMES_SORTED) {
   const t = document.createElement('a');
-  t.className = 'tile t-' + g.color;
+  t.className = 'tile';
+  t.style.setProperty('--acc', (GAI.GAME_ACCENTS[g.key] || {}).p || '#fff');
   t.dataset.cat = g.cat;
   t.dataset.key = g.key;
   t.href = GAI.GAME_PATHS[g.key];
@@ -259,6 +267,9 @@ for (const g of GAMES_SORTED) {
     t.style.animationDelay = (0.45 + entranceStagger * 0.03) + 's';
     entranceStagger++;
   }
+  // CRT-glass cabinet holds the live preview + corner overlays
+  const cab = document.createElement('div');
+  cab.className = 'cab';
   const canvas = document.createElement('canvas');
   canvas.className = 'preview';
   // Renderers draw in a logical PVW x PVH space; back the canvas at xDPR for
@@ -266,9 +277,26 @@ for (const g of GAMES_SORTED) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = PVW * dpr; canvas.height = PVH * dpr;
   canvas.setAttribute('aria-hidden','true');
-  t.appendChild(canvas);
+  cab.appendChild(canvas);
   const pctx = canvas.getContext('2d');
   pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // BEST chip — only when a score exists
+  const best = +(GAI.storage.get('gai_best_' + g.key) || 0);
+  if (best > 0) {
+    const bestEl = document.createElement('div');
+    bestEl.className = 'chip best';
+    bestEl.textContent = 'BEST ' + best;
+    cab.appendChild(bestEl);
+  }
+  // daily ✦ marker — only when it's a daily pick
+  if (isToday) {
+    const star = document.createElement('div');
+    star.className = 'chip daily';
+    star.textContent = '✦';
+    star.setAttribute('aria-label', "Today's challenge");
+    cab.appendChild(star);
+  }
+  t.appendChild(cab);
   const nameEl = document.createElement('div');
   nameEl.className = 'name';
   nameEl.innerHTML = '<span class="chrom"><span>' + (g.displayName || GAI.GAME_NAMES[g.key]) + '</span></span>';
@@ -277,22 +305,6 @@ for (const g of GAMES_SORTED) {
   tag.className = 'tag';
   tag.textContent = g.tag;
   t.appendChild(tag);
-  const best = +(GAI.storage.get('gai_best_' + g.key) || 0);
-  const bestEl = document.createElement('div');
-  bestEl.className = 'best';
-  bestEl.textContent = best > 0 ? ('BEST ' + best) : '— NEW —';
-  t.appendChild(bestEl);
-  const cat = document.createElement('div');
-  cat.className = 'cat';
-  cat.textContent = g.cat.toUpperCase();
-  t.appendChild(cat);
-  if (isToday) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.textContent = '🌟';
-    star.setAttribute('aria-label', "Today's challenge");
-    t.appendChild(star);
-  }
   t.addEventListener('click', (e) => {
     e.preventDefault();
     GAI.audio.ensure();
@@ -311,13 +323,7 @@ for (const g of GAMES_SORTED) {
   t.addEventListener('touchmove', cancelPress);
   t.addEventListener('contextmenu', (e) => { e.preventDefault(); togglePin(g.key); });
   // pinned indicator
-  if (GAI.pins.has(g.key)) {
-    const pm = document.createElement('div');
-    pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
-    pm.textContent = '📌';
-    pm.setAttribute('aria-label','Pinned');
-    t.appendChild(pm);
-  }
+  if (GAI.pins.has(g.key)) cab.appendChild(pinBadge());
   grid.appendChild(t);
   tiles.push({ meta: g, el: t, canvas, ctx: pctx, w: PVW, h: PVH, tick: (GAI.previews && GAI.previews[g.key]) || noop, state: {}, visible: true });
 }
@@ -325,19 +331,16 @@ for (const g of GAMES_SORTED) {
 function togglePin(key) {
   const list = GAI.pins.toggle(key);
   GAI.audio.ensure();
-  GAI.audio.tone(880, 0.06, 'square', 0.14);
-  GAI.ui.toast(list.includes(key) ? '📌 PINNED' : '× UNPINNED', 1500);
+  GAI.sfx.pick();
+  GAI.ui.toast(list.includes(key) ? 'PINNED' : 'UNPINNED', 1500);
   renderPinned();
-  // Add/remove indicator on the tile
+  // Add/remove the pin badge on the tile cabinet
   const tile = tiles.find(t => t.meta.key === key);
   if (tile) {
-    const existing = tile.el.querySelector('[aria-label="Pinned"]');
-    if (list.includes(key) && !existing) {
-      const pm = document.createElement('div');
-      pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
-      pm.textContent = '📌';
-      pm.setAttribute('aria-label','Pinned');
-      tile.el.appendChild(pm);
+    const cab = tile.el.querySelector('.cab');
+    const existing = tile.el.querySelector('.chip.pin');
+    if (list.includes(key) && !existing && cab) {
+      cab.appendChild(pinBadge());
     } else if (!list.includes(key) && existing) {
       existing.remove();
     }

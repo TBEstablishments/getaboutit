@@ -243,91 +243,93 @@ body.revealed .hero-bloom { animation: heroSurge 1s ease both; }
   );
 }
 
-/* ===== grid ===== */
+/* ===== grid — CRT-glass cabinets on the floor (DESIGN §13: 4/3/2/2) ===== */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;          /* mobile floor = 2 cols */
+  gap: 30px 18px;
   margin-top: 26px;
 }
-@media (min-width: 480px) { .grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
-@media (min-width: 1280px) { .grid { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+@media (min-width: 768px)  { .grid { grid-template-columns: repeat(3, 1fr); gap: 36px 24px; } }
+@media (min-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 44px 30px; } }
 
 .tile {
+  --acc: #ffffff;
   position: relative;
   display: block;
-  background: rgba(10,10,30,0.65);
-  border: 1px solid currentColor;
-  padding: 14px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   outline: none;
 }
-.tile:focus-visible { box-shadow: 0 0 0 2px #fff inset; }
-@media (hover: hover) and (pointer: fine) {
-  .tile:hover {
-    transform: translateY(-4px);
-    background: rgba(20,15,50,0.75);
-    box-shadow: 0 0 0 2px currentColor, 0 8px 24px rgba(0,0,0,0.5), 0 0 18px rgba(255,255,255,0.05);
-    /* Raise the lifted tile above its neighbours and the section above it so the
-       -4px lift + 2px ring never render behind anything. Scoped inside #home's
-       z-index:1 context, so scanlines/vignette/surprise still overlay it. */
-    position: relative;
-    z-index: 10;
-  }
-  .tile:hover .preview { filter: brightness(1.18); }
+/* the cabinet — a CRT screen behind glass, tinted by the game's accent */
+.cab {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0a1e;
+  box-shadow:
+    0 0 0 1px var(--acc),
+    0 8px 20px rgba(0,0,0,0.45),
+    inset 0 0 34px -12px var(--acc);
+  transition: transform 0.3s cubic-bezier(.2,.7,.2,1), box-shadow 0.3s ease;
+}
+.cab::before {            /* glass highlight */
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: 12px;
+  background: linear-gradient(155deg, rgba(255,255,255,0.20), transparent 42%, rgba(0,0,0,0.30));
+}
+.cab::after {             /* fine scanlines */
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: 12px;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.10) 0 1px, transparent 1px 3px);
+  opacity: 0.5;
 }
 .tile .preview {
-  display: block;
-  width: 100%; height: 100px;
-  background: #0a0a1e;
-  border: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 12px;
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
   image-rendering: pixelated;
   transition: filter 0.18s ease;
 }
+.tile:focus-visible .cab { box-shadow: 0 0 0 2px #fff, 0 8px 20px rgba(0,0,0,0.45); }
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover { z-index: 10; }
+  .tile:hover .cab {
+    transform: translateY(-10px);
+    box-shadow:
+      0 0 0 1px var(--acc),
+      0 20px 38px rgba(0,0,0,0.55),
+      0 0 30px -4px var(--acc);
+  }
+  .tile:hover .preview { filter: brightness(1.12); }
+}
 .tile .name {
-  font-size: clamp(11px, 1.8vw, 14px);
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
+  margin-top: 14px;
+  font-size: clamp(10px, 1.7vw, 13px);
+  letter-spacing: 0.05em;
+  color: #fff;
 }
 .tile .tag {
+  margin-top: 5px;
   font-size: 8px;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase;
 }
-.tile .best {
-  position: absolute;
-  top: 18px; right: 16px;
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  color: var(--c-yellow);
-  background: rgba(0,0,0,0.5);
-  padding: 3px 7px;
-}
-.tile .star {
-  position: absolute;
-  top: 14px; left: 14px;
-  font-size: 14px;
-  filter: drop-shadow(0 0 4px #ffd60a);
-}
-.tile.daily { box-shadow: 0 0 0 2px var(--c-cyan), 0 0 24px rgba(0,245,255,0.35); }
 
-/* tile color rings */
-.tile.t-pink      { color: var(--c-pink); }
-.tile.t-magenta   { color: var(--c-magenta); }
-.tile.t-purple    { color: var(--c-purple); }
-.tile.t-deeppurple{ color: var(--c-deeppurple); }
-.tile.t-blue      { color: var(--c-blue); }
-.tile.t-cyan      { color: var(--c-cyan); }
-.tile.t-teal      { color: var(--c-teal); }
-.tile.t-yellow    { color: var(--c-yellow); }
-.tile.t-orange    { color: var(--c-orange); }
-.tile.t-red       { color: var(--c-red); }
-.tile .name { color: #fff; }
+/* subtle tile-face overlays — small, corner-placed, never fight the preview */
+.chip { position: absolute; z-index: 3; line-height: 1; }
+.chip.best {
+  top: 7px; right: 7px;
+  font-size: 7px; letter-spacing: 0.1em; color: var(--c-yellow);
+  background: rgba(0,0,0,0.55); padding: 3px 5px; border-radius: 3px;
+}
+.chip.daily {
+  top: 6px; left: 8px;
+  font-size: 11px; color: var(--c-yellow);
+  filter: drop-shadow(0 0 4px rgba(255,214,10,0.6));
+}
+.chip.pin { bottom: 6px; left: 7px; display: flex; filter: drop-shadow(0 0 3px rgba(255,0,110,0.5)); }
 
 /* ===== surprise me — restyled per DESIGN.md brand cues:
    transparent bg + 2px pink border + pink text. Reads as an
