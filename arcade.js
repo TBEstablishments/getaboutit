@@ -1,30 +1,22 @@
 (() => {
 'use strict';
 const GAI = window.GAI;
-const PAL = GAI.PALETTE;
 const $ = (s) => document.querySelector(s);
 
-// entrance
-const firstVisit = !sessionStorage.getItem('gai_seen');
-if (firstVisit) {
-  sessionStorage.setItem('gai_seen', '1');
-  document.body.classList.add('entrance');
-}
-
-// Hand the wordmark off to chromBreathe once wmEnter finishes. Without
-// this, body.entrance sticks forever and the breathing animation never
-// takes over (the entrance selector's `animation: wmEnter ...` wins on
-// specificity over `.chrom-jitter`'s chromBreathe).
-const _wordmark = document.querySelector('.wordmark');
-if (_wordmark) {
-  _wordmark.addEventListener('animationend', (e) => {
-    if (e.animationName === 'wmEnter') {
-      document.body.classList.remove('entrance');
-    }
-  }, { once: true });
-  // Safety net: remove class after 1.5s regardless, in case animationend
-  // never fires (e.g. prefers-reduced-motion suppresses wmEnter entirely).
-  setTimeout(() => document.body.classList.remove('entrance'), 1500);
+// ── hero boot + reveal (session-scoped) ──────────────────────────────────
+// First home load of a new browser session plays the full CRT boot + PRESS
+// START gate; same-session revisits and reduced-motion skip straight to the
+// revealed, resting page. Scoped to sessionStorage (not the persistent gai_*
+// flags) so the boot replays as a welcome the next day. The hero owns the
+// wordmark now — the old body.entrance machinery is gone; the resting state
+// is the CSS default and chromBreathe handles the breathing.
+const reduced = GAI.reducedMotion;
+const doBoot = !sessionStorage.getItem('gai_hero_booted') && !reduced;
+if (doBoot) {
+  sessionStorage.setItem('gai_hero_booted', '1');
+  document.body.classList.add('boot');
+} else {
+  document.body.classList.add('revealed');
 }
 
 // rainbow
@@ -108,24 +100,28 @@ function drawBg() {
 }
 
 // ====== games registry ======
+// Preview renderers live in shared/previews.js (GAI.previews[key]) — keyed by
+// game key, looked up at tile-build time. color = palette-name border class
+// (superseded by GAME_ACCENTS for the redesign; kept until the tile restyle).
 const GAMES = [
-  { key: 'stack',       tag: 'one-tap tower',       color: 'pink',    cat: 'arcade', preview: pvStack },
-  { key: 'snake',       tag: 'eat the dots',        color: 'teal',    cat: 'arcade', preview: pvSnake },
-  { key: 'blocks',      tag: 'lines disappear',     color: 'cyan',    cat: 'arcade', preview: pvBlocks },
-  { key: 'p2048',       tag: 'merge to win',        color: 'yellow',  cat: 'arcade', preview: pv2048, displayName: '2048' },
-  { key: 'breakout',    tag: 'smash the bricks',    color: 'orange',  cat: 'arcade', preview: pvBreakout },
-  { key: 'pong',        tag: 'first to eleven',     color: 'purple',  cat: 'arcade', preview: pvPong },
-  { key: 'flap',        tag: 'mind the gap',        color: 'yellow',  cat: 'arcade', preview: pvFlap },
-  { key: 'invaders',    tag: 'protect the line',    color: 'teal',    cat: 'arcade', preview: pvInvaders },
-  { key: 'runner',      tag: 'one tap to jump',     color: 'cyan',    cat: 'arcade', preview: pvRunner },
-  { key: 'slither',     tag: 'grow and dodge',      color: 'teal',    cat: 'arcade', preview: pvSlither },
-  { key: 'tictactoe',   tag: 'three in a row',      color: 'blue',    cat: 'board',  preview: pvTTT, displayName: 'TIC TAC TOE' },
-  { key: 'chess',       tag: 'the eternal game',    color: 'purple',  cat: 'board',  preview: pvChess },
-  { key: 'checkers',    tag: 'king me',             color: 'orange',  cat: 'board',  preview: pvCheckers },
-  { key: 'connect4',    tag: 'four in a row',       color: 'yellow',  cat: 'board',  preview: pvC4, displayName: 'CONNECT 4' },
-  { key: 'blackjack',   tag: '21 or bust',          color: 'teal',    cat: 'cards',  preview: pvBlackjack },
-  { key: 'solitaire',   tag: 'classic time killer', color: 'cyan',    cat: 'cards',  preview: pvSolitaire }
+  { key: 'stack',       tag: 'one-tap tower',       color: 'pink',    cat: 'arcade' },
+  { key: 'snake',       tag: 'eat the dots',        color: 'teal',    cat: 'arcade' },
+  { key: 'blocks',      tag: 'lines disappear',     color: 'cyan',    cat: 'arcade' },
+  { key: 'p2048',       tag: 'merge to win',        color: 'yellow',  cat: 'arcade', displayName: '2048' },
+  { key: 'breakout',    tag: 'smash the bricks',    color: 'orange',  cat: 'arcade' },
+  { key: 'pong',        tag: 'first to eleven',     color: 'purple',  cat: 'arcade' },
+  { key: 'flap',        tag: 'mind the gap',        color: 'yellow',  cat: 'arcade' },
+  { key: 'invaders',    tag: 'protect the line',    color: 'teal',    cat: 'arcade' },
+  { key: 'runner',      tag: 'one tap to jump',     color: 'cyan',    cat: 'arcade' },
+  { key: 'slither',     tag: 'grow and dodge',      color: 'teal',    cat: 'arcade' },
+  { key: 'tictactoe',   tag: 'three in a row',      color: 'blue',    cat: 'board',  displayName: 'TIC TAC TOE' },
+  { key: 'chess',       tag: 'the eternal game',    color: 'purple',  cat: 'board'  },
+  { key: 'checkers',    tag: 'king me',             color: 'orange',  cat: 'board'  },
+  { key: 'connect4',    tag: 'four in a row',       color: 'yellow',  cat: 'board',  displayName: 'CONNECT 4' },
+  { key: 'blackjack',   tag: '21 or bust',          color: 'teal',    cat: 'cards'  },
+  { key: 'solitaire',   tag: 'classic time killer', color: 'cyan',    cat: 'cards'  }
 ];
+const noop = () => {};
 
 // today's 3 — one arcade, one board, one card
 const todayInt = parseInt(GAI.todayUTC(), 10);
@@ -151,12 +147,10 @@ $('#motd').textContent = '> ' + motd;
 
 // stats
 function refreshStats() {
-  const total = GAI.totalPlays();
-  const st = GAI.streak.get();
-  $('#taps-count').textContent = total.toLocaleString();
-  $('#streak-count').textContent = st.current || 0;
-  const e = $('#streak-emoji');
-  if ((st.current || 0) >= 7) e.classList.add('hot'); else e.classList.remove('hot');
+  const cur = GAI.streak.get().current || 0;
+  const sc = $('#streak-count'); if (sc) sc.textContent = cur;
+  const fl = $('#streak-flame');
+  if (fl) { fl.classList.toggle('hot', cur >= 7); fl.classList.toggle('blazing', cur >= 30); }
 }
 refreshStats();
 
@@ -182,10 +176,10 @@ refreshTheme();
 const dailyStrip = $('#dailyStrip');
 for (const g of dailyTrio) {
   const a = document.createElement('a');
-  a.className = 'daily-tile t-' + g.color;
+  a.className = 'daily';
   a.href = GAI.GAME_PATHS[g.key];
   const name = g.displayName || GAI.GAME_NAMES[g.key];
-  a.innerHTML = '<span class="d-mark">✦ ' + g.cat.toUpperCase() + ' ·</span><span class="d-name chrom"><span>' + name + '</span></span><span class="d-tag">' + g.tag + '</span>';
+  a.innerHTML = '<div class="daily-cat">' + g.cat.toUpperCase() + '</div><div class="daily-name">' + name + '</div><div class="daily-desc">' + g.tag + '</div>';
   a.addEventListener('click', (e) => {
     e.preventDefault();
     GAI.audio.ensure();
@@ -194,29 +188,8 @@ for (const g of dailyTrio) {
   dailyStrip.appendChild(a);
 }
 
-// pinned strip
-function renderPinned() {
-  const pinned = GAI.pins.get().filter(k => GAMES.find(g => g.key === k));
-  const sec = $('#pinned');
-  const strip = $('#pinnedStrip');
-  if (!pinned.length) { sec.classList.add('hidden'); return; }
-  sec.classList.remove('hidden');
-  strip.innerHTML = '';
-  for (const k of pinned) {
-    const meta = GAMES.find(g => g.key === k);
-    const a = document.createElement('a');
-    a.className = 'pinned-tile t-' + meta.color;
-    a.href = GAI.GAME_PATHS[k];
-    a.textContent = meta.displayName || GAI.GAME_NAMES[k];
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      GAI.audio.ensure();
-      GAI.transition.glitchTo(GAI.GAME_PATHS[k]);
-    });
-    strip.appendChild(a);
-  }
-}
-renderPinned();
+// Pinned games fold into the grid (float to the front) via sortGrid() below —
+// no separate pinned band. recent stays as one slim strip, auto-hidden empty.
 
 // recent
 function renderRecent() {
@@ -230,7 +203,8 @@ function renderRecent() {
   for (const r of recent) {
     const meta = GAMES.find(g => g.key === r.key);
     const a = document.createElement('a');
-    a.className = 'recent-tile t-' + meta.color;
+    a.className = 'recent-tile';
+    a.style.setProperty('--acc', (GAI.GAME_ACCENTS[r.key] || {}).p || '#fff');
     a.href = GAI.GAME_PATHS[r.key];
     a.textContent = meta.displayName || GAI.GAME_NAMES[r.key];
     a.addEventListener('click', (e) => {
@@ -247,26 +221,59 @@ renderRecent();
 const GAMES_SORTED = GAMES.slice().sort((a, b) => GAI.gamePlays(b.key) - GAI.gamePlays(a.key));
 
 // tiles
+const PVW = 240, PVH = 160; // logical preview canvas dimensions
 const tiles = [];
 const grid = $('#grid');
 let entranceStagger = 0;
+function pinBadge() {
+  const d = document.createElement('div');
+  d.className = 'chip pin';
+  d.setAttribute('aria-label', 'Pinned');
+  d.innerHTML = '<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><rect x="3" y="1" width="4" height="3.4" fill="#ff006e"/><rect x="4.2" y="4" width="1.6" height="4.6" fill="#fff"/></svg>';
+  return d;
+}
 for (const g of GAMES_SORTED) {
   const t = document.createElement('a');
-  t.className = 'tile t-' + g.color;
+  t.className = 'tile';
+  t.style.setProperty('--acc', (GAI.GAME_ACCENTS[g.key] || {}).p || '#fff');
   t.dataset.cat = g.cat;
   t.dataset.key = g.key;
   t.href = GAI.GAME_PATHS[g.key];
-  const isToday = dailyTrio.some(d => d.key === g.key);
-  if (isToday) t.classList.add('daily');
-  if (firstVisit) {
+  const isToday = dailyTrio.some(d => d.key === g.key);  // the ✦ chip marks it
+  if (doBoot) {
     t.style.animationDelay = (0.45 + entranceStagger * 0.03) + 's';
     entranceStagger++;
   }
+  // CRT-glass cabinet holds the live preview + corner overlays
+  const cab = document.createElement('div');
+  cab.className = 'cab';
   const canvas = document.createElement('canvas');
   canvas.className = 'preview';
-  canvas.width = 240; canvas.height = 160;
+  // Renderers draw in a logical PVW x PVH space; back the canvas at xDPR for
+  // crispness on hi-DPI, then scale the context so the art is unchanged.
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = PVW * dpr; canvas.height = PVH * dpr;
   canvas.setAttribute('aria-hidden','true');
-  t.appendChild(canvas);
+  cab.appendChild(canvas);
+  const pctx = canvas.getContext('2d');
+  pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // BEST chip — only when a score exists
+  const best = +(GAI.storage.get('gai_best_' + g.key) || 0);
+  if (best > 0) {
+    const bestEl = document.createElement('div');
+    bestEl.className = 'chip best';
+    bestEl.textContent = 'BEST ' + best;
+    cab.appendChild(bestEl);
+  }
+  // daily ✦ marker — only when it's a daily pick
+  if (isToday) {
+    const star = document.createElement('div');
+    star.className = 'chip daymark';
+    star.textContent = '✦';
+    star.setAttribute('aria-label', "Today's challenge");
+    cab.appendChild(star);
+  }
+  t.appendChild(cab);
   const nameEl = document.createElement('div');
   nameEl.className = 'name';
   nameEl.innerHTML = '<span class="chrom"><span>' + (g.displayName || GAI.GAME_NAMES[g.key]) + '</span></span>';
@@ -275,22 +282,6 @@ for (const g of GAMES_SORTED) {
   tag.className = 'tag';
   tag.textContent = g.tag;
   t.appendChild(tag);
-  const best = +(GAI.storage.get('gai_best_' + g.key) || 0);
-  const bestEl = document.createElement('div');
-  bestEl.className = 'best';
-  bestEl.textContent = best > 0 ? ('BEST ' + best) : '— NEW —';
-  t.appendChild(bestEl);
-  const cat = document.createElement('div');
-  cat.className = 'cat';
-  cat.textContent = g.cat.toUpperCase();
-  t.appendChild(cat);
-  if (isToday) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.textContent = '🌟';
-    star.setAttribute('aria-label', "Today's challenge");
-    t.appendChild(star);
-  }
   t.addEventListener('click', (e) => {
     e.preventDefault();
     GAI.audio.ensure();
@@ -309,33 +300,40 @@ for (const g of GAMES_SORTED) {
   t.addEventListener('touchmove', cancelPress);
   t.addEventListener('contextmenu', (e) => { e.preventDefault(); togglePin(g.key); });
   // pinned indicator
-  if (GAI.pins.has(g.key)) {
-    const pm = document.createElement('div');
-    pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
-    pm.textContent = '📌';
-    pm.setAttribute('aria-label','Pinned');
-    t.appendChild(pm);
-  }
+  if (GAI.pins.has(g.key)) cab.appendChild(pinBadge());
   grid.appendChild(t);
-  tiles.push({ meta: g, el: t, canvas, ctx: canvas.getContext('2d'), tick: g.preview, state: {}, visible: true });
+  tiles.push({ meta: g, el: t, canvas, ctx: pctx, w: PVW, h: PVH, tick: (GAI.previews && GAI.previews[g.key]) || noop, state: {}, visible: true });
 }
+
+// Order the grid: pinned games float to the front (in pin order), the rest by
+// play count. Re-appending existing tile nodes preserves their canvas + state
+// + IntersectionObserver registration, so previews keep running across a sort.
+function sortGrid() {
+  const pins = GAI.pins.get();
+  const ordered = tiles.slice().sort((a, b) => {
+    const pa = pins.indexOf(a.meta.key), pb = pins.indexOf(b.meta.key);
+    if (pa >= 0 && pb >= 0) return pa - pb;
+    if (pa >= 0) return -1;
+    if (pb >= 0) return 1;
+    return GAI.gamePlays(b.meta.key) - GAI.gamePlays(a.meta.key);
+  });
+  for (const t of ordered) grid.appendChild(t.el);
+}
+sortGrid();
 
 function togglePin(key) {
   const list = GAI.pins.toggle(key);
   GAI.audio.ensure();
-  GAI.audio.tone(880, 0.06, 'square', 0.14);
-  GAI.ui.toast(list.includes(key) ? '📌 PINNED' : '× UNPINNED', 1500);
-  renderPinned();
-  // Add/remove indicator on the tile
+  GAI.sfx.pick();
+  GAI.ui.toast(list.includes(key) ? 'PINNED' : 'UNPINNED', 1500);
+  sortGrid();
+  // Add/remove the pin badge on the tile cabinet
   const tile = tiles.find(t => t.meta.key === key);
   if (tile) {
-    const existing = tile.el.querySelector('[aria-label="Pinned"]');
-    if (list.includes(key) && !existing) {
-      const pm = document.createElement('div');
-      pm.style.cssText = 'position:absolute;top:14px;left:14px;font-size:12px;z-index:3;';
-      pm.textContent = '📌';
-      pm.setAttribute('aria-label','Pinned');
-      tile.el.appendChild(pm);
+    const cab = tile.el.querySelector('.cab');
+    const existing = tile.el.querySelector('.chip.pin');
+    if (list.includes(key) && !existing && cab) {
+      cab.appendChild(pinBadge());
     } else if (!list.includes(key) && existing) {
       existing.remove();
     }
@@ -405,21 +403,33 @@ document.addEventListener('keydown', (e) => {
 // Stamp every tile with one frame so the bottom rows aren't empty
 // boxes before the user scrolls them into view.
 for (const t of tiles) {
-  try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, 0, performance.now()); } catch {}
+  try { t.tick(t.ctx, t.w, t.h, t.state, 0, performance.now()); } catch {}
 }
 
-// IntersectionObserver for previews. Pin the first 9 tiles to always
-// tick (they're above-the-fold on every viewport) — observer governs
-// the rest.
+// IntersectionObserver gates previews — observe every tile (the grid now sits
+// below the full-viewport hero, and pins reorder it, so no tile is reliably
+// above the fold). Off-screen tiles stop ticking; the margin pre-warms them
+// just before they scroll into view.
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
     const tile = tiles.find(t => t.el === e.target);
     if (tile) tile.visible = e.isIntersecting;
   }
-}, { rootMargin: '50px' });
-for (let i = 0; i < tiles.length; i++) {
-  if (i < 9) { tiles[i].visible = true; continue; }
-  io.observe(tiles[i].el);
+}, { rootMargin: '120px' });
+for (const t of tiles) io.observe(t.el);
+
+// scroll-reveal sections — fade-up as they enter view (separate observer from
+// the preview IO). reduced-motion → instant, no transform.
+const revealEls = document.querySelectorAll('.reveal');
+if (reduced) {
+  revealEls.forEach(el => el.classList.add('in'));
+} else {
+  const revIO = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); revIO.unobserve(e.target); }
+    }
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revIO.observe(el));
 }
 
 // hover blip
@@ -449,42 +459,105 @@ document.addEventListener('pointerdown', onFirstGesture);
 document.addEventListener('keydown', onFirstGesture);
 document.addEventListener('touchstart', onFirstGesture, { passive: true });
 
-// rAF
-let lastT = 0;
-const reduced = GAI.reducedMotion;
+// ── hero reveal + sound toggle ───────────────────────────────────────────
+const heroEl = $('#hero');
+let revealed = document.body.classList.contains('revealed');
+function scrollToFloor() {
+  const el = $('#dailyTrio') || $('.grid');
+  if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+}
+// Tap reveals AND scrolls to the floor; natural scroll reveals only (no
+// scrollIntoView — never hijack a scroll the user is already driving).
+function reveal(fromTap) {
+  if (revealed) { if (fromTap) scrollToFloor(); return; }
+  revealed = true;
+  document.body.classList.add('revealed');
+  document.body.classList.remove('boot');
+  onFirstGesture();                 // unlock hover-blip audio on this gesture too
+  GAI.audio.ensure();
+  GAI.sfx.coin();
+  setTimeout(() => GAI.sfx.rise(), 140);
+  if (fromTap) scrollToFloor();
+}
+if (heroEl) {
+  heroEl.addEventListener('click', (e) => {
+    if (e.target.closest('.ui-btn')) return;  // sound toggle etc.
+    reveal(true);
+  });
+}
+const onScrollReveal = () => { if (!revealed) reveal(false); };
+window.addEventListener('wheel', onScrollReveal, { passive: true });
+window.addEventListener('touchmove', onScrollReveal, { passive: true });
+window.addEventListener('scroll', onScrollReveal, { passive: true });
+
+// sound toggle — reads/writes the global mute so it persists + stays in sync
+// with the in-game mute button.
+const soundToggle = $('#soundToggle');
+const SND_ON = '<svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><path d="M9 4.5q1.4 2 0 4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M10.6 3q2.4 3.5 0 7" fill="none" stroke="currentColor" stroke-width="1.1"/></svg><span>SOUND ON</span>';
+const SND_OFF = '<svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M2 5h2l3-2.5v8L4 8H2z" fill="currentColor"/><line x1="8.5" y1="4.5" x2="12.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/><line x1="12.5" y1="4.5" x2="8.5" y2="8.5" stroke="currentColor" stroke-width="1.1"/></svg><span>SOUND OFF</span>';
+function syncSound() {
+  if (!soundToggle) return;
+  const m = GAI.audio.isMuted();
+  soundToggle.innerHTML = m ? SND_OFF : SND_ON;
+  soundToggle.classList.toggle('muted', m);
+  soundToggle.setAttribute('aria-pressed', String(m));
+}
+if (soundToggle) {
+  syncSound();  // initialize from persisted mute state
+  soundToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    GAI.audio.ensure();
+    GAI.audio.setMuted(!GAI.audio.isMuted());
+    syncSound();
+    if (!GAI.audio.isMuted()) GAI.sfx.tap();
+  });
+}
+
+// rAF — one shared loop drives the bg + all visible tile previews. Tiles are
+// throttled to ~TILE_FPS (cheaper than 60fps, plenty for previews); the bg
+// keeps the full frame cadence for smooth scrolling stars. IntersectionObserver
+// + display:none gate which tiles tick; document.hidden pauses everything.
+let lastT = 0, tileAcc = 0;
+const TILE_FPS = 30, TILE_STEP = 1000 / TILE_FPS;
 let bgDrawn = false;
 let staticDrawn = false;
+function tickTiles(dtSec, now) {
+  for (const t of tiles) {
+    if (!t.visible) continue;
+    if (t.el.style.display === 'none') continue;
+    try { t.tick(t.ctx, t.w, t.h, t.state, dtSec, now); } catch {}
+  }
+}
 function frame(now) {
   const dt = Math.min(now - lastT, 50); lastT = now;
   if (!document.hidden) {
     if (reduced) {
       if (!bgDrawn) { drawBg(now); bgDrawn = true; }
       if (!staticDrawn) {
-        for (const t of tiles) { try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, 0, now); } catch {} }
+        for (const t of tiles) { try { t.tick(t.ctx, t.w, t.h, t.state, 0, now); } catch {} }
         staticDrawn = true;
       }
     } else {
       drawBg(now);
-      for (const t of tiles) {
-        if (!t.visible) continue;
-        if (t.el.style.display === 'none') continue;
-        try { t.tick(t.ctx, t.canvas.width, t.canvas.height, t.state, dt / 1000, now); } catch {}
+      tileAcc += dt;
+      if (tileAcc >= TILE_STEP) {
+        tickTiles(Math.min(tileAcc, 50) / 1000, now); // capped variable step
+        tileAcc = 0;
       }
     }
   }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) lastT = performance.now(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { lastT = performance.now(); tileAcc = 0; } });
 
 // surprise me with long press = category-only
 let surpriseTimer = null;
 let surpriseCategoryMode = sessionStorage.getItem('gai_surprise_cat') || 'all';
 const surpriseBtn = $('#surprise');
 function updateSurpriseLabel() {
-  surpriseBtn.textContent = surpriseCategoryMode === 'all'
-    ? '🎲 SURPRISE ME'
-    : '🎲 ' + surpriseCategoryMode.toUpperCase();
+  const lbl = $('#surpriseLabel');
+  if (lbl) lbl.textContent = surpriseCategoryMode === 'all' ? 'SURPRISE ME' : surpriseCategoryMode.toUpperCase();
 }
 updateSurpriseLabel();
 function surprisePick() {
@@ -579,316 +652,5 @@ if (GAI.totalPlays() >= 100) {
   v.textContent = '⚡ VETERAN ⚡';
   $('.hero').appendChild(v);
 }
-
-// ====== PREVIEWS ======
-function clr(ctx, w, h) { ctx.fillStyle = '#0a0a1e'; ctx.fillRect(0, 0, w, h); }
-function shadeColor(hex, m) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  return `rgb(${(r*m)|0},${(g*m)|0},${(b*m)|0})`;
-}
-
-function pvStack(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cyc = 3, phase = (s.t % cyc) / cyc;
-  drawIso(ctx, w/2, h*0.7, 70, 18, PAL[0]);
-  drawIso(ctx, w/2, h*0.55, 70, 18, PAL[1]);
-  const drop = phase < 0.7 ? Math.max(-30, -30 + (phase/0.7)*25) : -5;
-  const flash = phase >= 0.7 && phase < 0.85;
-  drawIso(ctx, w/2, h*0.40 - drop, 70, 18, flash ? '#fff' : PAL[2]);
-  if (flash) { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fillRect(0,0,w,h); }
-}
-function drawIso(ctx, cx, cy, hw, hh, color) {
-  const c30 = 0.866;
-  const tR = { x: cx + hw*c30, y: cy + hw*0.25 };
-  const tL = { x: cx - hw*c30, y: cy + hw*0.25 };
-  const tT = { x: cx, y: cy };
-  const tB = { x: cx, y: cy + hw*0.5 };
-  ctx.fillStyle = color;
-  ctx.beginPath(); ctx.moveTo(tT.x,tT.y); ctx.lineTo(tR.x,tR.y); ctx.lineTo(tB.x,tB.y); ctx.lineTo(tL.x,tL.y); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = shadeColor(color, 0.7);
-  ctx.beginPath(); ctx.moveTo(tR.x,tR.y); ctx.lineTo(tB.x,tB.y); ctx.lineTo(tB.x,tB.y+hh); ctx.lineTo(tR.x,tR.y+hh); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = shadeColor(color, 0.55);
-  ctx.beginPath(); ctx.moveTo(tL.x,tL.y); ctx.lineTo(tB.x,tB.y); ctx.lineTo(tB.x,tB.y+hh); ctx.lineTo(tL.x,tL.y+hh); ctx.closePath(); ctx.fill();
-}
-function pvSnake(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 5, cell = 10;
-  for (let i = 0; i < N; i++) {
-    const tau = s.t * 1.2 - i * 0.15;
-    const x = w/2 + Math.sin(tau * 2) * 60;
-    const y = h/2 + Math.sin(tau) * 28;
-    ctx.fillStyle = i === 0 ? PAL[6] : PAL[2];
-    ctx.fillRect(x - cell/2, y - cell/2, cell, cell);
-  }
-  ctx.fillStyle = PAL[7]; ctx.fillRect(w*0.78, h*0.5 - 5, 7, 7);
-}
-function pvBlocks(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 12, cols = 7, rows = 8;
-  const x0 = (w - cols*cell)/2, y0 = h - rows*cell - 6;
-  for (let c = 0; c < cols; c++) if ((c + (s.t|0)) % 7 < 5) { ctx.fillStyle = PAL[5]; ctx.fillRect(x0 + c*cell, y0 + (rows-1)*cell, cell-1, cell-1); }
-  const phase = (s.t % 2.5) / 2.5;
-  const tY = (phase < 0.7) ? phase / 0.7 * (rows - 3) : (rows - 3);
-  ctx.fillStyle = phase >= 0.85 ? '#fff' : PAL[2];
-  for (let i = 0; i < 3; i++) ctx.fillRect(x0 + (2+i)*cell, y0 + (tY|0)*cell, cell-1, cell-1);
-  ctx.fillRect(x0 + 3*cell, y0 + ((tY|0)+1)*cell, cell-1, cell-1);
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.strokeRect(x0, y0, cols*cell, rows*cell);
-}
-function pv2048(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 38; const x0 = (w - cell*2 - 8)/2, y0 = (h - cell)/2;
-  const phase = (s.t % 2.5) / 2.5;
-  if (phase < 0.45) {
-    const t = phase / 0.45;
-    drawTile(ctx, x0 + (1-t)*8, y0, cell, '2', PAL[7]);
-    drawTile(ctx, x0 + cell + 8 + t*8, y0, cell, '2', PAL[7]);
-  } else if (phase < 0.55) {
-    const t = (phase - 0.45) / 0.10;
-    const sc = 1 + 0.15 * Math.sin(t * Math.PI);
-    ctx.save(); ctx.translate(x0 + cell/2 + 4, y0 + cell/2); ctx.scale(sc, sc);
-    drawTile(ctx, -cell/2, -cell/2, cell, '4', PAL[8]); ctx.restore();
-  } else {
-    drawTile(ctx, x0 + 4, y0, cell, '4', PAL[8]);
-  }
-}
-function drawTile(ctx, x, y, sz, txt, color) {
-  ctx.fillStyle = color; ctx.fillRect(x, y, sz, sz);
-  ctx.fillStyle = '#0a0a1e'; ctx.font = 'bold 16px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(txt, x + sz/2, y + sz/2);
-}
-function pvBreakout(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  if (!s.ball) s.ball = { x: w/2, y: h*0.45, vx: 60, vy: -50 };
-  if (!s.bricks) s.bricks = [1,1,1,1,1,1,1,1];
-  const bw = w / 8;
-  for (let i = 0; i < 8; i++) if (s.bricks[i]) { ctx.fillStyle = PAL[i % PAL.length]; ctx.fillRect(i * bw + 1, 8, bw - 2, 10); }
-  ctx.fillStyle = PAL[5]; ctx.fillRect(w/2 - 20, h - 14, 40, 4);
-  for (let i = 5; i > 0; i--) { ctx.fillStyle = `rgba(0,245,255,${(0.15*i/5).toFixed(3)})`; ctx.fillRect(s.ball.x - i*2, s.ball.y - i*1.5, 4, 4); }
-  ctx.fillStyle = '#fff'; ctx.fillRect(s.ball.x - 2, s.ball.y - 2, 4, 4);
-  s.ball.x += s.ball.vx * dt; s.ball.y += s.ball.vy * dt;
-  if (s.ball.x < 4 || s.ball.x > w - 4) s.ball.vx *= -1;
-  if (s.ball.y > h - 18) s.ball.vy = -Math.abs(s.ball.vy);
-  if (s.ball.y < 22) { s.ball.vy = Math.abs(s.ball.vy); const idx = Math.floor(s.ball.x/bw); if (s.bricks[idx]) s.bricks[idx] = 0; }
-  if (s.bricks.every(b => !b)) s.bricks = [1,1,1,1,1,1,1,1];
-}
-function pvPong(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  if (!s.ball) s.ball = { x: w/2, y: h/2, vx: 60, vy: 35 };
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.setLineDash([4,4]);
-  ctx.beginPath(); ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle = PAL[5];
-  ctx.fillRect(6, Math.max(8, Math.min(h-28, s.ball.y - 10)), 4, 20);
-  ctx.fillRect(w - 10, Math.max(8, Math.min(h-28, s.ball.y - 10 + Math.sin(s.t*2)*8)), 4, 20);
-  ctx.fillStyle = '#fff'; ctx.fillRect(s.ball.x - 2, s.ball.y - 2, 4, 4);
-  s.ball.x += s.ball.vx * dt; s.ball.y += s.ball.vy * dt;
-  if (s.ball.x < 14) s.ball.vx = Math.abs(s.ball.vx);
-  if (s.ball.x > w - 14) s.ball.vx = -Math.abs(s.ball.vx);
-  if (s.ball.y < 4 || s.ball.y > h - 4) s.ball.vy *= -1;
-}
-function pvFlap(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const px = w * 0.65, gapY = h * 0.5 + Math.sin(s.t * 0.7) * 15;
-  ctx.fillStyle = PAL[6]; ctx.fillRect(px, 0, 18, gapY - 20); ctx.fillRect(px, gapY + 20, 18, h);
-  const bx = w * 0.32, by = h * 0.5 + Math.sin(s.t * 3) * 12;
-  ctx.save(); ctx.translate(bx, by); ctx.rotate(Math.sin(s.t * 3 + 1.5) * 0.3);
-  ctx.font = 'bold 14px "Press Start 2P", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillStyle = PAL[0]; ctx.fillText('G', 1.5, 0);
-  ctx.fillStyle = PAL[5]; ctx.fillText('G', -1.5, 0);
-  ctx.fillStyle = '#fff'; ctx.fillText('G', 0, 0); ctx.restore();
-}
-function pvInvaders(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  for (let i = 0; i < 8; i++) { ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect((i*31)%w, (i*17+(s.t*20))%h, 1, 1); }
-  const off = Math.sin(s.t * 1.6) * 8;
-  for (let i = 0; i < 4; i++) drawAlien(ctx, (w/2 - 60) + i * 28 + off, h * 0.5, PAL[6]);
-  ctx.fillStyle = PAL[5]; ctx.fillRect(w/2 - 5, h - 14, 10, 4); ctx.fillRect(w/2 - 2, h - 18, 4, 4);
-}
-function drawAlien(ctx, x, y, color) {
-  ctx.fillStyle = color;
-  const px = [[0,1,0,0,0,1,0],[1,1,1,1,1,1,1],[1,0,1,1,1,0,1],[1,1,0,1,0,1,1]];
-  const u = 2;
-  for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) if (px[r][c]) ctx.fillRect(x + c*u, y + r*u, u, u);
-}
-function pvRunner(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const horY = h * 0.7;
-  ctx.fillStyle = '#1a0635'; ctx.fillRect(0, 0, w, horY);
-  ctx.fillStyle = '#05050f'; ctx.fillRect(0, horY, w, h - horY);
-  ctx.strokeStyle = 'rgba(255,0,110,0.6)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(0, horY); ctx.lineTo(w, horY); ctx.stroke();
-  for (let i = -2; i <= 2; i++) {
-    ctx.beginPath(); ctx.moveTo(w/2 + i * 30, h); ctx.lineTo(w/2, horY); ctx.stroke();
-  }
-  // obstacles
-  const phase = (s.t * 60) % w;
-  ctx.fillStyle = PAL[9];
-  ctx.fillRect(w - phase, horY - 18, 14, 18);
-  // player
-  const py = horY - 12 + Math.sin(s.t * 4) * 6;
-  ctx.font = 'bold 18px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillStyle = PAL[0]; ctx.fillText('G', w*0.25+1.5, py);
-  ctx.fillStyle = PAL[5]; ctx.fillText('G', w*0.25-1.5, py);
-  ctx.fillStyle = '#fff'; ctx.fillText('G', w*0.25, py);
-}
-function pvTTT(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 30, x0 = (w - cell*3)/2, y0 = (h - cell*3)/2;
-  ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1;
-  for (let i = 1; i < 3; i++) {
-    ctx.beginPath(); ctx.moveTo(x0 + i*cell, y0); ctx.lineTo(x0 + i*cell, y0 + 3*cell); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x0, y0 + i*cell); ctx.lineTo(x0 + 3*cell, y0 + i*cell); ctx.stroke();
-  }
-  const phase = (s.t % 3) / 3;
-  drawX(ctx, x0, y0, cell, Math.min(1, phase / 0.25));
-  drawO(ctx, x0 + cell, y0 + cell, cell, Math.max(0, Math.min(1, (phase - 0.25) / 0.25)));
-  drawX(ctx, x0 + 2*cell, y0 + 2*cell, cell, Math.max(0, Math.min(1, (phase - 0.5) / 0.25)));
-  if (phase > 0.75) {
-    const t = (phase - 0.75) / 0.25;
-    ctx.strokeStyle = PAL[7]; ctx.lineWidth = 3;
-    ctx.shadowColor = PAL[7]; ctx.shadowBlur = 10;
-    ctx.beginPath(); ctx.moveTo(x0 + 4, y0 + 4);
-    ctx.lineTo(x0 + 4 + t * (3*cell - 8), y0 + 4 + t * (3*cell - 8));
-    ctx.stroke(); ctx.shadowBlur = 0;
-  }
-}
-function drawX(ctx, x, y, sz, t) {
-  if (t <= 0) return;
-  ctx.strokeStyle = PAL[0]; ctx.lineWidth = 2; const m = 6;
-  ctx.beginPath(); ctx.moveTo(x + m, y + m); ctx.lineTo(x + m + (sz - 2*m) * Math.min(1, t * 2), y + m + (sz - 2*m) * Math.min(1, t * 2)); ctx.stroke();
-  if (t > 0.5) { ctx.beginPath(); ctx.moveTo(x + sz - m, y + m); ctx.lineTo(x + sz - m - (sz - 2*m) * ((t - 0.5) * 2), y + m + (sz - 2*m) * ((t - 0.5) * 2)); ctx.stroke(); }
-}
-function drawO(ctx, x, y, sz, t) {
-  if (t <= 0) return;
-  ctx.strokeStyle = PAL[5]; ctx.lineWidth = 2; const r = (sz - 12) / 2;
-  ctx.beginPath(); ctx.arc(x + sz/2, y + sz/2, r, -Math.PI/2, -Math.PI/2 + Math.PI * 2 * t); ctx.stroke();
-}
-function pvChess(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cell = 18, x0 = (w - cell*4)/2, y0 = (h - cell*4)/2;
-  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
-    ctx.fillStyle = (r + c) % 2 === 0 ? '#1a1147' : '#0e0828';
-    ctx.fillRect(x0 + c*cell, y0 + r*cell, cell, cell);
-  }
-  ctx.font = 'bold 14px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const phase = (s.t % 3) / 3;
-  ctx.fillStyle = '#fff'; ctx.fillText('♚', x0 + cell*0.5, y0 + cell*0.5);
-  ctx.fillStyle = '#fff'; ctx.fillText('♕', x0 + cell*3.5, y0 + cell*3.5);
-  if (phase > 0.5) {
-    ctx.fillStyle = '#fff'; ctx.fillText('♕', x0 + cell*0.5, y0 + cell*2.5);
-    ctx.strokeStyle = PAL[9]; ctx.lineWidth = 1;
-    ctx.strokeRect(x0, y0, cell, cell);
-  } else {
-    ctx.fillStyle = '#fff'; ctx.fillText('♕', x0 + cell*0.5, y0 + cell*3.5);
-  }
-}
-function pvCheckers(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const N = 6, cell = 14, x0 = (w - N*cell)/2, y0 = (h - N*cell)/2;
-  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
-    ctx.fillStyle = (r + c) % 2 === 1 ? '#3a0ca3' : '#1a0635';
-    ctx.fillRect(x0 + c*cell, y0 + r*cell, cell, cell);
-  }
-  const positions = [[0,1],[1,2],[2,3],[3,4]];
-  const phase = (s.t % 3) / 3;
-  const idx = Math.min(positions.length - 1, Math.floor(phase * 4));
-  ctx.fillStyle = PAL[9];
-  ctx.beginPath(); ctx.arc(x0 + positions[idx][1] * cell + cell/2, y0 + positions[idx][0] * cell + cell/2, cell * 0.35, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = PAL[7];
-  ctx.beginPath(); ctx.arc(x0 + 4 * cell + cell/2, y0 + 4 * cell + cell/2, cell * 0.35, 0, Math.PI*2); ctx.fill();
-}
-function pvC4(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cols = 7, rows = 5, cell = 14;
-  const x0 = (w - cols*cell)/2, y0 = (h - rows*cell)/2;
-  ctx.fillStyle = '#3a0ca3'; ctx.fillRect(x0, y0, cols*cell, rows*cell);
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    ctx.beginPath(); ctx.arc(x0 + c*cell + cell/2, y0 + r*cell + cell/2, cell * 0.35, 0, Math.PI*2);
-    ctx.fillStyle = '#0a0a1e'; ctx.fill();
-  }
-  const board = [[0,0,0,2,0,0,0],[0,0,0,1,0,0,0],[0,0,2,1,0,0,0],[2,1,1,2,0,0,0]];
-  const phase = (s.t % 3) / 3;
-  const visRows = Math.floor(phase * board.length) + 1;
-  for (let r = 0; r < Math.min(visRows, board.length); r++) for (let c = 0; c < cols; c++) {
-    if (board[r][c] === 0) continue;
-    const y = y0 + (r + 1) * cell + cell/2;
-    ctx.beginPath(); ctx.arc(x0 + c*cell + cell/2, y, cell * 0.35, 0, Math.PI*2);
-    ctx.fillStyle = board[r][c] === 1 ? PAL[9] : PAL[7]; ctx.fill();
-  }
-}
-function pvBlackjack(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  const cw = 38, ch = 54;
-  drawMiniCard(ctx, w/2 - cw - 4, h/2 - ch/2, cw, ch, 'A', '♠', false);
-  drawMiniCard(ctx, w/2 + 4, h/2 - ch/2, cw, ch, 'K', '♥', true);
-  ctx.fillStyle = PAL[6];
-  ctx.font = 'bold 11px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('21', w / 2, h - 12);
-}
-function drawMiniCard(ctx, x, y, w, h, rank, suit, red) {
-  ctx.fillStyle = '#fff'; GAI.fx.roundRect(ctx, x, y, w, h, 4); ctx.fill();
-  ctx.strokeStyle = 'rgba(10,10,30,0.5)'; ctx.lineWidth = 1; GAI.fx.roundRect(ctx, x, y, w, h, 4); ctx.stroke();
-  ctx.fillStyle = red ? '#ef233c' : '#1a1a30';
-  ctx.font = 'bold 8px "Press Start 2P", monospace';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillText(rank, x + 3, y + 3);
-  ctx.font = 'bold 14px "Press Start 2P", monospace';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(suit, x + w/2, y + h/2);
-}
-function pvSolitaire(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // 4 foundation slots
-  for (let i = 0; i < 4; i++) {
-    const x = 14 + i * 28, y = 16;
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; GAI.fx.roundRect(ctx, x, y, 22, 30, 3); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    ctx.font = 'bold 10px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(['♠','♥','♦','♣'][i], x + 11, y + 15);
-  }
-  // cascade
-  const phase = (s.t % 3) / 3;
-  for (let i = 0; i < 5; i++) {
-    const x = 24 + (i % 5) * 16;
-    const y = 60 + Math.abs(Math.sin(s.t + i)) * 10 + i * 6;
-    drawMiniCard(ctx, x, y, 18, 24, ['A','2','3','4','5'][i], '♠', false);
-  }
-}
-
-// ====== Phase 3 previews ======
-function pvSlither(ctx, w, h, s, dt) {
-  clr(ctx, w, h); s.t = (s.t || 0) + dt;
-  // a snake winding
-  const N = 14;
-  for (let i = 0; i < N; i++) {
-    const t = s.t * 1.5 - i * 0.18;
-    const x = w/2 + Math.cos(t) * 56;
-    const y = h/2 + Math.sin(t * 1.4) * 32;
-    if (i === 0) {
-      ctx.fillStyle = '#ff006e';
-      ctx.beginPath(); ctx.arc(x + 1.5, y, 7, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#00f5ff';
-      ctx.beginPath(); ctx.arc(x - 1.5, y, 7, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
-    } else {
-      ctx.fillStyle = PAL[6];
-      ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fill();
-    }
-  }
-  // food orbs
-  ctx.fillStyle = PAL[7]; ctx.beginPath(); ctx.arc(w*0.18, h*0.4, 3, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = PAL[0]; ctx.beginPath(); ctx.arc(w*0.82, h*0.7, 3, 0, Math.PI*2); ctx.fill();
-}
-
-
-
-
-
-
-
 
 })();
